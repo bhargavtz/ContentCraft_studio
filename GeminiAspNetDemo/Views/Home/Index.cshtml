@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Gemini AI Chat";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Chat with Gemini AI</h3>
+                </div>
+                <div class="card-body">
+                    <div id="chat-messages" class="mb-4" style="height: 400px; overflow-y: auto;">
+                        <!-- Messages will be displayed here -->
+                    </div>
+                    <form id="chat-form" class="mt-3">
+                        <div class="input-group">
+                            <textarea id="prompt" class="form-control" rows="2" placeholder="Type your message here..." required></textarea>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i> Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#chat-form').on('submit', function(e) {
+                e.preventDefault();
+                const prompt = $('#prompt').val();
+                if (!prompt) return;
+
+                // Add user message
+                addMessage('You', prompt, 'user');
+                
+                // Clear input
+                $('#prompt').val('');
+
+                // Send request to server
+                $.ajax({
+                    url: '/Home/Generate',
+                    type: 'POST',
+                    data: { prompt: prompt },
+                    success: function(response) {
+                        if (response.success) {
+                            addMessage('Gemini', response.content, 'ai');
+                        } else {
+                            addMessage('Error', response.error, 'error');
+                        }
+                    },
+                    error: function() {
+                        addMessage('Error', 'Failed to get response', 'error');
+                    }
+                });
+            });
+
+            function addMessage(sender, content, type) {
+                const messageDiv = $('<div>').addClass('mb-3');
+                const senderSpan = $('<strong>').text(sender + ': ');
+                const contentSpan = $('<span>').text(content);
+
+                messageDiv.append(senderSpan).append(contentSpan);
+                
+                if (type === 'user') {
+                    messageDiv.addClass('text-end');
+                } else if (type === 'error') {
+                    messageDiv.addClass('text-danger');
+                }
+
+                $('#chat-messages').append(messageDiv);
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+            }
+        });
+    </script>
+}
