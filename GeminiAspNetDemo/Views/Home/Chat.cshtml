@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "AI Chat";
+}
+
+<div class="max-w-4xl mx-auto p-4">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-blue-600 p-4">
+            <h1 class="text-xl font-bold text-white">Chat with Gemini AI</h1>
+        </div>
+        <div class="p-4">
+            <div id="chat-messages" class="space-y-4 mb-4" style="height: 400px; overflow-y: auto;">
+                <!-- Messages will be displayed here -->
+            </div>
+            <form id="chat-form" class="mt-4">
+                <div class="flex space-x-2">
+                    <textarea 
+                        id="prompt" 
+                        class="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                        rows="2" 
+                        placeholder="Type your message here..." 
+                        required></textarea>
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Send
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#chat-form').on('submit', function(e) {
+                e.preventDefault();
+                const prompt = $('#prompt').val();
+                if (!prompt) return;
+
+                // Add user message
+                addMessage('You', prompt, 'user');
+                
+                // Clear input
+                $('#prompt').val('');
+
+                // Send request to server
+                $.ajax({
+                    url: '/Home/Generate',
+                    type: 'POST',
+                    data: { prompt: prompt },
+                    success: function(response) {
+                        if (response.success) {
+                            addMessage('Gemini', response.content, 'ai');
+                        } else {
+                            addMessage('Error', response.error, 'error');
+                        }
+                    },
+                    error: function() {
+                        addMessage('Error', 'Failed to get response', 'error');
+                    }
+                });
+            });
+
+            function addMessage(sender, content, type) {
+                const messageDiv = $('<div>').addClass('p-3 rounded-lg ' + getMessageClass(type));
+                const senderSpan = $('<div>').addClass('font-bold mb-1').text(sender);
+                const contentSpan = $('<div>').text(content);
+
+                messageDiv.append(senderSpan).append(contentSpan);
+                
+                $('#chat-messages').append(messageDiv);
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+            }
+
+            function getMessageClass(type) {
+                switch (type) {
+                    case 'user':
+                        return 'bg-blue-100 ml-12';
+                    case 'ai':
+                        return 'bg-gray-100 mr-12';
+                    case 'error':
+                        return 'bg-red-100 text-red-700';
+                    default:
+                        return 'bg-gray-100';
+                }
+            }
+        });
+    </script>
+} 

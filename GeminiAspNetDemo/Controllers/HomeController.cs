@@ -21,6 +21,11 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Chat()
+    {
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> Generate(string prompt)
     {
