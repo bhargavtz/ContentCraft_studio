@@ -1,6 +1,120 @@
 ﻿@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<header class="bg-blue-600 text-white p-4 shadow-md">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="text-2xl font-bold">ContentCraft Studio</a>
+        <ul class="flex space-x-6">
+            <li><a href="/" class="hover:text-blue-200">Home</a></li>
+            <li><a href="/Home/About" class="hover:text-blue-200">About</a></li>
+            <li><a href="/Home/Contact" class="hover:text-blue-200">Contact</a></li>
+            <li><a href="/Home/Privacy" class="hover:text-blue-200">Privacy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="max-w-4xl mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 space-y-8">
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Introduction</h2>
+            <p class="text-gray-700">
+                At ContentCraft Studio, we take your privacy seriously. This Privacy Policy explains how we collect, 
+                use, disclose, and safeguard your information when you use our website and services. Please read this 
+                privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not 
+                access the site.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Information We Collect</h2>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Personal Information</h3>
+                    <p class="text-gray-700">We may collect personal information that you voluntarily provide to us when you:</p>
+                    <ul class="list-disc list-inside text-gray-700 mt-2">
+                        <li>Register for an account</li>
+                        <li>Sign up for our newsletter</li>
+                        <li>Contact us through our contact form</li>
+                        <li>Use our AI chat services</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold mb-2">Usage Information</h3>
+                    <p class="text-gray-700">We automatically collect certain information when you visit our website, including:</p>
+                    <ul class="list-disc list-inside text-gray-700 mt-2">
+                        <li>IP addresses</li>
+                        <li>Browser type</li>
+                        <li>Device information</li>
+                        <li>Usage patterns</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">How We Use Your Information</h2>
+            <p class="text-gray-700">We use the information we collect to:</p>
+            <ul class="list-disc list-inside text-gray-700 mt-2">
+                <li>Provide and maintain our services</li>
+                <li>Improve user experience</li>
+                <li>Send you updates and marketing communications</li>
+                <li>Respond to your inquiries</li>
+                <li>Monitor and analyze usage patterns</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Data Security</h2>
+            <p class="text-gray-700">
+                We implement appropriate technical and organizational security measures to protect your personal 
+                information. However, please note that no method of transmission over the internet or electronic 
+                storage is 100% secure.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Third-Party Services</h2>
+            <p class="text-gray-700">
+                We use Google's Gemini AI API for our content generation services. Your interactions with the AI 
+                are subject to Google's privacy policy. We recommend reviewing their privacy policy to understand 
+                how they handle your data.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Your Rights</h2>
+            <p class="text-gray-700">You have the right to:</p>
+            <ul class="list-disc list-inside text-gray-700 mt-2">
+                <li>Access your personal information</li>
+                <li>Correct inaccurate information</li>
+                <li>Request deletion of your information</li>
+                <li>Opt-out of marketing communications</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-2xl font-bold mb-4">Contact Us</h2>
+            <p class="text-gray-700">
+                If you have questions about this Privacy Policy, please <a href="/Home/Contact" class="text-blue-600 hover:underline">contact us</a> at:
+                <br>
+                Email: privacy@contentcraftstudio.com
+                <br>
+                Phone: +1 (555) 123-4567
+            </p>
+        </div>
+
+        <div class="text-sm text-gray-600">
+            <p>Last updated: February 18, 2024</p>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-blue-600 text-white p-8">
+    <div class="max-w-7xl mx-auto text-center">
+        <p class="text-blue-100">© 2024 ContentCraft Studio. All rights reserved. <a href="/Home/Contact" class="hover:text-white">Contact Us</a></p>
+    </div>
+</footer>
