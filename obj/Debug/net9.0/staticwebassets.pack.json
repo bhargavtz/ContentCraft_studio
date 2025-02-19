@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\images\\hero-image.jpg",
+      "PackagePath": "staticwebassets\\images\\hero-image.jpg"
+    },
+    {
       "Id": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
