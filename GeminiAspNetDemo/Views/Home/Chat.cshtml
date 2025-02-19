@@ -1,0 +1,274 @@
+@{
+    ViewData["Title"] = "AI Chat";
+}
+
+<link rel="stylesheet" href="~/css/chat.css" />
+
+<header class="bg-blue-600 text-white p-4 shadow-md">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="text-2xl font-bold">ContentCraft Studio</a>
+        <ul class="flex space-x-6">
+            <li><a href="/" class="hover:text-blue-200">Home</a></li>
+            <li><a href="/Home/About" class="hover:text-blue-200">About</a></li>
+            <li><a href="/Home/Contact" class="hover:text-blue-200">Contact</a></li>
+            <li><a href="/Home/Privacy" class="hover:text-blue-200">Privacy</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="max-w-5xl mx-auto p-4">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="bg-blue-600 p-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-white">Chat with Gemini AI</h1>
+            <button id="clearChat" class="px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white rounded-md text-sm">
+                Clear Chat
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-12 h-[calc(100vh-16rem)]">
+            <!-- Sidebar with suggestions -->
+            <div class="col-span-3 bg-gray-50 p-4 border-r">
+                <h2 class="font-bold text-gray-700 mb-3">Suggested Prompts</h2>
+                <div class="space-y-2">
+                    <button class="w-full text-left p-2 text-sm rounded hover:bg-blue-50 text-gray-700 suggested-prompt">
+                        Write a blog post about AI technology
+                    </button>
+                    <button class="w-full text-left p-2 text-sm rounded hover:bg-blue-50 text-gray-700 suggested-prompt">
+                        Generate a social media caption
+                    </button>
+                    <button class="w-full text-left p-2 text-sm rounded hover:bg-blue-50 text-gray-700 suggested-prompt">
+                        Create a product description
+                    </button>
+                    <button class="w-full text-left p-2 text-sm rounded hover:bg-blue-50 text-gray-700 suggested-prompt">
+                        Write a professional email
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main chat area -->
+            <div class="col-span-9 flex flex-col">
+                <div id="chat-messages" class="flex-1 p-4 space-y-4 overflow-y-auto">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p class="text-gray-700">
+                            👋 Hello! I'm your AI assistant. I can help you with content creation, answering questions, 
+                            and more. I support markdown formatting in my responses. Feel free to ask anything!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="border-t p-4">
+                    <form id="chat-form" class="space-y-4">
+                        <div class="flex space-x-2">
+                            <div class="flex-1">
+                                <textarea 
+                                    id="prompt" 
+                                    class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                    rows="3"
+                                    placeholder="Type your message here... (Markdown is supported in responses)"
+                                    required></textarea>
+                                <div class="flex justify-between mt-2 text-sm text-gray-500">
+                                    <span>Press Shift + Enter for new line</span>
+                                    <span id="charCount">0 characters</span>
+                                </div>
+                            </div>
+                            <button 
+                                type="submit" 
+                                class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center space-x-2">
+                                <span>Send</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-blue-600 text-white p-8">
+    <div class="max-w-7xl mx-auto text-center">
+        <p class="text-blue-100">© 2024 ContentCraft Studio. All rights reserved. <a href="/Home/Privacy" class="hover:text-white">Privacy Policy</a></p>
+    </div>
+</footer>
+
+@section Scripts {
+    <!-- Add marked.js for markdown support -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Add highlight.js for code syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Configure marked.js
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        return hljs.highlight(code, { language: lang }).value;
+                    }
+                    return hljs.highlightAuto(code).value;
+                },
+                breaks: true
+            });
+
+            let isGenerating = false;
+
+            // Handle character count
+            $('#prompt').on('input', function() {
+                $('#charCount').text($(this).val().length + ' characters');
+            });
+
+            // Handle suggested prompts
+            $('.suggested-prompt').click(function() {
+                $('#prompt').val($(this).text().trim());
+                $('#prompt').focus();
+                $('#charCount').text($('#prompt').val().length + ' characters');
+            });
+
+            // Handle clear chat
+            $('#clearChat').click(function() {
+                if (confirm('Are you sure you want to clear the chat history?')) {
+                    $('#chat-messages').html(`
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-gray-700">
+                                👋 Hello! I'm your AI assistant. I can help you with content creation, answering questions, 
+                                and more. I support markdown formatting in my responses. Feel free to ask anything!
+                            </p>
+                        </div>
+                    `);
+                }
+            });
+
+            // Handle form submission
+            $('#chat-form').on('submit', function(e) {
+                e.preventDefault();
+                if (isGenerating) return;
+
+                const prompt = $('#prompt').val();
+                if (!prompt) return;
+
+                // Add user message
+                addMessage('You', prompt, 'user');
+                
+                // Clear input and update char count
+                $('#prompt').val('');
+                $('#charCount').text('0 characters');
+
+                isGenerating = true;
+                addLoadingMessage();
+
+                // Send request to server
+                $.ajax({
+                    url: '/Home/Generate',
+                    type: 'POST',
+                    data: { prompt: prompt },
+                    success: function(response) {
+                        removeLoadingMessage();
+                        if (response.success) {
+                            addMessage('Gemini', response.content, 'ai');
+                        } else {
+                            addMessage('Error', response.error, 'error');
+                        }
+                        isGenerating = false;
+                    },
+                    error: function() {
+                        removeLoadingMessage();
+                        addMessage('Error', 'Failed to get response', 'error');
+                        isGenerating = false;
+                    }
+                });
+            });
+
+            function addLoadingMessage() {
+                $('#chat-messages').append(`
+                    <div class="loading-message p-3 rounded-lg bg-gray-50">
+                        <div class="flex items-center space-x-2">
+                            <div class="text-blue-600">Generating response</div>
+                            <div class="flex space-x-1">
+                                <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                <div class="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                scrollToBottom();
+            }
+
+            function removeLoadingMessage() {
+                $('.loading-message').remove();
+            }
+
+            function addMessage(sender, content, type) {
+                const messageDiv = $('<div>').addClass('p-4 rounded-lg ' + getMessageClass(type));
+                const headerDiv = $('<div>').addClass('flex items-center space-x-2 mb-2');
+                
+                // Add avatar
+                const avatar = $('<div>').addClass('w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ' + getAvatarClass(type))
+                    .text(sender.charAt(0));
+                
+                // Add sender name
+                const senderDiv = $('<div>').addClass('font-bold').text(sender);
+                
+                headerDiv.append(avatar, senderDiv);
+                
+                // Add content with markdown support for AI messages
+                const contentDiv = $('<div>').addClass('prose max-w-none');
+                if (type === 'ai') {
+                    contentDiv.html(marked.parse(content));
+                    // Initialize syntax highlighting
+                    contentDiv.find('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                } else {
+                    contentDiv.text(content);
+                }
+
+                messageDiv.append(headerDiv, contentDiv);
+                $('#chat-messages').append(messageDiv);
+                scrollToBottom();
+            }
+
+            function getMessageClass(type) {
+                switch (type) {
+                    case 'user':
+                        return 'bg-blue-50 ml-12';
+                    case 'ai':
+                        return 'bg-white border border-gray-200 mr-12';
+                    case 'error':
+                        return 'bg-red-50 text-red-700';
+                    default:
+                        return 'bg-gray-50';
+                }
+            }
+
+            function getAvatarClass(type) {
+                switch (type) {
+                    case 'user':
+                        return 'bg-blue-600';
+                    case 'ai':
+                        return 'bg-green-600';
+                    case 'error':
+                        return 'bg-red-600';
+                    default:
+                        return 'bg-gray-600';
+                }
+            }
+
+            function scrollToBottom() {
+                const chatMessages = document.getElementById('chat-messages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Handle Shift+Enter for new line
+            $('#prompt').keydown(function(e) {
+                if (e.keyCode === 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    $('#chat-form').submit();
+                }
+            });
+        });
+    </script>
+} 

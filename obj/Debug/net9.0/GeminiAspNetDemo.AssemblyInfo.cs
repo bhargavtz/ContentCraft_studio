@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GeminiAspNetDemo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8faf863025a16098a8a166b77135a792cd217da3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9bf30e2c9e57d030bd9138774902d88f92f3fffb")]
 [assembly: System.Reflection.AssemblyProductAttribute("GeminiAspNetDemo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GeminiAspNetDemo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
