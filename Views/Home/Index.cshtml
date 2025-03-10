@@ -2,50 +2,80 @@
     ViewData["Title"] = "Home";
 }
 
-<nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-    <div class="flex items-center">
-        <img src="~/images/logo.png" alt="ContentCraft Studio" class="h-8 w-8 mr-2">
-        <span class="text-xl font-semibold">ContentCraft Studio</span>
-    </div>
-    <div class="flex items-center space-x-6">
-        <a href="@Url.Action("Index", "Tools")" class="text-gray-600 hover:text-gray-900">Tools</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">Pricing</a>
-        <a href="@Url.Action("SignIn", "Account")" class="text-gray-600 hover:text-gray-900">Sign In</a>
-        <a href="@Url.Action("SignUp", "Account")" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Get Started</a>
+<nav class="bg-white shadow-sm sticky top-0 z-50" x-data="{ open: false }">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <img src="~/images/logo.png" alt="ContentCraft Studio" class="h-10 w-10 mr-3">
+                <span class="text-xl font-bold text-gray-900">ContentCraft Studio</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/Tools/" class="text-gray-700 hover:text-primary transition-colors duration-200 nav-item">Tools</a>
+                <a href="#pricing" class="text-gray-700 hover:text-primary transition-colors duration-200 nav-item">Pricing</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="relative" x-data="{ open: false }">
+                        <button x-on:click="open = !open" type="button" class="flex items-center space-x-2 text-gray-700 hover:text-primary transition-colors duration-200">
+                            <span>Welcome, @User.Identity?.Name</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div x-show="open" x-on:click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                            <a href="/Tools/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                            <a href="/Account/Profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                            <a href="@Url.Action("Logout", "Account")" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign Out</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a href="@Url.Action("SignIn", "Account")" class="text-gray-700 hover:text-primary transition-colors duration-200 nav-item">Sign In</a>
+                    <a href="@Url.Action("SignUp", "Account")" class="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-lg transition-colors duration-200 nav-item font-medium">Get Started</a>
+                }
+            </div>
+        </div>
     </div>
 </nav>
 
 <main>
     <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div>
-            <h1 class="text-5xl font-bold mb-6">
-                Create Amazing Content with
-                <span class="text-indigo-600 block mt-2">AI-Powered Tools</span>
-            </h1>
-            <p class="text-gray-600 text-lg mb-8">
-                Empower your content creation with our suite of AI tools.
-                Generate engaging captions, compelling blog posts, and
-                stunning images in seconds.
-            </p>
-            <div class="flex space-x-4">
-                <a href="#" class="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 flex items-center">
-                    Get Started Free
-                    <span class="ml-2">🚀</span>
-                </a>
-                <a href="#" class="text-gray-700 px-6 py-3 rounded-md border border-gray-300 hover:border-gray-400 flex items-center">
-                    Explore Tools
-                    <span class="ml-2">🔍</span>
-                </a>
-            </div>
-        </div>
-        <div class="relative">
-            <img src="~/images/hero-image.jpg" alt="AI Tools Dashboard" class="rounded-lg shadow-xl">
-            <div class="absolute bottom-4 right-4 bg-indigo-600 text-white px-4 py-2 rounded-md text-sm">
-                Powered by AI
+    <section class="bg-gradient-to-b from-gray-50 to-white py-20 sm:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="hero-content">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                        Create Amazing Content with
+                        <span class="text-primary block mt-2">AI-Powered Tools</span>
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        Empower your content creation with our suite of AI tools.
+                        Generate engaging captions, compelling blog posts, and
+                        stunning images in seconds.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="@Url.Action("SignUp", "Account")" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-dark transition-colors duration-200 shadow-sm">
+                            Get Started Free
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <a href="#demo" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                            Watch Demo
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="relative hidden md:block">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-2xl transform rotate-6"></div>
+                    <img src="/images/hero-image.jpg" alt="AI Content Creation" class="relative rounded-2xl shadow-xl">
+                </div>
             </div>
         </div>
     </section>
+</main>
 
     <!-- Features Section -->
     <section class="py-20 bg-gray-50">
@@ -57,11 +87,11 @@
                 <!-- Instagram Caption Generator -->
                 <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                     <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-2xl">T</span>
+                        <span class="text-2xl">📱</span>
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Instagram Caption Generator</h3>
                     <p class="text-gray-600 mb-4">Create engaging captions that capture attention and drive engagement.</p>
-                    <a href="#" class="text-indigo-600 hover:text-indigo-700 flex items-center">
+                    <a href="#" class="text-primary hover:text-primary-dark flex items-center font-medium">
                         Try it now
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -76,7 +106,7 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-2">AI Image Generator</h3>
                     <p class="text-gray-600 mb-4">Transform your ideas into stunning visuals with our AI-powered image generator.</p>
-                    <a href="#" class="text-indigo-600 hover:text-indigo-700 flex items-center">
+                    <a href="#" class="text-primary hover:text-primary-dark flex items-center font-medium">
                         Try it now
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -91,7 +121,7 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Blog Content Generator</h3>
                     <p class="text-gray-600 mb-4">Generate SEO-optimized blog content and titles that rank higher.</p>
-                    <a href="#" class="text-indigo-600 hover:text-indigo-700 flex items-center">
+                    <a href="#" class="text-primary hover:text-primary-dark flex items-center font-medium">
                         Try it now
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -103,26 +133,26 @@
     </section>
 
     <!-- Stats Section -->
-    <section class="py-20">
+    <section class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12">Trusted by Content Creators Worldwide</h2>
+            <h2 class="text-3xl font-bold text-center mb-4">Trusted by Content Creators Worldwide</h2>
             <p class="text-center text-gray-600 mb-12">Join thousands of creators who trust ContentCraft Studio</p>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600 mb-2">100K+</div>
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl font-bold text-primary mb-2">100K+</div>
                     <div class="text-gray-600">Active Users</div>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600 mb-2">1M+</</div>
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl font-bold text-primary mb-2">1M+</div>
                     <div class="text-gray-600">Content Pieces</div>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600 mb-2">98%</div>
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl font-bold text-primary mb-2">98%</div>
                     <div class="text-gray-600">Satisfaction Rate</div>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600 mb-2">50+</div>
+                <div class="p-6 bg-gray-50 rounded-lg">
+                    <div class="text-4xl font-bold text-primary mb-2">50+</div>
                     <div class="text-gray-600">Countries</div>
                 </div>
             </div>
@@ -188,6 +218,106 @@
         </div>
     </section>
 
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4">Simple, Transparent Pricing</h2>
+            <p class="text-gray-600 text-center mb-12">Choose the perfect plan for your content creation needs</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Free Tier -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                    <h3 class="text-2xl font-bold mb-4">Free</h3>
+                    <p class="text-4xl font-bold mb-6">$0<span class="text-gray-500 text-lg font-normal">/month</span></p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Basic Instagram captions
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            5 AI image generations/month
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Basic chat support
+                        </li>
+                    </ul>
+                    <a href="@Url.Action("SignUp", "Account")" class="block w-full text-center px-6 py-3 border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white transition-colors duration-200">
+                        Get Started
+                    </a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="bg-primary p-8 rounded-xl shadow-lg text-white transform scale-105">
+                    <div class="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-3 py-1 rounded-br-lg rounded-tl-lg">
+                        POPULAR
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Pro</h3>
+                    <p class="text-4xl font-bold mb-6">$29<span class="text-gray-200 text-lg font-normal">/month</span></p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Advanced Instagram captions
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            100 AI image generations/month
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Priority support
+                        </li>
+                    </ul>
+                    <a href="@Url.Action("SignUp", "Account")" class="block w-full text-center px-6 py-3 bg-white text-primary font-medium rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        Get Started
+                    </a>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                    <h3 class="text-2xl font-bold mb-4">Enterprise</h3>
+                    <p class="text-4xl font-bold mb-6">$99<span class="text-gray-500 text-lg font-normal">/month</span></p>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Custom Instagram captions
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Unlimited AI image generations
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            24/7 Premium support
+                        </li>
+                    </ul>
+                    <a href="@Url.Action("SignUp", "Account")" class="block w-full text-center px-6 py-3 border border-primary text-primary font-medium rounded-lg hover:bg-primary hover:text-white transition-colors duration-200">
+                        Contact Sales
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="py-20 bg-indigo-600">
         <div class="max-w-7xl mx-auto px-4 text-center">
@@ -198,4 +328,33 @@
             </div>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-2">
+                <h3 class="text-xl font-bold mb-4">ContentCraft Studio</h3>
+                <p class="text-blue-100 mb-4">Empowering content creators with AI-powered tools for better, faster content creation.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="/Home/About" class="text-blue-100 hover:text-white">About Us</a></li>
+                    <li><a href="/Home/Tools" class="text-blue-100 hover:text-white">Tools</a></li>
+                    <li><a href="#pricing" class="text-blue-100 hover:text-white">Pricing</a></li>
+                    <li><a href="/Home/Contact" class="text-blue-100 hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-4">Legal</h4>
+                <ul class="space-y-2">
+                    <li><a href="/Home/Privacy" class="text-blue-100 hover:text-white">Privacy Policy</a></li>
+                    <li><a href="/Home/Terms" class="text-blue-100 hover:text-white">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-blue-500">
+            <p class="text-center text-blue-100">&copy; 2024 ContentCraft Studio. All rights reserved.</p>
+        </div>
+    </footer>
 </main>

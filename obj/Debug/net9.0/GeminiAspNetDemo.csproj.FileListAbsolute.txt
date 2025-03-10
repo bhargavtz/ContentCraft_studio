@@ -116,7 +116,6 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.sour
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\bundle\GeminiAspNetDemo.styles.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\projectbundle\GeminiAspNetDemo.bundle.scp.css
-C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\2qq8dd5wu2-b9sayid5wm.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\rnv4cq6tui-61n19gt1b8.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\686km1u9zm-xtxxf3hu2r.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\sk1xpw95ab-c2jlpeoesf.gz
@@ -292,3 +291,16 @@ C:\Users\Prem kaneriya\Downloads\ContentCraft_studio\ContentCraft_studio\obj\Deb
 C:\Users\Prem kaneriya\Downloads\ContentCraft_studio\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.pdb
 C:\Users\Prem kaneriya\Downloads\ContentCraft_studio\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.genruntimeconfig.cache
 C:\Users\Prem kaneriya\Downloads\ContentCraft_studio\ContentCraft_studio\obj\Debug\net9.0\ref\GeminiAspNetDemo.dll
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\2qq8dd5wu2-do25x4aboi.gz
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Auth0.AspNetCore.Authentication.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.csproj.AssemblyReference.cache
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAs.0DFA457B.Up2Date
