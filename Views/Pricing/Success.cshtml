@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Payment Successful";
+}
+
+<div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center">
+        <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Payment Successful!</h2>
+        <p class="mt-2 text-sm text-gray-600">Thank you for purchasing the @ViewData["Plan"] plan. You now have access to all features.</p>
+        <div class="mt-6">
+            <a href="/Home" class="text-indigo-600 hover:text-indigo-500">Return to Dashboard</a>
+        </div>
+    </div>
+</div>

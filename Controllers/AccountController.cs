@@ -37,5 +37,18 @@ namespace ContentCraft_studio.Controllers
         {
             return RedirectToAction(nameof(Login));
         }
+
+        [Authorize]
+        public IActionResult Profile()
+        {
+            var user = HttpContext.User;
+            var profile = new
+            {
+                Name = user.Identity.Name,
+                Email = user.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
+                Picture = user.Claims.FirstOrDefault(c => c.Type == "picture")?.Value
+            };
+            return View(profile);
+        }
     }
 }

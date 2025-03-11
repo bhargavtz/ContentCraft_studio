@@ -28,6 +28,12 @@ builder.Services.Configure<GeminiOptions>(
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 
+// Add HTTPS configuration
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7098;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

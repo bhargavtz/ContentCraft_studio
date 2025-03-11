@@ -2,21 +2,8 @@
     ViewData["Title"] = "AI Tools";
 }
 
-<nav class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-    <div class="flex items-center">
-        <img src="~/images/logo.png" alt="ContentCraft Studio" class="h-8 w-8 mr-2">
-        <span class="text-xl font-semibold">ContentCraft Studio</span>
-    </div>
-    <div class="flex items-center space-x-6">
-        <a href="@Url.Action("Index", "Tools")" class="text-indigo-600 font-semibold">Tools</a>
-        <a href="#" class="text-gray-600 hover:text-gray-900">Pricing</a>
-        <a href="@Url.Action("SignIn", "Account")" class="text-gray-600 hover:text-gray-900">Sign In</a>
-        <a href="@Url.Action("SignUp", "Account")" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Get Started</a>
-    </div>
-</nav>
 
 <main>
-    <!-- Tools Header Section -->
     <section class="bg-gradient-to-r from-indigo-600 to-indigo-800 py-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h1 class="text-4xl font-bold text-white mb-4">AI-Powered Content Creation Tools</h1>
@@ -26,11 +13,9 @@
         </div>
     </section>
 
-    <!-- Tools Grid Section -->
     <section class="py-16">
         <div class="max-w-7xl mx-auto px-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Instagram Caption Generator -->
                 <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 border border-gray-100">
                     <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-2xl">📱</span>
@@ -54,7 +39,6 @@
                     <a href="@Url.Action("InstagramCaption", "Tools")" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Try Now</a>
                 </div>
 
-                <!-- AI Image Generator -->
                 <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 border border-gray-100">
                     <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-2xl">🎨</span>
@@ -78,7 +62,6 @@
                     <a href="#" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Try Now</a>
                 </div>
 
-                <!-- Blog Content Generator -->
                 <div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 border border-gray-100">
                     <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
                         <span class="text-2xl">✍️</span>

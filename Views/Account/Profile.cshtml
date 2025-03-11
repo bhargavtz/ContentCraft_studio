@@ -1,3 +1,5 @@
+@model dynamic
+
 @{
     ViewData["Title"] = "Profile";
 }
@@ -15,12 +17,10 @@
                 <div class="bg-white shadow rounded-lg overflow-hidden">
                     <div class="p-6">
                         <div class="flex items-center space-x-4">
-                            <div class="h-16 w-16 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
-                                @(User.Identity.Name?[0].ToString().ToUpper())
-                            </div>
+                            <img src="@Model.Picture" alt="@Model.Name" class="w-24 h-24 rounded-full mr-4">
                             <div>
-                                <h2 class="text-xl font-semibold text-gray-900">@User.Identity.Name</h2>
-                                <p class="text-sm text-gray-500">@User.Claims.FirstOrDefault(c => c.Type == "email")?.Value</p>
+                                <h2 class="text-xl font-semibold text-gray-900">@Model.Name</h2>
+                                <p class="text-sm text-gray-500">@Model.Email</p>
                             </div>
                         </div>
 
