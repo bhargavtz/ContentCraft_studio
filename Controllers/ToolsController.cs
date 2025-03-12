@@ -8,12 +8,12 @@ namespace ContentCraft_studio.Controllers
     public class ToolsController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
-        private const string GEMINI_API_KEY = "AIzaSyAtnxHDSCzBtb6msLptO2yZFumQ8BWEous";
-        private const string GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateText";
+        private readonly IConfiguration _configuration;
 
-        public ToolsController(IHttpClientFactory clientFactory)
+        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -27,11 +27,14 @@ namespace ContentCraft_studio.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GenerateCaption(string prompt)
+        public async Task<IActionResult> GenerateCaption([FromBody] CaptionRequest request)
         {
             try
             {
                 var client = _clientFactory.CreateClient();
+                var apiKey = _configuration["Gemini:ApiKey"];
+                var promptText = $"Generate an engaging Instagram caption for the following post with a {request.Mood} tone: {request.Prompt}";
+
                 var requestBody = new
                 {
                     contents = new[]
@@ -40,14 +43,14 @@ namespace ContentCraft_studio.Controllers
                         {
                             parts = new[]
                             {
-                                new { text = $"Generate an engaging Instagram caption for: {prompt}" }
+                                new { text = promptText }
                             }
                         }
                     }
                 };
 
                 var response = await client.PostAsync(
-                    $"{GEMINI_API_URL}?key={GEMINI_API_KEY}",
+                    $"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateText?key={apiKey}",
                     new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
                 );
 
@@ -62,5 +65,11 @@ namespace ContentCraft_studio.Controllers
                 return Json(new { error = "Failed to generate caption", details = ex.Message });
             }
         }
+    }
+
+    public class CaptionRequest
+    {
+        public string Prompt { get; set; }
+        public string Mood { get; set; }
     }
 }
