@@ -15,7 +15,7 @@
     <section class="py-16">
         <div class="max-w-3xl mx-auto px-4">
             <div class="bg-white rounded-xl shadow-lg p-6">
-                <form id="captionForm" class="space-y-6">
+                <form id="captionForm" class="space-y-6" enctype="multipart/form-data">
                     <div>
                         <label for="mood" class="block text-sm font-medium text-gray-700">Select Post Mood</label>
                         <select id="mood" name="mood" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -24,21 +24,62 @@
                             <option value="funny">Funny & Humorous</option>
                             <option value="inspirational">Inspirational & Motivational</option>
                             <option value="promotional">Promotional & Marketing</option>
+                            <option value="travel">Travel & Adventure</option>
+                            <option value="food">Food & Culinary</option>
+                            <option value="fashion">Fashion & Style</option>
+                            <option value="health">Health & Wellness</option>
+                            <option value="tech">Tech & Innovation</option>
+                            <option value="nature">Nature & Environment</option>
+                            <option value="art">Art & Creative</option>
+                            <option value="business">Business & Entrepreneurship</option>
+                            <option value="education">Education & Learning</option>
+                            <option value="lifestyle">Lifestyle & Daily Life</option>
                         </select>
                     </div>
-                    <div>
-                        <label for="prompt" class="block text-sm font-medium text-gray-700">Describe your post</label>
-                        <textarea id="prompt" name="prompt" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Choose Input Type</label>
+                            <div class="mt-2 space-x-4">
+                                <button type="button" id="textInputBtn" class="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-100 rounded-md hover:bg-indigo-200 active">Text Description</button>
+                                <button type="button" id="imageInputBtn" class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200">Upload Image</button>
+                            </div>
+                        </div>
+                        <div id="textInputSection">
+                            <label for="prompt" class="block text-sm font-medium text-gray-700">Describe your post</label>
+                            <textarea id="prompt" name="prompt" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                        </div>
+                        <div id="imageInputSection" class="hidden">
+                            <label for="imageUpload" class="block text-sm font-medium text-gray-700">Upload an image</label>
+                            <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                <div class="space-y-1 text-center">
+                                    <div id="imagePreview" class="hidden mb-3">
+                                        <img src="" alt="Preview" class="mx-auto h-32 w-auto">
+                                    </div>
+                                    <div class="flex text-sm text-gray-600">
+                                        <label for="imageUpload" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">
+                                            <span>Upload a file</span>
+                                            <input id="imageUpload" name="image" type="file" accept="image/*" class="sr-only">
+                                        </label>
+                                        <p class="pl-1">or drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Generate Caption</button>
                 </form>
 
                 <div id="result" class="mt-8 hidden">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Generated Caption</h3>
-                    <div id="generatedCaption" class="bg-gray-50 rounded-lg p-4 text-gray-800"></div>
-                    <button onclick="copyToClipboard()" class="mt-4 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Copy to Clipboard
-                    </button>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Generated Captions</h3>
+                    <div id="generatedCaptions" class="space-y-4">
+                        <div class="caption-item bg-gray-50 rounded-lg p-4 text-gray-800 hidden">
+                            <p class="caption-text"></p>
+                            <button onclick="copyCaptionToClipboard(this)" class="mt-2 inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,24 +88,80 @@
 
 @section Scripts {
     <script>
+        const textInputBtn = document.getElementById('textInputBtn');
+        const imageInputBtn = document.getElementById('imageInputBtn');
+        const textInputSection = document.getElementById('textInputSection');
+        const imageInputSection = document.getElementById('imageInputSection');
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+
+        textInputBtn.addEventListener('click', () => {
+            textInputBtn.classList.add('text-indigo-600', 'bg-indigo-100');
+            textInputBtn.classList.remove('text-gray-600', 'bg-gray-100');
+            imageInputBtn.classList.add('text-gray-600', 'bg-gray-100');
+            imageInputBtn.classList.remove('text-indigo-600', 'bg-indigo-100');
+            textInputSection.classList.remove('hidden');
+            imageInputSection.classList.add('hidden');
+        });
+
+        imageInputBtn.addEventListener('click', () => {
+            imageInputBtn.classList.add('text-indigo-600', 'bg-indigo-100');
+            imageInputBtn.classList.remove('text-gray-600', 'bg-gray-100');
+            textInputBtn.classList.add('text-gray-600', 'bg-gray-100');
+            textInputBtn.classList.remove('text-indigo-600', 'bg-indigo-100');
+            imageInputSection.classList.remove('hidden');
+            textInputSection.classList.add('hidden');
+        });
+
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.classList.remove('hidden');
+                    imagePreview.querySelector('img').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         document.getElementById('captionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const prompt = document.getElementById('prompt').value;
-            const mood = document.getElementById('mood').value;
+            const formData = new FormData();
+            formData.append('mood', document.getElementById('mood').value);
+            
+            if (!imageInputSection.classList.contains('hidden')) {
+                const imageFile = document.getElementById('imageUpload').files[0];
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+            } else {
+                formData.append('prompt', document.getElementById('prompt').value);
+            }
+
             const response = await fetch('/Tools/GenerateCaption', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ prompt, mood })
+                body: formData
             });
+
             const data = await response.json();
-            document.getElementById('generatedCaption').textContent = data.caption;
+            const captionsContainer = document.getElementById('generatedCaptions');
+            const template = document.querySelector('.caption-item');
+            
+            captionsContainer.innerHTML = '';
+            
+            data.captions.forEach(caption => {
+                const captionElement = template.cloneNode(true);
+                captionElement.classList.remove('hidden');
+                captionElement.querySelector('.caption-text').textContent = caption;
+                captionsContainer.appendChild(captionElement);
+            });
+            
             document.getElementById('result').classList.remove('hidden');
         });
 
-        function copyToClipboard() {
-            const caption = document.getElementById('generatedCaption').textContent;
+        function copyCaptionToClipboard(button) {
+            const caption = button.parentElement.querySelector('.caption-text').textContent;
             navigator.clipboard.writeText(caption);
             alert('Caption copied to clipboard!');
         }

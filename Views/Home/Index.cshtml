@@ -4,13 +4,24 @@
 
 <main>
     
-    <section class="bg-gradient-to-b from-gray-50 to-white py-20 sm:py-32">
+    <section class="bg-gradient-to-b from-[#03045e] to-[#90e0ef] py-20 sm:py-32">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div class="hero-content">
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                        Create Amazing Content with
-                        <span class="text-primary block mt-2">AI-Powered Tools</span>
+                        Create Engaging Content With
+                        <span class="animate-color-change block mt-2">AI-Powered Tools</span>
+                        <style>
+                            @@keyframes colorChange {
+                                0% { color: #758bfd; }
+                                33% { color: #ff8600; }
+                                66% { color: #758bfd; }
+                                100% { color: #5fa8d3; }
+                            }
+                            .animate-color-change {
+                                animation: colorChange 6s infinite;
+                            }
+                        </style>
                     </h1>
                     <p class="text-lg text-gray-600 mb-8 leading-relaxed">
                         Empower your content creation with our suite of AI tools.
@@ -18,23 +29,23 @@
                         stunning images in seconds.
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="@Url.Action("SignUp", "Account")" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-primary hover:bg-primary-dark transition-colors duration-200 shadow-sm">
+                        <a href="@Url.Action("SignUp", "Account")" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-[#023e8a] hover:bg-[#0077b6] transition-colors duration-200 shadow-sm">
                             Get Started Free
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
                         </a>
-                        <a href="#demo" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
-                            Watch Demo
+                        <a href="https://github.com/bhargavtz/ContentCraft_studio" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                            Github Repo
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                             </svg>
                         </a>
                     </div>
                 </div>
-                <div class="relative hidden md:block">
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-2xl transform rotate-6"></div>
-                    <img src="/images/hero-image.jpg" alt="AI Content Creation" class="relative rounded-2xl shadow-xl">
+                <div class="relative hidden md:block" id="hero-image-container">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-tiffany-blue-500/20 to-transparent rounded-2xl transform rotate-6"></div>
+                    <img src="/images/hero-image.jpg" alt="AI Content Creation" class="relative rounded-2xl shadow-xl transition-transform duration-300 ease-out" id="hero-image">
                 </div>
             </div>
         </div>
@@ -42,7 +53,7 @@
 </main>
 
     <!-- Features Section -->
-    <section class="py-20 bg-gray-50">
+    <section class="py-20 bg-floral-white-700">
         <div class="max-w-7xl mx-auto px-4">
             <h2 class="text-3xl font-bold text-center mb-4">Powerful AI Tools at Your Fingertips</h2>
             <p class="text-gray-600 text-center mb-12">Everything you need to create engaging content for your audience</p>
@@ -55,7 +66,7 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Instagram Caption Generator</h3>
                     <p class="text-gray-600 mb-4">Create engaging captions that capture attention and drive engagement.</p>
-                    <a href="#" class="text-primary hover:text-primary-dark flex items-center font-medium">
+                    <a href="#" class="text-ut-orange-500 hover:text-ut-orange-600 flex items-center font-medium">
                         Try it now
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -70,7 +81,7 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-2">AI Image Generator</h3>
                     <p class="text-gray-600 mb-4">Transform your ideas into stunning visuals with our AI-powered image generator.</p>
-                    <a href="#" class="text-primary hover:text-primary-dark flex items-center font-medium">
+                    <a href="#" class="text-ut-orange-500 hover:text-ut-orange-600 flex items-center font-medium">
                         Try it now
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -85,7 +96,7 @@
                     </div>
                     <h3 class="text-xl font-semibold mb-2">Blog Content Generator</h3>
                     <p class="text-gray-600 mb-4">Generate SEO-optimized blog content and titles that rank higher.</p>
-                    <a href="#" class="text-primary hover:text-primary-dark flex items-center font-medium">
+                    <a href="#" class="text-ut-orange-500 hover:text-ut-orange-600 flex items-center font-medium">
                         Try it now
                         <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -103,42 +114,21 @@
             <p class="text-center text-gray-600 mb-12">Join thousands of creators who trust ContentCraft Studio</p>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div class="p-6 bg-gray-50 rounded-lg">
-                    <div class="text-4xl font-bold text-primary mb-2">100K+</div>
-                    <div class="text-gray-600">Active Users</div>
+                <div class="p-6 bg-gray-50 rounded-lg transform hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                    <div class="text-4xl font-bold text-space-cadet-500 mb-2 animate-counter group-hover:text-[#48cae4]">100+</div>
+                    <div class="text-gray-600 group-hover:text-[#48cae4]">Active Users</div>
                 </div>
-                <div class="p-6 bg-gray-50 rounded-lg">
-                    <div class="text-4xl font-bold text-primary mb-2">1M+</</div>
-                    <div class="text-gray-600">Content Pieces</div>
+                <div class="p-6 bg-gray-50 rounded-lg transform hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                    <div class="text-4xl font-bold text-space-cadet-500 mb-2 animate-counter group-hover:text-[#48cae4]">10+</div>
+                    <div class="text-gray-600 group-hover:text-[#48cae4]">Content Pieces</div>
                 </div>
-                <div class="p-6 bg-gray-50 rounded-lg">
-                    <div class="text-4xl font-bold text-primary mb-2">98%</div>
-                    <div class="text-gray-600">Satisfaction Rate</div>
+                <div class="p-6 bg-gray-50 rounded-lg transform hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                    <div class="text-4xl font-bold text-space-cadet-500 mb-2 animate-counter group-hover:text-[#48cae4]">89%</div>
+                    <div class="text-gray-600 group-hover:text-[#48cae4]">Satisfaction Rate</div>
                 </div>
-                <div class="p-6 bg-gray-50 rounded-lg">
-                    <div class="text-4xl font-bold text-primary mb-2">50+</div>
-                    <div class="text-gray-600">Countries</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial Section -->
-    <section class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="bg-white p-8 rounded-xl shadow-sm max-w-3xl mx-auto">
-                <div class="flex items-center mb-6">
-                    <img src="~/images/avatar.jpg" alt="Michael Chen" class="w-12 h-12 rounded-full mr-4">
-                    <div>
-                        <h3 class="font-semibold">Michael Chen</h3>
-                        <p class="text-gray-600 text-sm">Digital Marketing Director at GrowthLabs</p>
-                    </div>
-                </div>
-                <p class="text-gray-700 italic">"The AI-powered tools have saved us countless hours. Our content production has doubled while maintaining consistent quality."</p>
-                <div class="flex justify-center mt-6 space-x-2">
-                    <button class="w-2 h-2 rounded-full bg-indigo-600"></button>
-                    <button class="w-2 h-2 rounded-full bg-gray-300"></button>
-                    <button class="w-2 h-2 rounded-full bg-gray-300"></button>
+                <div class="p-6 bg-gray-50 rounded-lg transform hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                    <div class="text-4xl font-bold text-space-cadet-500 mb-2 animate-counter group-hover:text-[#48cae4]">50+</div>
+                    <div class="text-gray-600 group-hover:text-[#48cae4]">Countries</div>
                 </div>
             </div>
         </div>
@@ -192,7 +182,7 @@
                 <!-- Free Tier -->
                 <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                     <h3 class="text-2xl font-bold mb-4">Free</h3>
-                    <p class="text-4xl font-bold mb-6">$0<span class="text-gray-500 text-lg font-normal">/month</span></p>
+                    <p class="text-4xl font-bold mb-6">₹0<span class="text-gray-500 text-lg font-normal">/month</span></p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-center">
                             <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,7 +214,7 @@
                         POPULAR
                     </div>
                     <h3 class="text-2xl font-bold mb-4">Pro</h3>
-                    <p class="text-4xl font-bold mb-6">$29<span class="text-gray-200 text-lg font-normal">/month</span></p>
+                    <p class="text-4xl font-bold mb-6">₹2,400<span class="text-gray-200 text-lg font-normal">/month</span></p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-center">
                             <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -253,7 +243,7 @@
                 <!-- Enterprise Tier -->
                 <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                     <h3 class="text-2xl font-bold mb-4">Enterprise</h3>
-                    <p class="text-4xl font-bold mb-6">$99<span class="text-gray-500 text-lg font-normal">/month</span></p>
+                    <p class="text-4xl font-bold mb-6">₹8,200<span class="text-gray-500 text-lg font-normal">/month</span></p>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-center">
                             <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -282,43 +272,86 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-20 bg-indigo-600">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-3xl font-bold text-white mb-8">Ready to Transform Your Content Creation?</h2>
-            <div class="flex justify-center space-x-4">
-                <a href="#" class="bg-white text-indigo-600 px-8 py-3 rounded-md hover:bg-gray-100">Start Free Trial</a>
-                <a href="#" class="border border-white text-white px-8 py-3 rounded-md hover:bg-indigo-700">View Pricing</a>
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
-    <footer class="bg-blue-600 text-white py-12">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="col-span-2">
-                <h3 class="text-xl font-bold mb-4">ContentCraft Studio</h3>
-                <p class="text-blue-100 mb-4">Empowering content creators with AI-powered tools for better, faster content creation.</p>
+    <footer class="bg-gradient-to-b from-[#03045e] to-[#0077b6] text-white py-16">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <!-- Company Info -->
+                <div class="lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-6">ContentCraft Studio</h3>
+                    <p class="text-gray-300 mb-6 leading-relaxed">Empowering content creators with AI-powered tools for better, faster content creation. Join our community of creators today.</p>
+                    <!-- Newsletter -->
+                    <div class="mt-6">
+                        <h4 class="text-lg font-semibold mb-4">Subscribe to Our Newsletter</h4>
+                        <form class="flex gap-2">
+                            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:border-[#48cae4] text-white placeholder-gray-400">
+                            <button type="submit" class="px-6 py-2 bg-[#48cae4] text-white rounded-lg hover:bg-[#90e0ef] transition-colors duration-300">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/Home/About" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">About Us</a></li>
+                        <li><a href="/Home/Tools" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Tools</a></li>
+                        <li><a href="/pricing" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Pricing</a></li>
+                        <li><a href="/Home/Contact" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal & Social -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Connect With Us</h4>
+                    <div class="flex space-x-4 mb-8">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#48cae4] transition-colors duration-300">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#48cae4] transition-colors duration-300">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-[#48cae4] transition-colors duration-300">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.016 18.6h-2.91v-4.575c0-1.086-.018-2.482-1.512-2.482-1.515 0-1.747 1.182-1.747 2.403v4.654H7.937V8.4h2.79v1.28h.04c.39-.736 1.338-1.512 2.758-1.512 2.95 0 3.49 1.94 3.49 4.467v5.965z"/></svg>
+                        </a>
+                    </div>
+                    <h4 class="text-lg font-semibold mb-4">Legal</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/Home/Privacy" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Privacy Policy</a></li>
+                        <li><a href="/Home/Terms" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Terms of Service</a></li>
+                    </ul>
+                </div>
             </div>
-            <div>
-                <h4 class="font-semibold mb-4">Quick Links</h4>
-                <ul class="space-y-2">
-                    <li><a href="/Home/About" class="text-blue-100 hover:text-white">About Us</a></li>
-                    <li><a href="/Home/Tools" class="text-blue-100 hover:text-white">Tools</a></li>
-                    <li><a href="/pricing" class="text-blue-100 hover:text-white">Pricing</a></li>
-                    <li><a href="/Home/Contact" class="text-blue-100 hover:text-white">Contact</a></li>
-                </ul>
+
+            <!-- Copyright -->
+            <div class="mt-12 pt-8 border-t border-white/10 text-center">
+                <p class="text-gray-300">&copy; 2025 ContentCraft Studio. All rights reserved.</p>
             </div>
-            <div>
-                <h4 class="font-semibold mb-4">Legal</h4>
-                <ul class="space-y-2">
-                    <li><a href="/Home/Privacy" class="text-blue-100 hover:text-white">Privacy Policy</a></li>
-                    <li><a href="/Home/Terms" class="text-blue-100 hover:text-white">Terms of Service</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-blue-500">
-            <p class="text-center text-blue-100">&copy; 2025 ContentCraft Studio. All rights reserved.</p>
         </div>
     </footer>
 </main>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('hero-image-container');
+            const image = document.getElementById('hero-image');
+            
+            container.addEventListener('mousemove', function(e) {
+                const rect = container.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                const moveX = (mouseX - rect.width/2) / 25;
+                const moveY = (mouseY - rect.height/2) / 25;
+                
+                image.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                image.style.transform = 'translate(0, 0)';
+            });
+        });
+    </script>
+}
