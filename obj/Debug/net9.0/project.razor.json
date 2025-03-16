@@ -19526,6 +19526,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Tools\\ImageDescription.cshtml",
+      "TargetPath": "Views\\Tools\\ImageDescription.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Home\\Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
       "FileKind": "mvc"
@@ -19543,6 +19548,11 @@
     {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Home\\About.cshtml",
       "TargetPath": "Views\\Home\\About.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Tools\\StoryGenerator.cshtml",
+      "TargetPath": "Views\\Tools\\StoryGenerator.cshtml",
       "FileKind": "mvc"
     },
     {

@@ -1,0 +1,148 @@
+@{
+    ViewData["Title"] = "AI Story Generator";
+}
+
+<main class="min-h-screen bg-gradient-to-b from-[#e0e7ff] to-white py-12">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#312e81] mb-4">AI Story Generator</h1>
+            <p class="text-lg text-gray-600">Generate stories on your desired topics with our free AI story generator. Simply enter the prompt and adjust parameters as per your requirements to fetch engaging stories effortlessly!</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <label for="story-prompt" class="block text-sm font-medium text-gray-700 mb-2">Write about...</label>
+                        <textarea id="story-prompt" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your story prompt here..."></textarea>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Story Type</label>
+                            <select id="story-type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="default">Default</option>
+                                <option value="fiction">Fiction</option>
+                                <option value="non-fiction">Non-Fiction</option>
+                                <option value="fantasy">Fantasy</option>
+                                <option value="mystery">Mystery</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Set Creativity</label>
+                            <select id="creativity-level" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="standard">Standard</option>
+                                <option value="high">High</option>
+                                <option value="maximum">Maximum</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Length</label>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center">
+                                    <input type="radio" name="length" value="short" class="text-indigo-600" checked>
+                                    <span class="ml-2 text-sm text-gray-600">Short</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="length" value="medium" class="text-indigo-600">
+                                    <span class="ml-2 text-sm text-gray-600">Medium</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="length" value="long" class="text-indigo-600">
+                                    <span class="ml-2 text-sm text-gray-600">Long</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="generate-btn" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                        Generate Story
+                    </button>
+                </div>
+
+                <div class="relative">
+                    <img src="/images/story-generator-illustration.svg" alt="Story Generator" class="w-full h-auto">
+                    <p class="text-sm text-gray-500 text-center mt-4">Keep in mind the more detail you provide,<br>the better output you get.</p>
+                </div>
+            </div>
+
+            <div id="result-container" class="hidden mt-8 border-t pt-8">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">Generated Story</h3>
+                <div id="story-content" class="prose max-w-none text-gray-600 bg-gray-50 p-6 rounded-lg">
+                    <!-- AI-generated story will be inserted here -->
+                </div>
+                <div class="mt-6 flex justify-end space-x-4">
+                    <button id="copy-btn" class="px-4 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-600 hover:text-white transition-colors">
+                        Copy to Clipboard
+                    </button>
+                    <button id="regenerate-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                        Regenerate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const storyPrompt = document.getElementById('story-prompt');
+            const storyType = document.getElementById('story-type');
+            const creativityLevel = document.getElementById('creativity-level');
+            const generateBtn = document.getElementById('generate-btn');
+            const resultContainer = document.getElementById('result-container');
+            const storyContent = document.getElementById('story-content');
+            const copyBtn = document.getElementById('copy-btn');
+            const regenerateBtn = document.getElementById('regenerate-btn');
+
+            // Generate story
+            generateBtn.addEventListener('click', async () => {
+                if (!storyPrompt.value.trim()) {
+                    alert('Please enter a story prompt');
+                    return;
+                }
+
+                generateBtn.disabled = true;
+                generateBtn.textContent = 'Generating...';
+
+                try {
+                    // TODO: Implement API call to generate story
+                    // For now, we'll simulate a response
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    const mockStory = 'This is a sample AI-generated story based on your prompt. The actual implementation will integrate with the backend API to generate real stories using AI.';
+                    
+                    storyContent.textContent = mockStory;
+                    resultContainer.classList.remove('hidden');
+                } catch (error) {
+                    alert('Error generating story. Please try again.');
+                } finally {
+                    generateBtn.disabled = false;
+                    generateBtn.textContent = 'Generate Story';
+                }
+            });
+
+            // Copy to clipboard
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(storyContent.textContent)
+                    .then(() => {
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 2000);
+                    })
+                    .catch(() => {
+                        alert('Failed to copy to clipboard');
+                    });
+            });
+
+            // Regenerate story
+            regenerateBtn.addEventListener('click', () => {
+                generateBtn.click();
+            });
+        });
+    </script>
+}

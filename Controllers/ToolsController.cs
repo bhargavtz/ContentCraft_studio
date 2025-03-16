@@ -40,8 +40,27 @@ namespace ContentCraft_studio.Controllers
                 var client = _clientFactory.CreateClient();
                 var apiKey = _configuration["Gemini:ApiKey"];
 
-                var promptText = $"Generate 5 unique and creative business names for a {request.Industry} company with these keywords: {request.Keywords}. The names should have a {request.Style} style. Each name should be separated by '---'. Make them memorable and suitable for business use.";
+                var promptText = $@"Generate 4 unique, creative, and memorable business names for a company in the {request.Industry} industry. These names should incorporate or relate to the following keywords: {request.Keywords}. The overall style should be {request.Style}.
 
+For each name, provide the following information in a structured format:
+1. The business name
+2. Brand Identity: List 3 key characteristics that define the brand's personality and values
+3. Industry Fit: Explain how the name aligns with {request.Industry} industry
+4. Keywords: Highlight which of the provided keywords ({request.Keywords}) are incorporated
+5. Name Meaning: Provide a brief explanation of the name's significance and symbolism
+
+The names should:
+* Be suitable for use in branding and marketing
+* Avoid generic prefixes like 'Company', 'Inc.', 'LLC'
+* Be diverse in their approach (some literal, some metaphorical, some playful)
+* Focus on the core aspects of the {request.Industry} industry
+
+Separate each complete name entry with '---'. Format each entry as:
+Name: [business name]
+Brand Identity: [3 bullet points]
+Industry Fit: [explanation]
+Keywords: [relevant keywords]
+Name Meaning: [brief explanation]";
                 var requestBody = new
                 {
                     contents = new[]
@@ -72,26 +91,57 @@ namespace ContentCraft_studio.Controllers
                     .GetProperty("text")
                     .GetString();
 
-                var names = text?.Split("---", StringSplitOptions.RemoveEmptyEntries)
-                    .Select(n => n.Trim())
-                    .ToArray() ?? new[] { "Unable to generate business names" };
+                var entries = text?.Split("---", StringSplitOptions.RemoveEmptyEntries)
+                    .Select(entry =>
+                    {
+                        var lines = entry.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                        var nameData = new Dictionary<string, string>();
 
-                var result = names.Select(name => new
+                        foreach (var line in lines)
+                        {
+                            var parts = line.Split(':', 2);
+                            if (parts.Length == 2)
+                            {
+                                nameData[parts[0].Trim()] = parts[1].Trim();
+                            }
+                        }
+
+                        return nameData;
+                    })
+                    .ToArray() ?? Array.Empty<Dictionary<string, string>>();
+
+                var result = entries.Select(entry => new
                 {
-                    name = name,
+                    name = entry.GetValueOrDefault("Name", "Unnamed"),
                     brandIdentity = new
                     {
-                        uniquePoints = new[]
-                        {
-                            "Modern and professional appearance",
-                            "Reflects industry values",
-                            "Memorable and unique"
-                        },
-                        industryFit = $"Perfect fit for {request.Industry} industry",
-                        keywords = request.Keywords.Split(',').Select(k => k.Trim()).ToArray()
+                        uniquePoints = entry.GetValueOrDefault("Brand Identity", "")
+                            .Split('•', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(point => point.Trim())
+                            .Where(point => !string.IsNullOrEmpty(point))
+                            .ToArray(),
+                        industryFit = entry.GetValueOrDefault("Industry Fit", $"Perfect fit for {request.Industry} industry"),
+                        keywords = entry.GetValueOrDefault("Keywords", request.Keywords)
+                            .Split(',').Select(k => k.Trim()).ToArray()
                     },
-                    nameMeaning = $"This name combines elements that represent {request.Industry} excellence with professional style"
+                    nameMeaning = entry.GetValueOrDefault("Name Meaning", 
+                        $"This name combines elements that represent {request.Industry} excellence with professional style")
                 }).ToArray();
+
+                if (!result.Any())
+                {
+                    result = new[] { new 
+                    {
+                        name = "Unable to generate business names",
+                        brandIdentity = new
+                        {
+                            uniquePoints = new string[] { },
+                            industryFit = string.Empty,
+                            keywords = new string[] { }
+                        },
+                        nameMeaning = string.Empty
+                    }};
+                }
 
                 return Json(new { names = result });
             }

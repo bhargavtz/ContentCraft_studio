@@ -76,12 +76,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcQnVzaW5lc3NOYW1lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/hp/Downloads/ContentCraft_studio/Views/Tools/ImageDescription.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcSW1hZ2VEZXNjcmlwdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/hp/Downloads/ContentCraft_studio/Views/Tools/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/hp/Downloads/ContentCraft_studio/Views/Tools/InstagramCaption.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcSW5zdGFncmFtQ2FwdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Downloads/ContentCraft_studio/Views/Tools/StoryGenerator.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcU3RvcnlHZW5lcmF0b3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/hp/Downloads/ContentCraft_studio/Views/_ViewImports.cshtml]
