@@ -3,6 +3,7 @@ using GeminiAspNetDemo.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using ContentCraft_studio.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,7 +50,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Add this line
+app.UseEmailVerificationHandler(); // Add custom email verification middleware
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
