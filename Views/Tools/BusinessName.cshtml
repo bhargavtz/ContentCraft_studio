@@ -1,0 +1,126 @@
+@{
+    ViewData["Title"] = "Business Name Generator";
+}
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Business Name Generator</h1>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <form id="businessNameForm" class="space-y-6">
+            <div>
+                <label for="industry" class="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                <select id="industry" name="industry" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="">Select an industry</option>
+                    <option value="technology">Technology</option>
+                    <option value="retail">Retail</option>
+                    <option value="food">Food & Restaurant</option>
+                    <option value="health">Health & Wellness</option>
+                    <option value="creative">Creative & Design</option>
+                    <option value="consulting">Consulting</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="keywords" class="block text-sm font-medium text-gray-700 mb-1">Keywords (separated by commas)</label>
+                <input type="text" id="keywords" name="keywords" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., innovative, modern, sustainable">
+            </div>
+
+            <div>
+                <label for="style" class="block text-sm font-medium text-gray-700 mb-1">Name Style</label>
+                <select id="style" name="style" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="modern">Modern</option>
+                    <option value="classic">Classic</option>
+                    <option value="fun">Fun & Playful</option>
+                    <option value="professional">Professional</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
+                Generate Names
+            </button>
+        </form>
+
+        <div id="results" class="mt-8 hidden">
+            <h2 class="text-xl font-semibold mb-4">Generated Names</h2>
+            <div id="namesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Generated names will be inserted here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('businessNameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const industry = document.getElementById('industry').value;
+            const keywords = document.getElementById('keywords').value;
+            const style = document.getElementById('style').value;
+
+            // Show loading state
+            const button = e.target.querySelector('button');
+            const originalText = button.textContent;
+            button.textContent = 'Generating...';
+            button.disabled = true;
+
+            try {
+                const response = await fetch('/api/tools/generate-business-names', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ industry, keywords, style })
+                });
+
+                const data = await response.json();
+                
+                // Display results
+                const resultsDiv = document.getElementById('results');
+                const namesListDiv = document.getElementById('namesList');
+                
+                resultsDiv.classList.remove('hidden');
+                namesListDiv.innerHTML = data.names.map(name => `
+                    <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <h3 class="font-medium text-lg mb-2">${name.name}</h3>
+                        <div class="space-y-2">
+                            <p class="text-sm text-gray-600">Domain availability: Checking...</p>
+                            <div class="text-sm">
+                                <p class="font-medium text-gray-700">Brand Identity:</p>
+                                <ul class="list-disc list-inside text-gray-600 ml-2">
+                                    ${name.brandIdentity.uniquePoints.map(point => `<li>${point}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="text-sm mt-2">
+                                <p class="font-medium text-gray-700">Industry Fit:</p>
+                                <p class="text-gray-600 ml-2">${name.brandIdentity.industryFit}</p>
+                            </div>
+                            <div class="text-sm mt-2">
+                                <p class="font-medium text-gray-700">Keywords:</p>
+                                <div class="flex flex-wrap gap-1 ml-2">
+                                    ${name.brandIdentity.keywords.map(keyword => `
+                                        <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">${keyword}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="text-sm mt-2">
+                                <p class="font-medium text-gray-700">Name Meaning:</p>
+                                <p class="text-gray-600 ml-2">${name.nameMeaning}</p>
+                            </div>
+                            <div class="mt-3">
+                                <button class="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors">Select this name</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while generating names. Please try again.');
+            } finally {
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        });
+    </script>
+}

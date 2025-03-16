@@ -19486,6 +19486,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Tools\\BusinessName.cshtml",
+      "TargetPath": "Views\\Tools\\BusinessName.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Account\\SignIn.cshtml",
       "TargetPath": "Views\\Account\\SignIn.cshtml",
       "FileKind": "mvc"

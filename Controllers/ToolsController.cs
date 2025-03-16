@@ -26,6 +26,81 @@ namespace ContentCraft_studio.Controllers
             return View();
         }
 
+        public IActionResult BusinessName()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("api/tools/generate-business-names")]
+        public async Task<IActionResult> GenerateBusinessNames([FromBody] BusinessNameRequest request)
+        {
+            try
+            {
+                var client = _clientFactory.CreateClient();
+                var apiKey = _configuration["Gemini:ApiKey"];
+
+                var promptText = $"Generate 5 unique and creative business names for a {request.Industry} company with these keywords: {request.Keywords}. The names should have a {request.Style} style. Each name should be separated by '---'. Make them memorable and suitable for business use.";
+
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new[]
+                            {
+                                new { text = promptText }
+                            }
+                        }
+                    }
+                };
+
+                var response = await client.PostAsync(
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
+                    new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
+                );
+
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
+
+                var text = jsonElement
+                    .GetProperty("candidates")[0]
+                    .GetProperty("content")
+                    .GetProperty("parts")[0]
+                    .GetProperty("text")
+                    .GetString();
+
+                var names = text?.Split("---", StringSplitOptions.RemoveEmptyEntries)
+                    .Select(n => n.Trim())
+                    .ToArray() ?? new[] { "Unable to generate business names" };
+
+                var result = names.Select(name => new
+                {
+                    name = name,
+                    brandIdentity = new
+                    {
+                        uniquePoints = new[]
+                        {
+                            "Modern and professional appearance",
+                            "Reflects industry values",
+                            "Memorable and unique"
+                        },
+                        industryFit = $"Perfect fit for {request.Industry} industry",
+                        keywords = request.Keywords.Split(',').Select(k => k.Trim()).ToArray()
+                    },
+                    nameMeaning = $"This name combines elements that represent {request.Industry} excellence with professional style"
+                }).ToArray();
+
+                return Json(new { names = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "Failed to generate business names", details = ex.Message });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> GenerateCaption([FromForm] CaptionRequest request, IFormFile image)
         {
@@ -119,5 +194,12 @@ namespace ContentCraft_studio.Controllers
     {
         public string? Prompt { get; set; }
         public string Mood { get; set; }
+    }
+
+    public class BusinessNameRequest
+    {
+        public string Industry { get; set; }
+        public string Keywords { get; set; }
+        public string Style { get; set; }
     }
 }
