@@ -28,13 +28,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\GeminiAspNetDemo.55gpcryfd7.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"55gpcryfd7"},{"Name":"integrity","Value":"sha256-\u002BdUj/ymGeHEh8jktL5ECgD6YtZRPpJFmkXV0rykXwVI="},{"Name":"label","Value":"_content/GeminiAspNetDemo/GeminiAspNetDemo.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022\u002BdUj/ymGeHEh8jktL5ECgD6YtZRPpJFmkXV0rykXwVI=\u0022"},{"Name":"Last-Modified","Value":"Fri, 14 Mar 2025 17:26:10 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022\u002BdUj/ymGeHEh8jktL5ECgD6YtZRPpJFmkXV0rykXwVI=\u0022"},{"Name":"Last-Modified","Value":"Mon, 17 Mar 2025 07:08:58 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/GeminiAspNetDemo/GeminiAspNetDemo.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\GeminiAspNetDemo.55gpcryfd7.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-\u002BdUj/ymGeHEh8jktL5ECgD6YtZRPpJFmkXV0rykXwVI="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022\u002BdUj/ymGeHEh8jktL5ECgD6YtZRPpJFmkXV0rykXwVI=\u0022"},{"Name":"Last-Modified","Value":"Fri, 14 Mar 2025 17:26:10 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1134"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022\u002BdUj/ymGeHEh8jktL5ECgD6YtZRPpJFmkXV0rykXwVI=\u0022"},{"Name":"Last-Modified","Value":"Mon, 17 Mar 2025 07:08:58 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/GeminiAspNetDemo/images/hero-image.jpg">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\hero-image.jpg'))</AssetFile>

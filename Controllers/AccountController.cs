@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -10,62 +11,46 @@ namespace ContentCraft_studio.Controllers
 {
     public class AccountController : Controller
     {
-        public async Task Login(string returnUrl = "/")
-        {
-            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
-                .WithRedirectUri(returnUrl)
-                .Build();
+        private readonly IOptions<Auth0Settings> _auth0Settings;
+        private readonly ILogger<AccountController> _logger;
 
-            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+        public AccountController(IOptions<Auth0Settings> auth0Settings, ILogger<AccountController> logger)
+        {
+            _auth0Settings = auth0Settings;
+            _logger = logger;
         }
 
-        [Authorize]
-        public async Task<IActionResult> Logout(bool switchAccount = false)
+        public async Task<IActionResult> Login(string returnUrl = "/", string message = null)
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                TempData["Message"] = message;
+            }
+
             try
             {
-                var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
-                    .WithRedirectUri($"{Request.Scheme}://{Request.Host}/Account/Login")
+                var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+                    .WithRedirectUri(returnUrl)
+                    .WithParameter("prompt", "select_account")
+                    .WithParameter("response_mode", "form_post")
                     .Build();
 
-                await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
-                
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                
-                HttpContext.Session.Clear();
-                
-                foreach (var cookie in Request.Cookies.Keys)
-                {
-                    Response.Cookies.Delete(cookie);
-                }
-
-                Response.Headers.Remove("Authorization");
-
-                if (switchAccount)
-                {
-                    TempData["Message"] = "Please sign in with a different account.";
-                    var auth0Settings = HttpContext.RequestServices.GetRequiredService<IOptions<Auth0Settings>>().Value;
-                return Redirect($"https://{auth0Settings.Domain}/v2/logout?client_id={auth0Settings.ClientId}&returnTo={Request.Scheme}://{Request.Host}/Account/Login");
-                }
-
-                TempData["Message"] = "Successfully logged out. Please sign in with your email address to continue.";
-                return RedirectToAction("Login");
+                await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+                return new EmptyResult();
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "An error occurred during logout. Please try clearing your browser cache and try again.";
-                return RedirectToAction("Login");
+                var errorMessage = $"Login error: {ex.Message}";
+                _logger.LogError(errorMessage);
+                _logger.LogError($"Stack trace: {ex.StackTrace}");
+                TempData["Error"] = "An error occurred during login. Please try again.";
+                return RedirectToAction("Index", "Home");
             }
-        }
-
-        public IActionResult SignIn()
-        {
-            return RedirectToAction(nameof(Login));
-        }
-
-        public IActionResult SignUp()
-        {
-            return RedirectToAction(nameof(Login));
         }
 
         [Authorize]
@@ -74,16 +59,69 @@ namespace ContentCraft_studio.Controllers
             var user = HttpContext.User;
             var profile = new
             {
-                Name = user.Identity.Name,
+                Name = user.Identity?.Name,
                 Email = user.Claims.FirstOrDefault(c => c.Type == "email")?.Value,
                 Picture = user.Claims.FirstOrDefault(c => c.Type == "picture")?.Value
             };
             return View(profile);
         }
 
-        public IActionResult VerifyEmail()
+        public async Task<IActionResult> SignIn()
         {
-            return View();
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return await Login("/", "Please sign in with your email address.");
+        }
+
+        public async Task<IActionResult> SignUp()
+        {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            var auth0Settings = _auth0Settings.Value;
+            var callbackUrl = auth0Settings.CallbackUrl ?? $"{Request.Scheme}://{Request.Host}/callback";
+            var state = Guid.NewGuid().ToString();
+            var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+                .WithRedirectUri(callbackUrl)
+                .WithParameter("screen_hint", "signup")
+                .WithParameter("state", state)
+                .Build();
+
+            await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+            return new EmptyResult();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Logout(bool switchAccount = false)
+        {
+            try
+            {
+                var auth0Settings = HttpContext.RequestServices.GetRequiredService<IOptions<Auth0Settings>>().Value;
+                var returnUrl = Url.Action("Index", "Home", null, Request.Scheme) ?? "/";
+               
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme);
+                
+                HttpContext.Session.Clear();
+                foreach (var cookie in Request.Cookies.Keys)
+                {
+                    Response.Cookies.Delete(cookie);
+                }
+
+                var logoutUrl = $"https://{auth0Settings.Domain}/v2/logout?client_id={auth0Settings.ClientId}&returnTo={Uri.EscapeDataString(returnUrl)}&state={Guid.NewGuid()}";
+                return Redirect(logoutUrl);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Logout error: {ex.Message}");
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }
