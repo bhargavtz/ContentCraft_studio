@@ -1,125 +1,44 @@
-@model dynamic
+@using System.Security.Claims
 
-@{
-    ViewData["Title"] = "Profile";
-}
-
-<div class="min-h-screen bg-gray-50 py-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
-            <p class="mt-2 text-sm text-gray-600">Manage your account settings and preferences</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-           
-            <div class="lg:col-span-2">
-                <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <div class="p-6">
-                        <div class="flex items-center space-x-4">
-                            <img src="@Model.Picture" alt="@Model.Name" class="w-24 h-24 rounded-full mr-4">
-                            <div>
-                                <h2 class="text-xl font-semibold text-gray-900">@Model.Name</h2>
-                                <p class="text-sm text-gray-500">@Model.Email</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 border-t border-gray-200 pt-6">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h3 class="text-sm font-medium text-gray-500">Account Status</h3>
-                                    <p class="mt-1 text-sm text-gray-900">Active</p>
-                                </div>
-                                <div>
-                                    <h3 class="text-sm font-medium text-gray-500">Member Since</h3>
-                                    <p class="mt-1 text-sm text-gray-900">@DateTime.Now.ToString("MMMM yyyy")</p>
-                                </div>
-                            </div>
-                        </div>
+<div class="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="px-6 py-8">
+            <div class="text-center">
+                @if (User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value != null)
+                {
+                    <img class="h-32 w-32 rounded-full mx-auto" src="@User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value" alt="Profile picture">
+                }
+                else
+                {
+                    <div class="h-32 w-32 rounded-full mx-auto bg-gray-300 flex items-center justify-center">
+                        <span class="text-4xl text-gray-600">@(User.Identity?.Name?[0].ToString().ToUpper() ?? "U")</span>
                     </div>
-                </div>
-
-                <!-- Activity Stats -->
-                <div class="mt-8 bg-white shadow rounded-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-lg font-medium text-gray-900">Activity Statistics</h2>
-                        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="p-4 bg-blue-50 rounded-lg">
-                                <dt class="text-sm font-medium text-blue-600">Content Generated</dt>
-                                <dd class="mt-1 text-3xl font-semibold text-blue-800">24</dd>
-                            </div>
-                            <div class="p-4 bg-green-50 rounded-lg">
-                                <dt class="text-sm font-medium text-green-600">AI Chats</dt>
-                                <dd class="mt-1 text-3xl font-semibold text-green-800">156</dd>
-                            </div>
-                            <div class="p-4 bg-purple-50 rounded-lg">
-                                <dt class="text-sm font-medium text-purple-600">Tools Used</dt>
-                                <dd class="mt-1 text-3xl font-semibold text-purple-800">8</dd>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
+                <h2 class="mt-4 text-2xl font-bold text-gray-900">@User.Identity?.Name</h2>
+                <p class="text-gray-600">@User.Claims.FirstOrDefault(c => c.Type == "email")?.Value</p>
             </div>
 
-            <!-- Account Settings Card -->
-            <div class="lg:col-span-1">
-                <div class="bg-white shadow rounded-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-lg font-medium text-gray-900">Account Settings</h2>
-                        <div class="mt-6 space-y-6">
-                            <div>
-                                <a href="#" class="flex items-center justify-between text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200">
-                                    <span>Edit Profile</span>
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
+            <div class="mt-8 border-t border-gray-200 pt-8">
+                <h3 class="text-lg font-medium text-gray-900">Profile Information</h3>
+                <dl class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    @foreach (var claim in User.Claims)
+                    {
+                        @if (claim.Type != "picture" && !claim.Type.Contains("urn:") && !claim.Type.Contains("sid"))
+                        {
+                            <div class="sm:col-span-1">
+                                <dt class="text-sm font-medium text-gray-500">@claim.Type.Split('/').Last().ToUpper()</dt>
+                                <dd class="mt-1 text-sm text-gray-900">@claim.Value</dd>
                             </div>
-                            <div>
-                                <a href="#" class="flex items-center justify-between text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200">
-                                    <span>Change Password</span>
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="#" class="flex items-center justify-between text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200">
-                                    <span>Notification Settings</span>
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                            <div>
-                                <a href="#" class="flex items-center justify-between text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200">
-                                    <span>Privacy Settings</span>
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        }
+                    }
+                </dl>
+            </div>
 
-                <!-- Subscription Status -->
-                <div class="mt-8 bg-white shadow rounded-lg overflow-hidden">
-                    <div class="p-6">
-                        <h2 class="text-lg font-medium text-gray-900">Subscription</h2>
-                        <div class="mt-4">
-                            <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                Active
-                            </div>
-                            <p class="mt-2 text-sm text-gray-600">Pro Plan</p>
-                            <p class="text-xs text-gray-500">Renews on March 1, 2024</p>
-                        </div>
-                        <div class="mt-6">
-                            <button class="w-full px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors duration-200">
-                                Manage Subscription
-                            </button>
-                        </div>
-                    </div>
+            <div class="mt-8 border-t border-gray-200 pt-8">
+                <div class="flex justify-end">
+                    <a href="/Account/Logout" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                        Sign Out
+                    </a>
                 </div>
             </div>
         </div>

@@ -19491,11 +19491,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Account\\SignIn.cshtml",
-      "TargetPath": "Views\\Account\\SignIn.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Home\\Index.cshtml",
       "TargetPath": "Views\\Home\\Index.cshtml",
       "FileKind": "mvc"
@@ -19516,11 +19511,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Account\\SignUp.cshtml",
-      "TargetPath": "Views\\Account\\SignUp.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Tools\\StoryGenerator.cshtml",
       "TargetPath": "Views\\Tools\\StoryGenerator.cshtml",
       "FileKind": "mvc"
@@ -19533,6 +19523,11 @@
     {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Home\\Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Account\\Register.cshtml",
+      "TargetPath": "Views\\Account\\Register.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -19558,6 +19553,11 @@
     {
       "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Tools\\BusinessName.cshtml",
       "TargetPath": "Views\\Tools\\BusinessName.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\hp\\Downloads\\ContentCraft_studio\\Views\\Account\\Login.cshtml",
+      "TargetPath": "Views\\Account\\Login.cshtml",
       "FileKind": "mvc"
     },
     {

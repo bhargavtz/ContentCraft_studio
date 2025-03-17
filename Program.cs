@@ -1,30 +1,28 @@
 using GeminiAspNetDemo.Models;
 using GeminiAspNetDemo.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Auth0.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication;
+using Auth0.AspNetCore.Authentication;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Configure Auth0 Authentication
-var auth0Settings = builder.Configuration.GetSection("Auth0").Get<Auth0Settings>();
-builder.Services.AddAuthentication(options => {
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = Auth0Constants.AuthenticationScheme;
-}).AddAuth0WebAppAuthentication(options => {
-    options.Domain = auth0Settings.Domain;
-    options.ClientId = auth0Settings.ClientId;
-    options.ClientSecret = auth0Settings.ClientSecret;
-    options.CallbackPath = new PathString("/callback");
-    options.ResponseType = "code";
+builder.Services.AddAuth0WebAppAuthentication(options => {
+    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.ClientId = builder.Configuration["Auth0:ClientId"];
+    options.ClientSecret = builder.Configuration["Auth0:ClientSecret"];
+    options.CallbackPath = "/callback";
     options.Scope = "openid profile email";
-    options.SaveTokens = true;
-    options.UseRefreshTokens = true;
+    options.ResponseType = "code";
+    options.LoginParameters = new Dictionary<string, string> { { "prompt", "login" } };
 });
 
+builder.Services.ConfigureApplicationCookie(options => {
+    options.LoginPath = "/Account/SignIn";
+    options.LogoutPath = "/Account/SignOut";
+    options.ReturnUrlParameter = "returnUrl";
+});
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
@@ -33,38 +31,22 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 
 
-builder.Services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.Name = "auth_cookie";
-    options.Cookie.IsEssential = true;
-    options.Events = new CookieAuthenticationEvents
-    {
-        OnSigningOut = async context =>
-        {
-            await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            await context.HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme);
-            context.CookieOptions.Expires = DateTimeOffset.Now.AddDays(-1);
-            foreach (var cookie in context.HttpContext.Request.Cookies.Keys)
-            {
-                context.HttpContext.Response.Cookies.Delete(cookie);
-            }
-        }
-    };
-});
 
-builder.Services.Configure<Auth0Settings>(builder.Configuration.GetSection("Auth0"));
+
 builder.Services.Configure<GeminiOptions>(
     builder.Configuration.GetSection("Gemini"));
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
+
+// Add session services
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 
 // Add HTTPS configuration
 builder.Services.AddHttpsRedirection(options =>
@@ -89,6 +71,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
