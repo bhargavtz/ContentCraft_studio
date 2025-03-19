@@ -74,10 +74,29 @@
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Generated Captions</h3>
                     <div id="generatedCaptions" class="space-y-4">
                         <div class="caption-item bg-gray-50 rounded-lg p-4 text-gray-800 hidden">
-                            <p class="caption-text"></p>
-                            <button onclick="copyCaptionToClipboard(this)" class="mt-2 inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                Copy
-                            </button>
+                            <div class="caption-content">
+                                <p class="caption-text"></p>
+                                <div class="format-toolbar hidden space-x-2 mb-2">
+                                    <button onclick="formatText(this, 'bold')" class="format-btn px-2 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        <strong>B</strong>
+                                    </button>
+                                    <button onclick="formatText(this, 'italic')" class="format-btn px-2 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                        <em>I</em>
+                                    </button>
+                                </div>
+                                <textarea class="caption-edit mt-2 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 hidden"></textarea>
+                            </div>
+                            <div class="flex space-x-2 mt-2">
+                                <button onclick="editCaption(this)" class="edit-btn inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    Edit
+                                </button>
+                                <button onclick="saveCaption(this)" class="save-btn hidden inline-flex items-center px-3 py-1 border border-indigo-500 bg-indigo-500 text-white rounded-md text-sm font-medium hover:bg-indigo-600">
+                                    Save
+                                </button>
+                                <button onclick="copyCaptionToClipboard(this)" class="copy-btn inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    Copy
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -160,10 +179,60 @@
             document.getElementById('result').classList.remove('hidden');
         });
 
+        function editCaption(button) {
+            const captionItem = button.closest('.caption-item');
+            const captionText = captionItem.querySelector('.caption-text');
+            const captionEdit = captionItem.querySelector('.caption-edit');
+            const formatToolbar = captionItem.querySelector('.format-toolbar');
+            const editBtn = captionItem.querySelector('.edit-btn');
+            const saveBtn = captionItem.querySelector('.save-btn');
+            
+            captionText.classList.add('hidden');
+            captionEdit.classList.remove('hidden');
+            formatToolbar.classList.remove('hidden');
+            captionEdit.value = captionText.innerHTML;
+            editBtn.classList.add('hidden');
+            saveBtn.classList.remove('hidden');
+        }
+
+        function saveCaption(button) {
+            const captionItem = button.closest('.caption-item');
+            const captionText = captionItem.querySelector('.caption-text');
+            const captionEdit = captionItem.querySelector('.caption-edit');
+            const formatToolbar = captionItem.querySelector('.format-toolbar');
+            const editBtn = captionItem.querySelector('.edit-btn');
+            const saveBtn = captionItem.querySelector('.save-btn');
+            
+            captionText.innerHTML = captionEdit.value;
+            captionText.classList.remove('hidden');
+            captionEdit.classList.add('hidden');
+            formatToolbar.classList.add('hidden');
+            editBtn.classList.remove('hidden');
+            saveBtn.classList.add('hidden');
+        }
+
         function copyCaptionToClipboard(button) {
-            const caption = button.parentElement.querySelector('.caption-text').textContent;
+            const caption = button.closest('.caption-item').querySelector('.caption-text').innerHTML;
             navigator.clipboard.writeText(caption);
             alert('Caption copied to clipboard!');
+        }
+
+        function formatText(button, style) {
+            const captionEdit = button.closest('.caption-item').querySelector('.caption-edit');
+            const start = captionEdit.selectionStart;
+            const end = captionEdit.selectionEnd;
+            const text = captionEdit.value;
+            
+            if (start === end) return;
+            
+            let formattedText = '';
+            if (style === 'bold') {
+                formattedText = text.substring(0, start) + '<strong>' + text.substring(start, end) + '</strong>' + text.substring(end);
+            } else if (style === 'italic') {
+                formattedText = text.substring(0, start) + '<em>' + text.substring(start, end) + '</em>' + text.substring(end);
+            }
+            
+            captionEdit.value = formattedText;
         }
     </script>
 }

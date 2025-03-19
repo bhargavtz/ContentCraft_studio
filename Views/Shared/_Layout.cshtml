@@ -40,6 +40,10 @@
                             <a href="/" class="nav-item border-transparent text-black hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Home</a>
                             <a href="/Tools" class="nav-item border-transparent text-black hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Tools</a>
                             <a href="/pricing" class="nav-item border-transparent text-black hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Pricing</a>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="/Dashboard" class="nav-item border-transparent text-black hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">Dashboard</a>
+                            }
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
@@ -66,8 +70,7 @@
                         else
                         {
                             <a href="/Account/SignIn" class="nav-item inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">Sign in</a>
-                            <a href="/Account/SignUp" class="nav-item ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">Sign up</a>
-                        }
+                                          }
                     </div>
                 </div>
             </div>
