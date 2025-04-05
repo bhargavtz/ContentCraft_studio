@@ -445,7 +445,6 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.sour
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\bundle\GeminiAspNetDemo.styles.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\projectbundle\GeminiAspNetDemo.bundle.scp.css
-C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\2qq8dd5wu2-do25x4aboi.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\rnv4cq6tui-61n19gt1b8.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\686km1u9zm-xtxxf3hu2r.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\25p4q2tast-t1cqhe9u97.gz
@@ -524,3 +523,4 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\refint\GeminiAspNetDe
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.pdb
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.genruntimeconfig.cache
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ref\GeminiAspNetDemo.dll
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\2qq8dd5wu2-eg82fg4iv7.gz

@@ -14,8 +14,27 @@
                         <span class="text-4xl text-gray-600">@(User.Identity?.Name?[0].ToString().ToUpper() ?? "U")</span>
                     </div>
                 }
-                <h2 class="mt-4 text-2xl font-bold text-gray-900">@User.Identity?.Name</h2>
-                <p class="text-gray-600">@User.Claims.FirstOrDefault(c => c.Type == "email")?.Value</p>
+                <div class="mt-4 space-y-2">
+                    <div class="inline-flex items-center space-x-2">
+                        <h2 id="nickname-display" class="text-2xl font-bold text-gray-900">@User.Identity?.Name</h2>
+                        <button onclick="editField('nickname')" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <input id="nickname-edit" type="text" class="hidden mt-1 text-2xl font-bold text-center border-b-2 border-indigo-500 focus:outline-none" value="@User.Identity?.Name">
+                    
+                    <div class="inline-flex items-center space-x-2">
+                        <p id="email-display" class="text-gray-600">@User.Claims.FirstOrDefault(c => c.Type == "email")?.Value</p>
+                        <button onclick="editField('email')" class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <input id="email-edit" type="email" class="hidden mt-1 text-center border-b-2 border-indigo-500 focus:outline-none" value="@User.Claims.FirstOrDefault(c => c.Type == "email")?.Value">
+                </div>
             </div>
 
             <div class="mt-8 border-t border-gray-200 pt-8">
@@ -44,3 +63,33 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function editField(field) {
+            const displayEl = document.getElementById(`${field}-display`);
+            const editEl = document.getElementById(`${field}-edit`);
+            
+            displayEl.classList.add('hidden');
+            editEl.classList.remove('hidden');
+            editEl.focus();
+
+            editEl.addEventListener('blur', () => {
+                const newValue = editEl.value.trim();
+                if (newValue) {
+                    displayEl.textContent = newValue;
+                    // TODO: Add API call to update the field value
+                }
+                
+                displayEl.classList.remove('hidden');
+                editEl.classList.add('hidden');
+            });
+
+            editEl.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    editEl.blur();
+                }
+            });
+        }
+    </script>
+}

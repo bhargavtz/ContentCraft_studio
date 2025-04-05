@@ -1,19 +1,22 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
-using ContentCraft_studio.Models;
+using GeminiAspNetDemo.Models;
+using GeminiAspNetDemo.Services;
 
-namespace ContentCraft_studio.Controllers
+namespace GeminiAspNetDemo.Controllers
 {
     public class ToolsController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
+        private readonly IGeminiService _geminiService;
 
-        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration)
+        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration, IGeminiService geminiService)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
+            _geminiService = geminiService;
         }
 
         public IActionResult Index()
@@ -26,9 +29,42 @@ namespace ContentCraft_studio.Controllers
             return View();
         }
 
+        public IActionResult ImageGenerator()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("api/tools/generate-image")]
+        public async Task<IActionResult> GenerateImage([FromBody] ImageGenerationRequest request)
+        {
+            var result = await _geminiService.GenerateImageAsync(request);
+            return Json(result);
+        }
+
         public IActionResult BusinessName()
         {
             return View();
+        }
+
+        public IActionResult BlogGenerator()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("api/tools/generate-blog-content")]
+        public async Task<IActionResult> GenerateBlogContent([FromBody] BlogContentRequest request)
+        {
+            try
+            {
+                var result = await _geminiService.GenerateContentAsync(request.Prompt);
+                return Json(new { content = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "Failed to generate blog content", details = ex.Message });
+            }
         }
 
         [HttpPost]
@@ -40,7 +76,7 @@ namespace ContentCraft_studio.Controllers
                 var client = _clientFactory.CreateClient();
                 var apiKey = _configuration["Gemini:ApiKey"];
 
-                var promptText = $@"Generate 4 unique, creative, and memorable business names for a company in the {request.Industry} industry. These names should incorporate or relate to the following keywords: {request.Keywords}. The overall style should be {request.Style}.
+                var promptText = $@"Generate 5 unique, creative, and memorable business names for a company in the {request.Industry} industry. These names should incorporate or relate to the following keywords: {request.Keywords}. The overall style should be {request.Style}.
 
 For each name, provide the following information in a structured format:
 1. The business name
@@ -251,5 +287,10 @@ Name Meaning: [brief explanation]";
         public string Industry { get; set; }
         public string Keywords { get; set; }
         public string Style { get; set; }
+    }
+
+    public class BlogContentRequest
+    {
+        public string Prompt { get; set; }
     }
 }
