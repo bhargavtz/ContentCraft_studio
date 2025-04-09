@@ -2,45 +2,6 @@
     ViewData["Title"] = "AI Tools";
 }
 
-<!-- Password Modal -->
-<div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-        <h3 class="text-xl font-bold mb-4 text-gray-800">Tool Access</h3>
-        <p class="text-red-600 mb-4">This tool is currently under maintenance.</p>
-        <div class="mb-4">
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Enter Password</label>
-            <input type="password" id="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter password">
-        </div>
-        <div class="flex justify-end space-x-3">
-            <button onclick="closePasswordModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-            <button onclick="validatePassword()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Submit</button>
-        </div>
-    </div>
-</div>
-
-<script>
-function openPasswordModal(toolUrl) {
-    document.getElementById('passwordModal').classList.remove('hidden');
-    document.getElementById('passwordModal').classList.add('flex');
-    window.currentToolUrl = toolUrl;
-}
-
-function closePasswordModal() {
-    document.getElementById('passwordModal').classList.add('hidden');
-    document.getElementById('passwordModal').classList.remove('flex');
-    document.getElementById('password').value = '';
-}
-
-function validatePassword() {
-    const password = document.getElementById('password').value;
-    if (password === 'bhargavtz') {
-        window.location.href = window.currentToolUrl;
-    } else {
-        alert('Incorrect password!');
-    }
-}
-</script>
-
 <main>
     <section class="bg-gradient-to-r from-[#03045e] to-[#0077b6] py-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
@@ -121,12 +82,8 @@ function validatePassword() {
                             <span class="text-sm text-gray-600">Multiple formats</span>
                         </div>
                     </div>
-                    <a href="#" class="inline-block bg-space-cadet-500 text-white px-4 py-2 rounded-md hover:bg-space-cadet-600">Try Now</a>
                 </div>
                 <div class="relative bg-[#ade8f4] rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 border border-gray-100 overflow-hidden">
-                    <div class="absolute inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-10">
-                        <p class="text-lg font-semibold text-gray-800 bg-white/80 px-4 py-2 rounded-lg">Opens in Presentation 2</p>
-                    </div>
                     <div class="w-12 h-12 bg-[#caf0f8] rounded-lg flex items-center justify-center mb-4">
                         <span class="text-2xl">📷</span>
                     </div>
@@ -146,7 +103,7 @@ function validatePassword() {
                             <span class="text-sm text-gray-600">Detailed descriptions</span>
                         </div>
                     </div>
-                    <a href="#" onclick="openPasswordModal('@Url.Action("ImageDescription", "Tools")'); return false;" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Try Now</a>
+                    <a href="@Url.Action("ImageDescription", "Tools")" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Try Now</a>
                 </div>
                 <div class="bg-[#ade8f4] rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 border border-gray-100">
                     <div class="w-12 h-12 bg-[#caf0f8] rounded-lg flex items-center justify-center mb-4">
@@ -172,9 +129,6 @@ function validatePassword() {
                 </div>
 
                 <div class="relative bg-[#ade8f4] rounded-xl shadow-sm hover:shadow-lg transition-shadow p-6 border border-gray-100 overflow-hidden">
-                    <div class="absolute inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-10">
-                        <p class="text-lg font-semibold text-gray-800 bg-white/80 px-4 py-2 rounded-lg">Opens in Presentation 2</p>
-                    </div>
                     <div class="w-12 h-12 bg-[#caf0f8] rounded-lg flex items-center justify-center mb-4">
                         <span class="text-2xl">📖</span>
                     </div>
@@ -194,7 +148,7 @@ function validatePassword() {
                             <span class="text-sm text-gray-600">Adjustable creativity</span>
                         </div>
                     </div>
-                    <a href="#" onclick="openPasswordModal('@Url.Action("StoryGenerator", "Tools")'); return false;" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Try Now</a>
+                    <a href="@Url.Action("StoryGenerator", "Tools")" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Try Now</a>
                 </div>
             </div>
         </div>

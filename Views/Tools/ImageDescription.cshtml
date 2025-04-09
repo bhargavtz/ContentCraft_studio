@@ -132,16 +132,33 @@
 
             // Generate description
             generateBtn.addEventListener('click', async () => {
+                if (!imageInput.files[0]) {
+                    alert('Please select an image first.');
+                    return;
+                }
                 generateBtn.disabled = true;
                 generateBtn.textContent = 'Generating...';
 
+                const formData = new FormData();
+                formData.append('image', imageInput.files[0]);
+                formData.append('mood', 'neutral'); // placeholder parameter if needed
+
                 try {
-                    // TODO: Implement API call to generate description
-                    // For now, we'll simulate a response
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    const mockDescription = 'This is a sample AI-generated description of the uploaded image. The actual implementation will integrate with the backend API to generate real descriptions using AI.';
-                    
-                    descriptionContent.textContent = mockDescription;
+                    const response = await fetch('/api/tools/generate-image-description', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    let description = '';
+                    if(data.description){
+                        description = data.description;
+                    }else if(data.error){
+                        description = 'Error: ' + data.error;
+                    }else{
+                        description = 'No description generated.';
+                    }
+                    descriptionContent.textContent = description;
                     resultContainer.classList.remove('hidden');
                 } catch (error) {
                     alert('Error generating description. Please try again.');
@@ -152,20 +169,44 @@
             });
 
             // Copy to clipboard
-            copyBtn.addEventListener('click', () => {
-                navigator.clipboard.writeText(descriptionContent.textContent)
-                    .then(() => {
-                        const originalText = copyBtn.textContent;
-                        copyBtn.textContent = 'Copied!';
-                        setTimeout(() => {
-                            copyBtn.textContent = originalText;
-                        }, 2000);
-                    })
-                    .catch(() => {
-                        alert('Failed to copy to clipboard');
-                    });
+            copyBtn.addEventListener('click', async () => {
+                const text = descriptionContent.textContent;
+                if (!text) {
+                    alert('No description to copy!');
+                    return;
+                }
+                try {
+                    await navigator.clipboard.writeText(text);
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+                } catch (err) {
+                    alert('Failed to copy description');
+                }
             });
 
+            // Create and add Share button
+            const shareBtn = document.createElement('button');
+            shareBtn.textContent = 'Share';
+            shareBtn.className = 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors';
+            copyBtn.parentNode.insertBefore(shareBtn, regenerateBtn);
+
+            shareBtn.addEventListener('click', async () => {
+                const text = descriptionContent.textContent;
+                if (!text) {
+                    alert('No description to share!');
+                    return;
+                }
+                if (navigator.share) {
+                    try {
+                        await navigator.share({ title: 'AI Image Description', text: text });
+                    } catch (err) {
+                        console.log('Share cancelled or failed');
+                    }
+                } else {
+                    alert('Sharing not supported on this device/browser.');
+                }
+            });
             // Regenerate description
             regenerateBtn.addEventListener('click', () => {
                 generateBtn.click();

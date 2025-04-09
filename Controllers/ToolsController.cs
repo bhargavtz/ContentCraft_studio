@@ -52,6 +52,16 @@ namespace GeminiAspNetDemo.Controllers
             return View();
         }
 
+        public IActionResult ImageDescription()
+        {
+            return View();
+        }
+
+        public IActionResult StoryGenerator()
+        {
+            return View();
+        }
+
         [HttpPost]
         [Route("api/tools/generate-blog-content")]
         public async Task<IActionResult> GenerateBlogContent([FromBody] BlogContentRequest request)
@@ -64,6 +74,21 @@ namespace GeminiAspNetDemo.Controllers
             catch (Exception ex)
             {
                 return Json(new { error = "Failed to generate blog content", details = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("api/tools/generate-story")]
+        public async Task<IActionResult> GenerateStory([FromBody] StoryGenerationRequest request)
+        {
+            try
+            {
+                var result = await _geminiService.GenerateContentAsync(request.Prompt);
+                return Json(new { story = result });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "Failed to generate story", details = ex.Message });
             }
         }
 

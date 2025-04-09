@@ -84,20 +84,9 @@ namespace GeminiAspNetDemo.Services
                             .GetProperty("text")
                             .GetString() ?? "No response generated";
                             
-                        // Preserve markdown formatting in the response
-                        responseText = responseText
-                            .Replace("##", "\n##")  // Ensure headers have newlines
-                            .Replace("**", "\n**")  // Ensure bold text has newlines
-                            .Replace("*", "\n*")   // Ensure italic and list items have newlines
-                            .Replace("-", "\n-")   // Ensure list items have newlines
-                            .Replace(">", "\n>")   // Ensure blockquotes have newlines
-                            .Replace("```", "\n```"); // Ensure code blocks have newlines
-
-                        // Remove any extra newlines and normalize spacing
-                        responseText = string.Join("\n", 
-                            responseText.Split('\n')
-                                .Select(line => line.Trim())
-                                .Where(line => !string.IsNullOrWhiteSpace(line)));
+                        // Return the response text directly without any modifications
+                        // This will preserve the original markdown formatting from Gemini
+                        return responseText;
 
                         return responseText;
                     }
