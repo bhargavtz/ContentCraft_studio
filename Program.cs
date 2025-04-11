@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Auth0.AspNetCore.Authentication;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using System.Security.Claims;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -30,9 +34,6 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-
-
-
 builder.Services.Configure<GeminiOptions>(
     builder.Configuration.GetSection("Gemini"));
 builder.Services.AddHttpClient();
@@ -56,7 +57,6 @@ builder.Services.AddHttpsRedirection(options =>
 
 var app = builder.Build();
 
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -71,6 +71,34 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Middleware to save user data to MongoDB after login
+app.Use(async (context, next) =>
+{
+    if (context.User.Identity.IsAuthenticated)
+    {
+        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userName = context.User.FindFirstValue(ClaimTypes.Name);
+        var userEmail = context.User.FindFirstValue(ClaimTypes.Email);
+        var userNickname = context.User.FindFirstValue("nickname");
+
+        var client = new MongoClient(builder.Configuration["MongoDb:ConnectionString"]);
+        var database = client.GetDatabase(builder.Configuration["MongoDb:DatabaseName"]);
+        var usersCollection = database.GetCollection<BsonDocument>("users");
+
+        var filter = Builders<BsonDocument>.Filter.Eq("_id", userId);
+        var update = Builders<BsonDocument>.Update
+            .Set("name", userName)
+            .Set("email", userEmail)
+            .Set("nickname", userNickname)
+            .Set("lastLogin", DateTime.UtcNow);
+
+        await usersCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true });
+    }
+
+    await next.Invoke();
+});
+
 app.UseSession();
 
 app.MapControllerRoute(

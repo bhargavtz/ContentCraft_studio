@@ -3,6 +3,9 @@ using System.Text;
 using System.Text.Json;
 using GeminiAspNetDemo.Models;
 using GeminiAspNetDemo.Services;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using System.Security.Claims;
 
 namespace GeminiAspNetDemo.Controllers
 {
@@ -11,12 +14,29 @@ namespace GeminiAspNetDemo.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
         private readonly IGeminiService _geminiService;
+        private readonly ILogger<ToolsController> _logger;
 
-        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration, IGeminiService geminiService)
+        [BindProperty]
+        public string? Prompt { get; set; }
+
+        [BindProperty]
+        public string? Industry { get; set; }
+
+        [BindProperty]
+        public string? Keywords { get; set; }
+
+        [BindProperty]
+        public string? Style { get; set; }
+
+        [BindProperty]
+        public string? Mood { get; set; }
+
+        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration, IGeminiService geminiService, ILogger<ToolsController> logger)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
             _geminiService = geminiService;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -297,6 +317,140 @@ Name Meaning: [brief explanation]";
             catch (Exception ex)
             {
                 return Json(new { error = "Failed to generate caption", details = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("api/tools/save-instagram-caption")]
+        public async Task<IActionResult> SaveInstagramCaption([FromBody] CaptionRequest request)
+        {
+            try
+            {
+                var client = new MongoClient(_configuration["MongoDb:ConnectionString"]);
+                var database = client.GetDatabase(_configuration["MongoDb:DatabaseName"]);
+                var captionsCollection = database.GetCollection<BsonDocument>("instagram_captions");
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var captionDocument = new BsonDocument
+                {
+                    { "_id", ObjectId.GenerateNewId() },
+                    { "userId", userId },
+                    { "caption", request.Prompt },
+                    { "createdAt", DateTime.UtcNow }
+                };
+
+                await captionsCollection.InsertOneAsync(captionDocument);
+
+                return Json(new { success = true, message = "Caption saved successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Failed to save caption.", error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GenerateAndSaveCaption([FromForm] CaptionRequest request, IFormFile image)
+        {
+            try
+            {
+                _logger.LogInformation("Starting caption generation and save process.");
+
+                var client = _clientFactory.CreateClient();
+                var apiKey = _configuration["Gemini:ApiKey"];
+                string promptText;
+                object requestBody;
+
+                if (image != null)
+                {
+                    using var ms = new MemoryStream();
+                    await image.CopyToAsync(ms);
+                    var imageBytes = ms.ToArray();
+                    var base64Image = Convert.ToBase64String(imageBytes);
+
+                    promptText = $"Analyze this image and generate 5 different catchy Instagram captions with a {request.Mood} tone. Each caption should be unique, include relevant emojis and hashtags, and be separated by '---'. Keep them concise and engaging.";
+
+                    requestBody = new
+                    {
+                        contents = new[]
+                        {
+                            new
+                            {
+                                parts = new object[]
+                                {
+                                    new
+                                    {
+                                        inlineData = new
+                                        {
+                                            mimeType = image.ContentType,
+                                            data = base64Image
+                                        }
+                                    },
+                                    new { text = promptText }
+                                }
+                            }
+                        }
+                    };
+                }
+                else
+                {
+                    promptText = $"Generate 5 different catchy Instagram captions about {request.Prompt} with a {request.Mood} tone. Each caption should be unique, include relevant emojis and hashtags, and be separated by '---'. Keep them concise and engaging.";
+
+                    requestBody = new
+                    {
+                        contents = new[]
+                        {
+                            new
+                            {
+                                parts = new[]
+                                {
+                                    new { text = promptText }
+                                }
+                            }
+                        }
+                    };
+                }
+
+                _logger.LogInformation("Sending request to AI service.");
+                var response = await client.PostAsync(
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
+                    new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
+                );
+
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
+
+                var text = jsonElement
+                    .GetProperty("candidates")[0]
+                    .GetProperty("content")
+                    .GetProperty("parts")[0]
+                    .GetProperty("text")
+                    .GetString();
+
+                // Save the entire response as a single document in MongoDB
+                _logger.LogInformation("Saving AI response to MongoDB.");
+                var mongoClient = new MongoClient(_configuration["MongoDb:ConnectionString"]);
+                var database = mongoClient.GetDatabase(_configuration["MongoDb:DatabaseName"]);
+                var captionsCollection = database.GetCollection<BsonDocument>("instagram_captions");
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var captionDocument = new BsonDocument
+                {
+                    { "userId", userId },
+                    { "response", text },
+                    { "createdAt", DateTime.UtcNow }
+                };
+
+                await captionsCollection.InsertOneAsync(captionDocument);
+
+                _logger.LogInformation("AI response saved successfully.");
+                return Json(new { success = true, message = "Captions saved successfully.", response = text });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to generate and save caption.");
+                return Json(new { success = false, message = "Failed to generate and save caption", details = ex.Message });
             }
         }
     }
