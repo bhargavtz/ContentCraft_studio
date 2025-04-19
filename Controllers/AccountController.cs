@@ -16,11 +16,13 @@ namespace GeminiAspNetDemo.Controllers
     {
         private readonly ILogger<AccountController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMongoDbService _mongoDbService;
 
-        public AccountController(ILogger<AccountController> logger, IConfiguration configuration)
+        public AccountController(ILogger<AccountController> logger, IConfiguration configuration, IMongoDbService mongoDbService)
         {
             _logger = logger;
             _configuration = configuration;
+            _mongoDbService = mongoDbService;
         }
 
         // Sign In Action
@@ -49,8 +51,9 @@ namespace GeminiAspNetDemo.Controllers
                 await HttpContext.SignOutAsync("Cookies");
 
                 // Build Auth0 logout properties
+                var redirectUri = Url.Action("Index", "Home");
                 var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
-                    .WithRedirectUri(Url.Action("Index", "Home"))
+                    .WithRedirectUri(redirectUri ?? "/")
                     .Build();
 
                 // Sign out from Auth0
@@ -76,24 +79,22 @@ namespace GeminiAspNetDemo.Controllers
             var userName = User.FindFirstValue(ClaimTypes.Name);
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
             var userNickname = User.FindFirstValue("nickname");
-            var picture = User.FindFirstValue("picture");
-            var emailVerified = User.FindFirstValue("email_verified");
-            var locale = User.FindFirstValue("locale");
-            var updatedAt = User.FindFirstValue("updated_at");
-            var authTime = User.FindFirstValue("auth_time");
+            //var picture = User.FindFirstValue("picture");
+            //var emailVerified = User.FindFirstValue("email_verified");
+            //var locale = User.FindFirstValue("locale");
+            //var updatedAt = User.FindFirstValue("updated_at");
+            //var authTime = User.FindFirstValue("auth_time");
 
             var user = new UserModel
             {
-                Id = userId,
-                Name = userName,
-                Email = userEmail,
-                Nickname = userNickname,
-                Picture = picture,
-                EmailVerified = emailVerified != null ? bool.Parse(emailVerified) : false,
-                Locale = locale,
-                UpdatedAt = updatedAt != null ? DateTime.Parse(updatedAt) : DateTime.UtcNow,
-                AuthTime = authTime != null ? Convert.ToInt64(authTime) : 0
+                Id = userId ?? string.Empty,
+                Name = userName ?? string.Empty,
+                Email = userEmail ?? string.Empty,
+                Nickname = userNickname ?? string.Empty,
+                LastLogin = DateTime.UtcNow
             };
+
+            await _mongoDbService.UpsertUserAsync(user);
 
             return View(user);
         }
@@ -118,6 +119,7 @@ namespace GeminiAspNetDemo.Controllers
                     Email = model.Email
                 };
 
+                await Task.Yield();
                 return Json(new { success = true });
             }
             catch (Exception ex)

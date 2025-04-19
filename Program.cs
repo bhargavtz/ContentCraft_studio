@@ -5,21 +5,25 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Auth0.AspNetCore.Authentication;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.Security.Claims;
 
-
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+// Configure data protection to persist keys to the file system
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "DataProtection-Keys")));
+
+
 builder.Services.AddAuth0WebAppAuthentication(options => {
     options.Domain = builder.Configuration["Auth0:Domain"];
     options.ClientId = builder.Configuration["Auth0:ClientId"];
     options.ClientSecret = builder.Configuration["Auth0:ClientSecret"];
-    options.CallbackPath = "/callback";
-    options.Scope = "openid profile email";
-    options.ResponseType = "code";
-    options.LoginParameters = new Dictionary<string, string> { { "prompt", "login" } };
 });
 
 builder.Services.ConfigureApplicationCookie(options => {
@@ -35,13 +39,16 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 
 builder.Services.Configure<GeminiOptions>(
-    builder.Configuration.GetSection("Gemini"));
+    builder.Configuration.GetSection("Gemini") ?? 
+    throw new InvalidOperationException("Gemini configuration section is missing"));
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<IMongoDbService, MongoDbService>();
 
 // Configure MongoDB settings
-builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection("MongoDb"));
+builder.Services.Configure<MongoDbOptions>(
+    builder.Configuration.GetSection("MongoDB") ?? 
+    throw new InvalidOperationException("MongoDB configuration section is missing"));
 
 // Add session services
 builder.Services.AddDistributedMemoryCache();

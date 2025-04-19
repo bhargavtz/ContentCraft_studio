@@ -8,10 +8,14 @@ namespace ContentCraft_studio.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string Nickname { get; set; }
-        public string Picture { get; set; }
-        public string Locale { get; set; }
-        public DateTime UpdatedAt { get; set; }
-        public bool EmailVerified { get; set; }
-        public long AuthTime { get; set; }
+        public DateTime LastLogin { get; set; } // Added field for last login timestamp
+
+        public UserModel()
+        {
+            Id = string.Empty;
+            Name = string.Empty;
+            Email = string.Empty;
+            Nickname = string.Empty;
+        }
     }
 }

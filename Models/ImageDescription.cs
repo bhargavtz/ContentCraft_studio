@@ -1,8 +1,8 @@
+using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
 
-namespace ContentCraft_studio.Models
+namespace ContentCraft_Studio.Models
 {
     public class ImageDescription
     {
@@ -18,5 +18,12 @@ namespace ContentCraft_studio.Models
 
         [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ImageDescription()
+        {
+            Id = string.Empty;
+            UserId = string.Empty;
+            Description = string.Empty;
+        }
     }
 }

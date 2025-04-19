@@ -10,25 +10,28 @@
         </div>
 
         <div class="bg-white rounded-xl shadow-lg p-8 mb-8">
-            <div id="upload-container" class="border-2 border-dashed border-[#48cae4] rounded-lg p-8 text-center cursor-pointer hover:border-[#0077b6] transition-colors">
-                <input type="file" id="image-input" class="hidden" accept="image/*">
-                <div class="space-y-4">
-                    <div class="w-16 h-16 mx-auto bg-[#ade8f4] rounded-full flex items-center justify-center">
-                        <svg class="w-8 h-8 text-[#0077b6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
+            <form id="imageForm" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div id="upload-container" class="border-2 border-dashed border-[#48cae4] rounded-lg p-8 text-center cursor-pointer hover:border-[#0077b6] transition-colors">
+                    <input type="file" id="image-input" name="image" class="hidden" accept="image/*">
+                    <div class="space-y-4">
+                        <div class="w-16 h-16 mx-auto bg-[#ade8f4] rounded-full flex items-center justify-center">
+                            <svg class="w-8 h-8 text-[#0077b6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-700">Drag and drop your image here</h3>
+                        <p class="text-gray-500">or click to browse</p>
+                        <p class="text-sm text-gray-400">Supports: JPG, PNG, GIF (max 5MB)</p>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-700">Drag and drop your image here</h3>
-                    <p class="text-gray-500">or click to browse</p>
-                    <p class="text-sm text-gray-400">Supports: JPG, PNG, GIF (max 5MB)</p>
                 </div>
-            </div>
+            </form>
 
             <div id="preview-container" class="hidden mt-8">
                 <h3 class="text-lg font-semibold text-gray-700 mb-4">Preview</h3>
                 <div class="relative rounded-lg overflow-hidden">
                     <img id="image-preview" class="w-full h-auto" src="#" alt="Preview">
-                    <button id="remove-image" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 focus:outline-none">
+                    <button id="remove-image" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -37,7 +40,7 @@
             </div>
 
             <div class="mt-6 text-center">
-                <button id="generate-btn" class="bg-[#0077b6] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#023e8a] transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <button id="generate-btn" class="bg-[#0077b6] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#023e8a] transition-colors disabled:opacity-50" disabled>
                     Generate Description
                 </button>
             </div>
@@ -52,241 +55,162 @@
                     <div class="h-4 bg-gray-200 rounded w-5/6"></div>
                 </div>
             </div>
-            <div class="mt-6 flex justify-end space-x-4">
-                <button id="save-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                    Save Description
-                </button>
-                <button id="copy-btn" class="px-4 py-2 border border-[#0077b6] text-[#0077b6] rounded-lg hover:bg-[#0077b6] hover:text-white transition-colors">
-                    Copy to Clipboard
-                </button>
-                <button id="regenerate-btn" class="px-4 py-2 bg-[#0077b6] text-white rounded-lg hover:bg-[#023e8a] transition-colors">
-                    Regenerate
-                </button>
-            </div>
+
+            <form asp-action="SaveImageDescription" method="post" class="mt-6">
+                <input type="hidden" id="description" name="Description" />
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="copy-btn" class="px-4 py-2 border border-[#0077b6] text-[#0077b6] rounded-lg hover:bg-[#0077b6] hover:text-white">
+                        Copy to Clipboard
+                    </button>
+                    <button type="button" id="regenerate-btn" class="px-4 py-2 bg-[#0077b6] text-white rounded-lg hover:bg-[#023e8a]">
+                        Regenerate
+                    </button>
+                </div>
+                </form>
         </div>
     </div>
 </main>
 
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const uploadContainer = document.getElementById('upload-container');
-            const imageInput = document.getElementById('image-input');
-            const previewContainer = document.getElementById('preview-container');
-            const imagePreview = document.getElementById('image-preview');
-            const removeImageBtn = document.getElementById('remove-image');
-            const generateBtn = document.getElementById('generate-btn');
-            const resultContainer = document.getElementById('result-container');
-            const descriptionContent = document.getElementById('description-content');
-            const copyBtn = document.getElementById('copy-btn');
-            const regenerateBtn = document.getElementById('regenerate-btn');
-
-            // Handle drag and drop
-            uploadContainer.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadContainer.classList.add('border-[#0077b6]');
-            });
-
-            uploadContainer.addEventListener('dragleave', () => {
-                uploadContainer.classList.remove('border-[#0077b6]');
-            });
-
-            uploadContainer.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadContainer.classList.remove('border-[#0077b6]');
-                const file = e.dataTransfer.files[0];
-                handleImageUpload(file);
-            });
-
-            // Handle click to upload
-            uploadContainer.addEventListener('click', () => {
-                imageInput.click();
-            });
-
-            imageInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                handleImageUpload(file);
-            });
-
-            // Handle image upload
-            function handleImageUpload(file) {
-                if (file && file.type.startsWith('image/')) {
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert('Image size must be less than 5MB');
-                        return;
-                    }
-
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        imagePreview.src = e.target.result;
-                        previewContainer.classList.remove('hidden');
-                        generateBtn.disabled = false;
-                        resultContainer.classList.add('hidden');
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    alert('Please upload a valid image file');
-                }
-            }
-
-            // Remove image
-            removeImageBtn.addEventListener('click', () => {
-                imageInput.value = '';
-                previewContainer.classList.add('hidden');
-                generateBtn.disabled = true;
-                resultContainer.classList.add('hidden');
-            });
-
-            // Generate description
-            generateBtn.addEventListener('click', async () => {
-                if (!imageInput.files[0]) {
-                    alert('Please select an image first.');
-                    return;
-                }
-                generateBtn.disabled = true;
-                generateBtn.textContent = 'Generating...';
-                document.getElementById('loading-placeholder').style.display = 'block';
-                descriptionContent.textContent = '';
-
-                const formData = new FormData();
-                formData.append('image', imageInput.files[0]);
-                formData.append('mood', 'neutral'); // placeholder parameter if needed
-
-                try {
-                    const response = await fetch('/api/tools/generate-image-description', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const data = await response.json();
-                    let description = '';
-                    if(data.description){
-                        description = data.description;
-                    }else if(data.error){
-                        description = 'Error: ' + data.error;
-                    }else{
-                        description = 'No description generated.';
-                    }
-                    descriptionContent.innerHTML = description.split('\n').map(line => `<p class="mb-2">${line}</p>`).join('');
-                    resultContainer.classList.remove('hidden');
-                } catch (error) {
-                    alert('Error generating description. Please try again.');
-                } finally {
-                    generateBtn.disabled = false;
-                    generateBtn.textContent = 'Generate Description';
-                }
-            });
-
-            // Copy to clipboard
-            copyBtn.addEventListener('click', async () => {
-                const text = descriptionContent.textContent;
-                if (!text) {
-                    alert('No description to copy!');
-                    return;
-                }
-                try {
-                    await navigator.clipboard.writeText(text);
-                    const originalText = copyBtn.textContent;
-                    copyBtn.textContent = 'Copied!';
-                    setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
-                } catch (err) {
-                    alert('Failed to copy description');
-                }
-            });
-
-            // Save description to MongoDB
-            const saveBtn = document.getElementById('save-btn');
-            saveBtn.addEventListener('click', async () => {
-                const description = descriptionContent.textContent;
-                if (!description) {
-                    alert('No description to save!');
-                    return;
-                }
-
-                try {
-                    const response = await fetch('/api/tools/save-image-description', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ description })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to save description');
-                    }
-
-                    const originalText = saveBtn.textContent;
-                    saveBtn.textContent = 'Saved!';
-                    saveBtn.disabled = true;
-                    setTimeout(() => {
-                        saveBtn.textContent = originalText;
-                        saveBtn.disabled = false;
-                    }, 2000);
-                } catch (error) {
-                    alert('Error saving description: ' + error.message);
-                }
-            });
-
-            shareBtn.addEventListener('click', async () => {
-                const text = descriptionContent.textContent;
-                if (!text) {
-                    alert('No description to share!');
-                    return;
-                }
-                if (navigator.share) {
-                    try {
-                        await navigator.share({ title: 'AI Image Description', text: text });
-                    } catch (err) {
-                        console.log('Share cancelled or failed');
-                    }
-                } else {
-                    alert('Sharing not supported on this device/browser.');
-                }
-            });
-            // Regenerate description
-            regenerateBtn.addEventListener('click', () => {
-                generateBtn.click();
-            });
-        });
-    </script>
-}
-
-@{
-    ViewData["Title"] = "Image Description";
-}
-
-<h2>Image Description</h2>
-
-<form id="imageDescriptionForm">
-    <div class="form-group">
-        <label for="description">Description</label>
-        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
-    </div>
-    <button type="button" id="saveButton" class="btn btn-primary">Save</button>
-</form>
-
 <script>
-    document.getElementById('saveButton').addEventListener('click', async () => {
-        const description = document.getElementById('description').value;
-        if (!description) {
-            alert('Description is required!');
-            return;
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        const uploadContainer = document.getElementById('upload-container');
+        const imageInput = document.getElementById('image-input');
+        const previewContainer = document.getElementById('preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const removeImageBtn = document.getElementById('remove-image');
+        const generateBtn = document.getElementById('generate-btn');
+        const resultContainer = document.getElementById('result-container');
+        const descriptionContent = document.getElementById('description-content');
+        const descriptionInput = document.getElementById('description');
+        descriptionInput.addEventListener('input', function() {
+            const content = descriptionInput.value;
+            updateDescriptionContent(content);
+        } );
+        const copyBtn = document.getElementById('copy-btn');
+        const regenerateBtn = document.getElementById('regenerate-btn');
 
-        const response = await fetch('/api/tools/save-image-description', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ description })
+        uploadContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadContainer.classList.add('border-[#0077b6]');
         });
 
-        if (response.ok) {
-            alert('Description saved successfully!');
-        } else {
-            const error = await response.json();
-            alert(`Error: ${error.error}`);
+        uploadContainer.addEventListener('dragleave', () => {
+            uploadContainer.classList.remove('border-[#0077b6]');
+        });
+
+        uploadContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadContainer.classList.remove('border-[#0077b6]');
+            const file = e.dataTransfer.files[0];
+            handleImageUpload(file);
+        });
+
+        uploadContainer.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            handleImageUpload(file);
+        });
+
+        function handleImageUpload(file) {
+            if (file && file.type.startsWith('image/')) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image size must be less than 5MB');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                    generateBtn.disabled = false;
+                    resultContainer.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please upload a valid image file');
+            }
         }
+
+        removeImageBtn.addEventListener('click', () => {
+            imageInput.value = '';
+            previewContainer.classList.add('hidden');
+            generateBtn.disabled = true;
+            resultContainer.classList.add('hidden');
+        });
+
+        generateBtn.addEventListener('click', async () => {
+            if (!imageInput.files[0]) {
+                alert('Please select an image first.');
+                return;
+            }
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            document.getElementById('loading-placeholder').style.display = 'block';
+            descriptionContent.innerHTML = '';
+
+            const formData = new FormData();
+            formData.append('image', imageInput.files[0]);
+
+            try {
+                // First, generate the description
+                const response = await fetch('/api/tools/generate-image-description', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate description');
+                }
+
+                let description = data.description || 'No description generated.';
+                descriptionContent.innerHTML = description.split('\n').map(line => `<p>${line}</p>`).join('');
+                descriptionInput.value = description;
+                resultContainer.classList.remove('hidden');
+
+                // Then, save the description to MongoDB
+                const saveResponse = await fetch('/api/tools/save-image-description', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description: description
+                    })
+                });
+
+                const saveData = await saveResponse.json();
+                if (!saveResponse.ok) {
+                    console.error('Failed to save description:', saveData.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message || 'Error generating or saving description.');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = 'Generate Description';
+                document.getElementById('loading-placeholder').style.display = 'none';
+            }
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            const text = descriptionContent.textContent;
+            if (!text) return alert('No description to copy!');
+            try {
+                await navigator.clipboard.writeText(text);
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => copyBtn.textContent = 'Copy to Clipboard', 2000);
+            } catch {
+                alert('Copy failed');
+            }
+        });
+
+        regenerateBtn.addEventListener('click', () => {
+            generateBtn.click();
+        });
     });
 </script>
+}

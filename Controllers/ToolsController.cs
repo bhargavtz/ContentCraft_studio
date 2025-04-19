@@ -3,6 +3,9 @@ using System.Text;
 using System.Text.Json;
 using ContentCraft_studio.Models;
 using ContentCraft_studio.Services;
+using Microsoft.AspNetCore.Authorization;
+using ContentCraft_Studio.Models;  // Add this for ImageDescription model
+using System.Security.Claims;
 
 namespace ContentCraft_studio.Controllers
 {
@@ -11,12 +14,15 @@ namespace ContentCraft_studio.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
         private readonly IGeminiService _geminiService;
+        private readonly IMongoDbService _mongoDbService;
 
-        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration, IGeminiService geminiService)
+        public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration, 
+            IGeminiService geminiService, IMongoDbService mongoDbService)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
             _geminiService = geminiService;
+            _mongoDbService = mongoDbService;
         }
 
         public IActionResult Index()
@@ -63,9 +69,14 @@ namespace ContentCraft_studio.Controllers
         {
             try
             {
-                if (image == null)
+                if (image == null || image.Length == 0)
                 {
-                    return Json(new { error = "Please upload an image" });
+                    return BadRequest(new { error = "Please upload an image" });
+                }
+
+                if (image.Length > 5 * 1024 * 1024) // 5MB limit
+                {
+                    return BadRequest(new { error = "Image size must be less than 5MB" });
                 }
 
                 using var ms = new MemoryStream();
@@ -106,11 +117,15 @@ namespace ContentCraft_studio.Controllers
                 };
 
                 var response = await client.PostAsync(
-                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
                     new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
                 );
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    return BadRequest(new { error = "Failed to generate description" });
+                }
+
                 var content = await response.Content.ReadAsStringAsync();
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
 
@@ -121,11 +136,44 @@ namespace ContentCraft_studio.Controllers
                     .GetProperty("text")
                     .GetString();
 
-                return Json(new { description = description ?? "Unable to generate description" });
+                return Ok(new { description = description ?? "Unable to generate description" });
             }
             catch (Exception ex)
             {
-                return Json(new { error = "Failed to generate description", details = ex.Message });
+                return BadRequest(new { error = "Failed to generate description", details = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpPost("api/tools/save-image-description")]
+        public async Task<IActionResult> SaveImageDescription([FromBody] SaveImageDescriptionRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request?.Description))
+                {
+                    return BadRequest(new { error = "Description is required" });
+                }
+
+                var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { error = "User not authenticated" });
+                }
+
+                var imageDescription = new ImageDescription
+                {
+                    UserId = userId,
+                    Description = request.Description,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                await _mongoDbService.SaveImageDescriptionAsync(imageDescription);
+                return Ok(new { message = "Description saved successfully" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Failed to save description", details = ex.Message });
             }
         }
 
@@ -140,6 +188,10 @@ namespace ContentCraft_studio.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(request.Prompt))
+                {
+                    return Json(new { error = "Prompt cannot be empty" });
+                }
                 var result = await _geminiService.GenerateContentAsync(request.Prompt);
                 return Json(new { content = result });
             }
@@ -155,6 +207,10 @@ namespace ContentCraft_studio.Controllers
         {
             try
             {
+                 if (string.IsNullOrEmpty(request.Prompt))
+                {
+                    return Json(new { error = "Prompt cannot be empty" });
+                }
                 var result = await _geminiService.GenerateContentAsync(request.Prompt);
                 return Json(new { story = result });
             }
@@ -376,18 +432,18 @@ Name Meaning: [brief explanation]";
     public class CaptionRequest
     {
         public string? Prompt { get; set; }
-        public string Mood { get; set; }
+        public required string Mood { get; set; }
     }
 
     public class BusinessNameRequest
     {
-        public string Industry { get; set; }
-        public string Keywords { get; set; }
-        public string Style { get; set; }
+        public required string Industry { get; set; }
+        public required string Keywords { get; set; }
+        public required string Style { get; set; }
     }
 
     public class BlogContentRequest
     {
-        public string Prompt { get; set; }
+        public required string Prompt { get; set; }
     }
 }

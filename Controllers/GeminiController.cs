@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ContentCraft_studio.Models;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -7,8 +8,9 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using ContentCraft_studio.Services;
-using ContentCraft_studio.Models;
+using ContentCraft_Studio.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ContentCraft_studio.Controllers
 {
@@ -19,12 +21,14 @@ namespace ContentCraft_studio.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration;
         private readonly IMongoDbService _mongoDbService;
+        private readonly ILogger<GeminiController> _logger;
 
-        public GeminiController(IHttpClientFactory clientFactory, IConfiguration configuration, IMongoDbService mongoDbService)
+        public GeminiController(IHttpClientFactory clientFactory, IConfiguration configuration, IMongoDbService mongoDbService, ILogger<GeminiController> logger)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
             _mongoDbService = mongoDbService;
+            _logger = logger;
         }
 
         [HttpPost("generate-image")]
@@ -49,8 +53,8 @@ namespace ContentCraft_studio.Controllers
                 if (responseData?.Candidates == null || !responseData.Candidates.Any())
                     return BadRequest(new { error = "No image generated" });
 
-                var imageUrl = responseData.Candidates.First().Contents.Parts
-                    .FirstOrDefault(p => p.InlineData?.MimeType?.StartsWith("image/") == true)?.InlineData.Data;
+                 var imageUrl = responseData.Candidates.FirstOrDefault()?.Contents?.Parts
+                    .FirstOrDefault(p => p.InlineData?.MimeType?.StartsWith("image/") == true)?.InlineData?.Data;
 
                 if (string.IsNullOrEmpty(imageUrl))
                     return BadRequest(new { error = "No image data in response" });
@@ -64,7 +68,7 @@ namespace ContentCraft_studio.Controllers
         }
 
         [Authorize]
-        [HttpPost("save-image-description")]
+        [HttpPost("api/gemini/save-image-description")]
         public async Task<IActionResult> SaveImageDescription([FromBody] SaveImageDescriptionRequest request)
         {
             try
@@ -74,10 +78,10 @@ namespace ContentCraft_studio.Controllers
                     return BadRequest(new { error = "Description is required" });
                 }
 
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+                var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userId))
                 {
-                    userId = Guid.NewGuid().ToString();
+                    return Unauthorized(new { error = "User not authenticated" });
                 }
 
                 var imageDescription = new ImageDescription
@@ -88,11 +92,12 @@ namespace ContentCraft_studio.Controllers
                 };
 
                 await _mongoDbService.SaveImageDescriptionAsync(imageDescription);
-                return Ok(new { message = "Description saved successfully", userId });
+                return Ok(new { message = "Description saved successfully" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                _logger.LogError(ex, "Error saving image description");
+                return StatusCode(500, new { error = "Internal server error" });
             }
         }
     }

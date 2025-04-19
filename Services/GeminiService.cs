@@ -87,8 +87,6 @@ namespace ContentCraft_studio.Services
                         // Return the response text directly without any modifications
                         // This will preserve the original markdown formatting from Gemini
                         return responseText;
-
-                        return responseText;
                     }
                     catch (Exception) when (attempt < MaxRetries)
                     {

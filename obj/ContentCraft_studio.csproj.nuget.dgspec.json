@@ -60,7 +60,7 @@
             },
             "Microsoft.AspNetCore.Authentication.OpenIdConnect": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[9.0.4, )"
             },
             "MongoDB.Driver": {
               "target": "Package",

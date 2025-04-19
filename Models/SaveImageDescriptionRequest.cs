@@ -2,6 +2,6 @@ namespace ContentCraft_studio.Models
 {
     public class SaveImageDescriptionRequest
     {
-        public string Description { get; set; }
+        public required string Description { get; set; }
     }
 }
