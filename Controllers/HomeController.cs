@@ -18,7 +18,22 @@ namespace GeminiAspNetDemo.Controllers
             return View();
         }
 
+        public IActionResult About() // Added About action
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult Contact() // Added Contact action
+        {
+            return View();
+        }
+
+        public IActionResult Terms() // Added Terms action
         {
             return View();
         }
