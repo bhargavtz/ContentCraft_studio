@@ -198,7 +198,6 @@ C:\Users\Prem kaneriya\Downloads\ContentCraft_studio\ContentCraft_studio\obj\Deb
 C:\Users\Prem kaneriya\Downloads\ContentCraft_studio\ContentCraft_studio\obj\Debug\net9.0\ref\GeminiAspNetDemo.dll
 C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Auth0.AspNetCore.Authentication.dll
 C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
 C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
@@ -425,14 +424,6 @@ C:\Users\DELL\Downloads\git\obj\Debug\net9.0\refint\GeminiAspNetDemo.dll
 C:\Users\DELL\Downloads\git\obj\Debug\net9.0\GeminiAspNetDemo.pdb
 C:\Users\DELL\Downloads\git\obj\Debug\net9.0\GeminiAspNetDemo.genruntimeconfig.cache
 C:\Users\DELL\Downloads\git\obj\Debug\net9.0\ref\GeminiAspNetDemo.dll
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\appsettings.Development.json
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\appsettings.json
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.staticwebassets.runtime.json
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.staticwebassets.endpoints.json
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.deps.json
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.runtimeconfig.json
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.pdb
-C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.csproj.AssemblyReference.cache
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.AssemblyInfoInputs.cache
@@ -442,9 +433,22 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.MvcA
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.RazorAssemblyInfo.cache
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.RazorAssemblyInfo.cs
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.sourcelink.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\appsettings.Development.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\appsettings.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.staticwebassets.runtime.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.staticwebassets.endpoints.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\DnsClient.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\MongoDB.Bson.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\MongoDB.Driver.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\SharpCompress.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\Snappier.dll
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\ZstdSharp.dll
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\bundle\GeminiAspNetDemo.styles.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\projectbundle\GeminiAspNetDemo.bundle.scp.css
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\2qq8dd5wu2-eg82fg4iv7.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\rnv4cq6tui-61n19gt1b8.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\686km1u9zm-xtxxf3hu2r.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\25p4q2tast-t1cqhe9u97.gz
@@ -521,6 +525,8 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAs.0DFA457B.Up2
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.dll
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\refint\GeminiAspNetDemo.dll
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.pdb
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.deps.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.runtimeconfig.json
+C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\GeminiAspNetDemo.pdb
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\GeminiAspNetDemo.genruntimeconfig.cache
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ref\GeminiAspNetDemo.dll
-C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\2qq8dd5wu2-eg82fg4iv7.gz

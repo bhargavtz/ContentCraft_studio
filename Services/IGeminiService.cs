@@ -1,6 +1,6 @@
-using GeminiAspNetDemo.Models;
+using ContentCraft_studio.Models;
 
-namespace GeminiAspNetDemo.Services
+namespace ContentCraft_studio.Services
 {
     public interface IGeminiService
     {

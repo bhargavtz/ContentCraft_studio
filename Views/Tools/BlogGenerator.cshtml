@@ -6,6 +6,14 @@
     <div class="max-w-3xl mx-auto">
         <h1 class="text-3xl font-bold mb-6">Blog Content Generator</h1>
         <p class="text-gray-600 mb-8">Generate SEO-optimized blog posts and articles in minutes.</p>
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+            <p class="text-blue-700">✨ SEO optimization and multiple formats available</p>
+            <ul class="list-disc list-inside mt-2 text-blue-600">
+                <li>Keyword analysis and optimization</li>
+                <li>Meta description generation</li>
+                <li>Content structure recommendations</li>
+            </ul>
+        </div>
 
         <form id="blogGeneratorForm" class="space-y-6">
             <div>
@@ -15,7 +23,8 @@
 
             <div>
                 <label for="keywords" class="block text-sm font-medium text-gray-700">SEO Keywords</label>
-                <input type="text" id="keywords" name="keywords" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Enter keywords separated by commas">
+                <input type="text" id="keywords" name="keywords" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Enter keywords separated by commas" required>
+                <p class="mt-1 text-sm text-gray-500">Add 3-5 target keywords for better SEO optimization</p>
             </div>
 
             <div>
@@ -54,10 +63,24 @@
 
         <div id="generatedContent" class="mt-8 hidden">
             <h2 class="text-xl font-semibold mb-4">Generated Content</h2>
+            <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                <h3 class="text-lg font-medium text-gray-700 mb-2">SEO Score</h3>
+                <div id="seoScore" class="flex items-center space-x-2">
+                    <div class="h-2 w-full bg-gray-200 rounded-full">
+                        <div id="seoScoreBar" class="h-2 bg-green-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span id="seoScoreText" class="text-sm font-medium text-gray-600">0%</span>
+                </div>
+                <ul id="seoTips" class="mt-3 text-sm text-gray-600 space-y-1"></ul>
+            </div>
             <div id="contentOutput" class="prose max-w-none bg-white p-6 rounded-lg shadow">
                 <!-- Generated content will be inserted here -->
             </div>
-            <div class="mt-4 flex justify-end">
+            <div class="mt-4 flex justify-between items-center">
+                <div class="flex space-x-2">
+                    <button id="downloadWord" class="text-blue-600 hover:text-blue-800 font-medium">Download as Word</button>
+                    <button id="downloadPdf" class="text-blue-600 hover:text-blue-800 font-medium">Download as PDF</button>
+                </div>
                 <button id="copyContent" class="text-blue-600 hover:text-blue-800 font-medium">
                     Copy to Clipboard
                 </button>
@@ -68,12 +91,48 @@
 
 @section Scripts {
     <script>
+        function analyzeSEO(content, keywords) {
+            const score = { value: 0, tips: [] };
+            const keywordList = keywords.split(',').map(k => k.trim().toLowerCase());
+            
+            // Check keyword density
+            keywordList.forEach(keyword => {
+                const regex = new RegExp(keyword, 'gi');
+                const count = (content.match(regex) || []).length;
+                const density = (count / content.split(' ').length) * 100;
+                if (density < 0.5) {
+                    score.tips.push(`Consider increasing usage of keyword: ${keyword}`);
+                } else if (density > 2.5) {
+                    score.tips.push(`Keyword '${keyword}' might be overused`);
+                } else {
+                    score.value += 20;
+                }
+            });
+
+            // Check content length
+            const wordCount = content.split(' ').length;
+            if (wordCount < 300) {
+                score.tips.push('Content length is too short for good SEO');
+            } else {
+                score.value += 20;
+            }
+
+            // Check headings
+            if (content.includes('<h1>') || content.includes('<h2>')) {
+                score.value += 20;
+            } else {
+                score.tips.push('Add more headings for better structure');
+            }
+
+            return score;
+        }
+
         document.getElementById('blogGeneratorForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const form = e.target;
             const formData = new FormData(form);
-            const prompt = `Generate a ${formData.get('length')} ${formData.get('format')} blog post about ${formData.get('topic')} in a ${formData.get('tone')} tone. Include these SEO keywords: ${formData.get('keywords')}. Focus on creating engaging, well-structured content with proper headings, paragraphs, and SEO optimization.`;
+            const prompt = `Generate a ${formData.get('length')} ${formData.get('format')} blog post about ${formData.get('topic')} in a ${formData.get('tone')} tone. Include these SEO keywords: ${formData.get('keywords')}. Focus on creating engaging, well-structured content with proper headings, paragraphs, and SEO optimization. Format the content with HTML tags for headings and paragraphs.`;
 
             try {
                 const submitButton = form.querySelector('button[type="submit"]');
@@ -103,6 +162,16 @@
 
                 document.getElementById('contentOutput').innerHTML = data.content;
                 document.getElementById('generatedContent').classList.remove('hidden');
+
+                // Analyze SEO
+                const seoAnalysis = analyzeSEO(data.content, formData.get('keywords'));
+                const seoScoreBar = document.getElementById('seoScoreBar');
+                const seoScoreText = document.getElementById('seoScoreText');
+                const seoTips = document.getElementById('seoTips');
+
+                seoScoreBar.style.width = `${seoAnalysis.value}%`;
+                seoScoreText.textContent = `${seoAnalysis.value}%`;
+                seoTips.innerHTML = seoAnalysis.tips.map(tip => `<li>• ${tip}</li>`).join('');
             } catch (error) {
                 console.error('Error:', error);
                 const errorMessage = error.message.includes('Too many requests') ?
@@ -121,6 +190,26 @@
             navigator.clipboard.writeText(content)
                 .then(() => alert('Content copied to clipboard!'))
                 .catch(err => console.error('Failed to copy:', err));
+        });
+
+        document.getElementById('downloadWord').addEventListener('click', () => {
+            const content = document.getElementById('contentOutput').innerHTML;
+            const blob = new Blob([content], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'blog-content.doc';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById('downloadPdf').addEventListener('click', () => {
+            const content = document.getElementById('contentOutput').innerHTML;
+            const style = '<style>body { font-family: Arial, sans-serif; line-height: 1.6; }</style>';
+            const win = window.open('', '', 'height=700,width=700');
+            win.document.write(`<html><head>${style}</head><body>${content}</body></html>`);
+            win.document.close();
+            win.print();
         });
     </script>
 }

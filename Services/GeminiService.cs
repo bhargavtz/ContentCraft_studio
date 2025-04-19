@@ -1,9 +1,9 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
-using GeminiAspNetDemo.Models;
+using ContentCraft_studio.Models;
 
-namespace GeminiAspNetDemo.Services
+namespace ContentCraft_studio.Services
 {
     public class GeminiService : IGeminiService
     {
@@ -114,31 +114,23 @@ namespace GeminiAspNetDemo.Services
             {
                 var geminiRequest = new
                 {
-                    contents = new[]
-                    {
-                        new
-                        {
-                            parts = new[]
-                            {
-                                new { text = request.Prompt }
-                            }
-                        }
-                    },
-                    generationConfig = new
+                    prompt = request.Prompt,
+                    model = "gemini-2.0-flash-exp-image-generation",
+                    parameters = new
                     {
                         temperature = 0.4,
                         topK = 32,
                         topP = 1,
-                        maxOutputTokens = 2048
-                    },
-                    safetySettings = new object[] { }
+                        imageSize = "1024x1024",
+                        sampleCount = 1
+                    }
                 };
 
                 var requestJson = JsonSerializer.Serialize(geminiRequest);
                 var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
                 
                 var response = await _httpClient.PostAsync(
-                    $"models/gemini-pro-vision:generateContent?key={_apiKey}",
+                    $"models/gemini-2.0-flash-exp-image-generation:generateImage?key={_apiKey}",
                     content);
 
                 response.EnsureSuccessStatusCode();
@@ -146,19 +138,12 @@ namespace GeminiAspNetDemo.Services
                 var responseJson = await response.Content.ReadAsStringAsync();
                 var responseObj = JsonSerializer.Deserialize<JsonElement>(responseJson);
 
-                var contentParts = responseObj
-                    .GetProperty("candidates")[0]
-                    .GetProperty("content")
-                    .GetProperty("parts");
+                var imageData = responseObj
+                    .GetProperty("images")[0]
+                    .GetProperty("data")
+                    .GetString();
 
-                var generatedContent = new List<string>();
-
-                foreach (var part in contentParts.EnumerateArray())
-                {
-                    generatedContent.Add(part.GetProperty("text").GetString());
-                }
-
-                var imageUrl = string.Join(" ", generatedContent);
+                var imageUrl = imageData;
 
                 return new ImageGenerationResponse
                 {

@@ -1,9 +1,13 @@
-using GeminiAspNetDemo.Models;
-using GeminiAspNetDemo.Services;
+using ContentCraft_studio.Models;
+using ContentCraft_studio.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using Auth0.AspNetCore.Authentication;
+using System.Net;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -30,13 +34,14 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-
-
-
 builder.Services.Configure<GeminiOptions>(
     builder.Configuration.GetSection("Gemini"));
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
+builder.Services.AddScoped<IMongoDbService, MongoDbService>();
+
+// Configure MongoDB settings
+builder.Services.Configure<MongoDbOptions>(builder.Configuration.GetSection("MongoDb"));
 
 // Add session services
 builder.Services.AddDistributedMemoryCache();

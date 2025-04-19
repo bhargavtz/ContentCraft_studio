@@ -1,4 +1,4 @@
-namespace GeminiAspNetDemo.Models
+namespace ContentCraft_studio.Models
 {
     public class StoryGenerationRequest
     {

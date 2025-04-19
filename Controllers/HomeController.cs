@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using GeminiAspNetDemo.Models;
+using ContentCraft_studio.Models;
 
 namespace GeminiAspNetDemo.Controllers
 {
@@ -29,4 +29,4 @@ namespace GeminiAspNetDemo.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
-} 
+}

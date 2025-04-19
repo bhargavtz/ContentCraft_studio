@@ -158,7 +158,7 @@
                 formData.append('prompt', document.getElementById('prompt').value);
             }
 
-            const response = await fetch('/Tools/GenerateCaption', {
+            const response = await fetch('/Tools/GenerateAndSaveCaption', {
                 method: 'POST',
                 body: formData
             });
@@ -168,15 +168,22 @@
             const template = document.querySelector('.caption-item');
             
             captionsContainer.innerHTML = '';
-            
-            data.captions.forEach(caption => {
-                const captionElement = template.cloneNode(true);
-                captionElement.classList.remove('hidden');
-                captionElement.querySelector('.caption-text').textContent = caption;
-                captionsContainer.appendChild(captionElement);
-            });
-            
-            document.getElementById('result').classList.remove('hidden');
+
+            if (data.success) {
+                const captions = data.response.split('---').map(c => c.trim());
+                captions.forEach(caption => {
+                    if (caption) {
+                        const captionElement = template.cloneNode(true);
+                        captionElement.classList.remove('hidden');
+                        captionElement.querySelector('.caption-text').textContent = caption;
+                        captionsContainer.appendChild(captionElement);
+                    }
+                });
+                
+                document.getElementById('result').classList.remove('hidden');
+            } else {
+                alert('Error generating captions: ' + data.message);
+            }
         });
 
         function editCaption(button) {

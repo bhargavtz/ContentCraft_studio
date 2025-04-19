@@ -4,6 +4,7 @@
     <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="px-6 py-8">
             <div class="text-center">
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Your Profile</h1>
                 @if (User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value != null)
                 {
                     <img class="h-32 w-32 rounded-full mx-auto" src="@User.Claims.FirstOrDefault(c => c.Type == "picture")?.Value" alt="Profile picture">
@@ -40,7 +41,34 @@
             <div class="mt-8 border-t border-gray-200 pt-8">
                 <h3 class="text-lg font-medium text-gray-900">Profile Information</h3>
                 <dl class="mt-4 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-                    @foreach (var claim in User.Claims)
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">USER ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900">@User.FindFirstValue(ClaimTypes.NameIdentifier)</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">EMAIL VERIFIED</dt>
+                        <dd class="mt-1 text-sm text-gray-900">
+                            @if (User.FindFirstValue("email_verified")?.ToLower() == "true")
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Verified</span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Not Verified</span>
+                            }
+                        </dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">LOCALE</dt>
+                        <dd class="mt-1 text-sm text-gray-900">@User.FindFirstValue("locale")</dd>
+                    </div>
+                    <div class="sm:col-span-1">
+                        <dt class="text-sm font-medium text-gray-500">LAST UPDATED</dt>
+                        <dd class="mt-1 text-sm text-gray-900">@(User.FindFirstValue("updated_at") ?? "Not available")</dd>
+                    </div>
+                    @foreach (var claim in User.Claims.Where(c => 
+                        !new[] { "picture", "email_verified", "locale", "updated_at", "sid", ClaimTypes.NameIdentifier }.Contains(c.Type) && 
+                        !c.Type.Contains("urn:")))
                     {
                         @if (claim.Type != "picture" && !claim.Type.Contains("urn:") && !claim.Type.Contains("sid"))
                         {
@@ -74,11 +102,30 @@
             editEl.classList.remove('hidden');
             editEl.focus();
 
-            editEl.addEventListener('blur', () => {
+            editEl.addEventListener('blur', async () => {
                 const newValue = editEl.value.trim();
                 if (newValue) {
-                    displayEl.textContent = newValue;
-                    // TODO: Add API call to update the field value
+                    try {
+                        const response = await fetch('/Account/UpdateProfile', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                [field]: newValue
+                            })
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            displayEl.textContent = newValue;
+                        } else {
+                            alert('Failed to update profile');
+                        }
+                    } catch (error) {
+                        console.error('Error updating profile:', error);
+                        alert('Failed to update profile');
+                    }
                 }
                 
                 displayEl.classList.remove('hidden');

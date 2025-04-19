@@ -1,8 +1,8 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\GeminiAspNetDemo.bundle.scp.css",
-      "PackagePath": "staticwebassets\\GeminiAspNetDemo.55gpcryfd7.bundle.scp.css"
+      "Id": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\ContentCraft_studio.bundle.scp.css",
+      "PackagePath": "staticwebassets\\ContentCraft_studio.o0mn1obpm4.bundle.scp.css"
     },
     {
       "Id": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\site.css",
@@ -261,24 +261,24 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.slim.min.map"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.GeminiAspNetDemo.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.ContentCraft_studio.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.GeminiAspNetDemo.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.ContentCraft_studio.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.GeminiAspNetDemo.props",
-      "PackagePath": "build\\GeminiAspNetDemo.props"
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.ContentCraft_studio.props",
+      "PackagePath": "build\\ContentCraft_studio.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.GeminiAspNetDemo.props",
-      "PackagePath": "buildMultiTargeting\\GeminiAspNetDemo.props"
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.ContentCraft_studio.props",
+      "PackagePath": "buildMultiTargeting\\ContentCraft_studio.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.GeminiAspNetDemo.props",
-      "PackagePath": "buildTransitive\\GeminiAspNetDemo.props"
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.ContentCraft_studio.props",
+      "PackagePath": "buildTransitive\\ContentCraft_studio.props"
     }
   ],
   "ElementsToRemove": []

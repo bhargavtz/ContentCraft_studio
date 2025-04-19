@@ -45,10 +45,17 @@
 
         <div id="result-container" class="hidden bg-white rounded-xl shadow-lg p-8">
             <h3 class="text-xl font-semibold text-gray-700 mb-4">Generated Description</h3>
-            <div id="description-content" class="prose max-w-none text-gray-600">
-            
+            <div id="description-content" class="prose max-w-none text-gray-600 space-y-2 whitespace-pre-line">
+                <div class="animate-pulse" id="loading-placeholder" style="display: none;">
+                    <div class="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                </div>
             </div>
             <div class="mt-6 flex justify-end space-x-4">
+                <button id="save-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    Save Description
+                </button>
                 <button id="copy-btn" class="px-4 py-2 border border-[#0077b6] text-[#0077b6] rounded-lg hover:bg-[#0077b6] hover:text-white transition-colors">
                     Copy to Clipboard
                 </button>
@@ -138,6 +145,8 @@
                 }
                 generateBtn.disabled = true;
                 generateBtn.textContent = 'Generating...';
+                document.getElementById('loading-placeholder').style.display = 'block';
+                descriptionContent.textContent = '';
 
                 const formData = new FormData();
                 formData.append('image', imageInput.files[0]);
@@ -158,7 +167,7 @@
                     }else{
                         description = 'No description generated.';
                     }
-                    descriptionContent.textContent = description;
+                    descriptionContent.innerHTML = description.split('\n').map(line => `<p class="mb-2">${line}</p>`).join('');
                     resultContainer.classList.remove('hidden');
                 } catch (error) {
                     alert('Error generating description. Please try again.');
@@ -185,11 +194,39 @@
                 }
             });
 
-            // Create and add Share button
-            const shareBtn = document.createElement('button');
-            shareBtn.textContent = 'Share';
-            shareBtn.className = 'px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors';
-            copyBtn.parentNode.insertBefore(shareBtn, regenerateBtn);
+            // Save description to MongoDB
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.addEventListener('click', async () => {
+                const description = descriptionContent.textContent;
+                if (!description) {
+                    alert('No description to save!');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/tools/save-image-description', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ description })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to save description');
+                    }
+
+                    const originalText = saveBtn.textContent;
+                    saveBtn.textContent = 'Saved!';
+                    saveBtn.disabled = true;
+                    setTimeout(() => {
+                        saveBtn.textContent = originalText;
+                        saveBtn.disabled = false;
+                    }, 2000);
+                } catch (error) {
+                    alert('Error saving description: ' + error.message);
+                }
+            });
 
             shareBtn.addEventListener('click', async () => {
                 const text = descriptionContent.textContent;
@@ -214,3 +251,42 @@
         });
     </script>
 }
+
+@{
+    ViewData["Title"] = "Image Description";
+}
+
+<h2>Image Description</h2>
+
+<form id="imageDescriptionForm">
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+    </div>
+    <button type="button" id="saveButton" class="btn btn-primary">Save</button>
+</form>
+
+<script>
+    document.getElementById('saveButton').addEventListener('click', async () => {
+        const description = document.getElementById('description').value;
+        if (!description) {
+            alert('Description is required!');
+            return;
+        }
+
+        const response = await fetch('/api/tools/save-image-description', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ description })
+        });
+
+        if (response.ok) {
+            alert('Description saved successfully!');
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.error}`);
+        }
+    });
+</script>

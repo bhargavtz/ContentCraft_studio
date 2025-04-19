@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
-using GeminiAspNetDemo.Models;
-using GeminiAspNetDemo.Services;
+using ContentCraft_studio.Models;
+using ContentCraft_studio.Services;
 
-namespace GeminiAspNetDemo.Controllers
+namespace ContentCraft_studio.Controllers
 {
     public class ToolsController : Controller
     {
@@ -55,6 +55,78 @@ namespace GeminiAspNetDemo.Controllers
         public IActionResult ImageDescription()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Route("api/tools/generate-image-description")]
+        public async Task<IActionResult> GenerateImageDescription([FromForm] IFormFile image)
+        {
+            try
+            {
+                if (image == null)
+                {
+                    return Json(new { error = "Please upload an image" });
+                }
+
+                using var ms = new MemoryStream();
+                await image.CopyToAsync(ms);
+                var imageBytes = ms.ToArray();
+                var base64Image = Convert.ToBase64String(imageBytes);
+
+                var client = _clientFactory.CreateClient();
+                var apiKey = _configuration["Gemini:ApiKey"];
+
+                var promptText = "Analyze this image and provide a detailed, professional description. Include: " +
+                    "1. Main subject and setting\n" +
+                    "2. Notable visual elements and composition\n" +
+                    "3. Colors, lighting, and atmosphere\n" +
+                    "4. Any text or recognizable elements\n" +
+                    "5. Overall mood or impression";
+
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new object[]
+                            {
+                                new
+                                {
+                                    inlineData = new
+                                    {
+                                        mimeType = image.ContentType,
+                                        data = base64Image
+                                    }
+                                },
+                                new { text = promptText }
+                            }
+                        }
+                    }
+                };
+
+                var response = await client.PostAsync(
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
+                    new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
+                );
+
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync();
+                var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
+
+                var description = jsonElement
+                    .GetProperty("candidates")[0]
+                    .GetProperty("content")
+                    .GetProperty("parts")[0]
+                    .GetProperty("text")
+                    .GetString();
+
+                return Json(new { description = description ?? "Unable to generate description" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "Failed to generate description", details = ex.Message });
+            }
         }
 
         public IActionResult StoryGenerator()
