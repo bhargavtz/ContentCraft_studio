@@ -11,21 +11,41 @@ namespace ContentCraft_studio.Services
     {
         Task SaveImageDescriptionAsync(ImageDescription imageDescription);
         Task UpsertUserAsync(UserModel user);
+        Task SaveBusinessNameAsync(BusinessNameModel businessName);
+        Task SaveBlogPostAsync(BlogPost blogPost);
     }
 
     public class MongoDbService : IMongoDbService
     {
         private readonly IMongoCollection<ImageDescription> _imageDescriptions;
         private readonly IMongoCollection<UserModel> _users;
+        private readonly IMongoCollection<BusinessNameModel> _businessNamesCollection;
+        private readonly IMongoCollection<BlogPost> _blogPostsCollection;
         private readonly ILogger<MongoDbService> _logger;
 
         public MongoDbService(IConfiguration configuration, ILogger<MongoDbService> logger)
         {
-            var client = new MongoClient(configuration["MongoDb:ConnectionString"]);
-            var database = client.GetDatabase(configuration["MongoDb:DatabaseName"]);
-            _imageDescriptions = database.GetCollection<ImageDescription>(configuration["MongoDb:ImageDescriptionsCollectionName"]); // Use config to set the collection name
-            _users = database.GetCollection<UserModel>(configuration["MongoDb:UsersCollectionName"]); // Use config to set users collection name
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            
+            var mongoDbOptions = configuration.GetSection("MongoDB").Get<MongoDbOptions>() 
+                ?? throw new InvalidOperationException("MongoDB configuration is missing");
+                
+            if (string.IsNullOrEmpty(mongoDbOptions.ConnectionString))
+                throw new InvalidOperationException("MongoDB connection string is not configured");
+            if (string.IsNullOrEmpty(mongoDbOptions.DatabaseName))
+                throw new InvalidOperationException("MongoDB database name is not configured");
+
+            var client = new MongoClient(mongoDbOptions.ConnectionString);
+            var database = client.GetDatabase(mongoDbOptions.DatabaseName);
+            
+            _imageDescriptions = database.GetCollection<ImageDescription>(
+                mongoDbOptions.ImageDescriptionsCollectionName ?? "ImageDescriptions");
+            _users = database.GetCollection<UserModel>(
+                mongoDbOptions.UsersCollectionName ?? "Users");
+            _businessNamesCollection = database.GetCollection<BusinessNameModel>(
+                mongoDbOptions.BusinessNamesCollectionName ?? "BusinessNames");
+            _blogPostsCollection = database.GetCollection<BlogPost>(
+                mongoDbOptions.BlogPostsCollectionName ?? "BlogPosts");
         }
 
         public async Task SaveImageDescriptionAsync(ImageDescription imageDescription)
@@ -56,6 +76,36 @@ namespace ContentCraft_studio.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to upsert user: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task SaveBusinessNameAsync(BusinessNameModel businessName)
+        {
+            try
+            {
+                _logger.LogInformation("Attempting to save business name: {@BusinessName}", businessName);
+                await _businessNamesCollection.InsertOneAsync(businessName);
+                _logger.LogInformation("Business name saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save business name: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task SaveBlogPostAsync(BlogPost blogPost)
+        {
+            try
+            {
+                _logger.LogInformation("Attempting to save blog post: {@BlogPost}", blogPost);
+                await _blogPostsCollection.InsertOneAsync(blogPost);
+                _logger.LogInformation("Blog post saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save blog post: {Ex}", ex);
                 throw;
             }
         }

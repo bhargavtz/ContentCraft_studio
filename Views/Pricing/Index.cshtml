@@ -1,5 +1,7 @@
 @{
     ViewData["Title"] = "Pricing Plans";
+    var plans = ViewData["Plans"] as dynamic[];
+    var testimonials = ViewData["Testimonials"] as dynamic[];
 }
 
 <div class="min-h-screen bg-gradient-to-br from-blue-100 to-purple-200 py-20">
@@ -10,152 +12,156 @@
         </div>
 
         <div class="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-3">
-            <!-- Free Plan -->
-            <div class="relative bg-white rounded-2xl shadow-xl overflow-hidden transition-transform hover:scale-105">
-                <div class="p-8">
-                    <h3 class="text-2xl font-semibold text-gray-900">Free</h3>
-                    <p class="mt-4 text-gray-500">Perfect for getting started</p>
-                    <p class="mt-8">
-                        <span class="text-5xl font-bold text-gray-900">₹0</span>
-                        <span class="text-gray-500">/month</span>
-                    </p>
-                    <ul class="mt-8 space-y-4">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">5 AI generations/month</span>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">Basic templates</span>
-                        </li>
-                    </ul>
-                    <button onclick="startSubscription('free')"
-                            class="mt-8 w-full py-3 px-4 rounded-lg bg-green-500 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                        Get Started
-                    </button>
-                </div>
-            </div>
+            @if (plans != null)
+            {
+                for (int i = 0; i < plans.Length; i++)
+                {
+                    var plan = plans[i];
+                    <div class="relative bg-white rounded-2xl shadow-xl overflow-hidden transition-transform hover:scale-105 @(plan.Popular ? "transform scale-105 border-4 border-yellow-400" : "")">
+                        @if (plan.Popular)
+                        {
+                            <div class="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-3 py-1 rounded-bl-lg">
+                                POPULAR
+                            </div>
+                        }
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold text-gray-900">@plan.Name</h3>
+                            <p class="mt-4 text-gray-500">@plan.Description</p>
+                            <p class="mt-8">
+                                <span class="text-5xl font-bold text-gray-900">₹@plan.Price</span>
+                                <span class="text-gray-500">/month</span>
+                            </p>
+                            <ul class="mt-8 space-y-4">
+                                @foreach (var feature in plan.Features)
+                                {
+                                    <li class="flex items-center">
+                                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span class="ml-3 text-gray-700">@feature</span>
+                                    </li>
+                                }
+                            </ul>
+                            <button onclick="handlePlanAction('@plan.Name.ToString().ToLower()')"
+                                    class="mt-8 w-full py-3 px-4 rounded-lg @(plan.Name == "Free" ? "bg-green-500 hover:bg-green-700" : plan.Name == "Pro" ? "bg-blue-500 hover:bg-blue-700" : "bg-indigo-600 hover:bg-indigo-700") text-white focus:outline-none focus:ring-2 focus:ring-offset-2">
+                                @(plan.Name == "Enterprise" ? "Contact Sales" : plan.Name == "Free" ? "Get Started" : "Subscribe Now")
+                            </button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
 
-            <!-- Pro Plan -->
-            <div class="relative bg-white rounded-2xl shadow-xl overflow-hidden transform scale-105">
-                <div class="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                    POPULAR
-                </div>
-                <div class="p-8">
-                    <h3 class="text-2xl font-semibold text-gray-900">Pro</h3>
-                    <p class="mt-4 text-gray-500">Best for professionals</p>
-                    <p class="mt-8">
-                        <span class="text-5xl font-bold text-gray-900">₹2,499</span>
-                        <span class="text-gray-500">/month</span>
-                    </p>
-                    <ul class="mt-8 space-y-4">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        <div class="mt-20">
+            <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">What Our Users Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @if (testimonials != null)
+                {
+                    foreach (var t in testimonials)
+                    {
+                        <div class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center">
+                            <svg class="w-8 h-8 text-indigo-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h4l2-2h4a2 2 0 012 2v12a2 2 0 01-2 2z" />
                             </svg>
-                            <span class="ml-3 text-gray-700">Unlimited AI generations</span>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">Premium templates</span>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">Priority support</span>
-                        </li>
-                    </ul>
-                    <button onclick="startSubscription('pro')"
-                            class="mt-8 w-full py-3 px-4 rounded-lg bg-blue-500 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Subscribe Now
-                    </button>
-                </div>
-            </div>
-
-            <!-- Enterprise Plan -->
-            <div class="relative bg-white rounded-2xl shadow-md overflow-hidden transition-transform hover:scale-105">
-                <div class="p-8">
-                    <h3 class="text-2xl font-semibold text-gray-900">Enterprise</h3>
-                    <p class="mt-4 text-gray-500">For large teams</p>
-                    <p class="mt-8">
-                        <span class="text-5xl font-bold text-gray-900">₹7,999</span>
-                        <span class="text-gray-500">/month</span>
-                    </p>
-                    <ul class="mt-8 space-y-4">
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">Everything in Pro</span>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">Custom integrations</span>
-                        </li>
-                        <li class="flex items-center">
-                            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                            <span class="ml-3 text-gray-700">24/7 support</span>
-                        </li>
-                    </ul>
-                    <button onclick="startSubscription('enterprise')"
-                            class="mt-8 w-full py-3 px-4 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        Contact Sales
-                    </button>
-                </div>
+                            <p class="text-gray-700 italic">"@t.Text"</p>
+                            <span class="mt-4 font-semibold text-gray-900">@t.Name</span>
+                        </div>
+                    }
+                }
             </div>
         </div>
 
         <!-- Payment Modal -->
-        <div id="paymentModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden">
-            <div class="flex items-center justify-center min-h-screen">
-                <div class="bg-white rounded-lg p-8 max-w-md w-full shadow-lg">
-                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Complete Your Purchase</h3>
-                    <form id="payment-form" action="/Pricing/ProcessPayment" method="post" class="space-y-4">
-                        <input type="hidden" id="selected-plan" name="plan" value="" />
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">Card Information</label>
-                            <input type="text" id="card" name="cardNumber" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Card number" required />
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <input type="text" name="expiry" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="MM/YY" required />
-                            </div>
-                            <div>
-                                <input type="text" name="cvc" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="CVC" required />
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Pay Now
-                        </button>
-                        <button type="button" onclick="closePaymentModal()" class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50">
-                            Cancel
-                        </button>
-                    </form>
+        <div id="paymentModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm relative animate-fadeIn">
+                <button onclick="closePaymentModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl">&times;</button>
+                <div class="flex justify-center mb-6">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" class="h-8 mx-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/MasterCard_Logo.svg" alt="MasterCard" class="h-8 mx-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/PayPal_2014_logo.png" alt="PayPal" class="h-8 mx-1">
                 </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">Card Payment</h3>
+                <form id="fakePaymentForm" autocomplete="off" novalidate>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-1">Card Number</label>
+                        <input type="text" maxlength="19" pattern="[0-9 ]*" inputmode="numeric" placeholder="1234 5678 9012 3456" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition outline-none bg-gray-50" required>
+                        <span class="hidden text-xs text-red-500 mt-1">Enter valid card number</span>
+                    </div>
+                    <div class="flex space-x-3 mb-4">
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-1">Expiry</label>
+                            <input type="text" maxlength="5" pattern="\d{2}/\d{2}" placeholder="MM/YY" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition outline-none bg-gray-50" required>
+                            <span class="hidden text-xs text-red-500 mt-1">MM/YY</span>
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-gray-700 mb-1">CVC</label>
+                            <input type="text" maxlength="4" pattern="\d{3,4}" placeholder="123" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition outline-none bg-gray-50" required>
+                            <span class="hidden text-xs text-red-500 mt-1">Required</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3 mt-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-semibold text-lg shadow-md hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 animate-bounce">Pay Now</button>
+                    <div id="fakePaymentMsg" class="hidden mt-4 text-green-600 text-center font-semibold">Payment processing...</div>
+                </form>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="contactModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full shadow-lg relative">
+            <button onclick="closeContactModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+            <partial name="~/Views/Home/Contact.cshtml" />
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        function startSubscription(plan) {
-            document.getElementById('selected-plan').value = plan;
-            document.getElementById('paymentModal').classList.remove('hidden');
-        }
-
         function closePaymentModal() {
             document.getElementById('paymentModal').classList.add('hidden');
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('fakePaymentForm');
+            if(form){
+                form.onsubmit = function(e){
+                    e.preventDefault();
+                    var valid = true;
+                    var inputs = form.querySelectorAll('input');
+                    inputs.forEach(function(input){
+                        var span = input.nextElementSibling;
+                        if(!input.checkValidity()){
+                            span.classList.remove('hidden');
+                            valid = false;
+                        } else {
+                            span.classList.add('hidden');
+                        }
+                    });
+                    if(valid){
+                        document.getElementById('fakePaymentMsg').classList.remove('hidden');
+                        setTimeout(function(){
+                            window.location.href = '/Pricing/Success';
+                        }, 1800);
+                    }
+                };
+            }
+        });
+
+        function handlePlanAction(plan) {
+            if (plan === 'free') {
+                window.location.href = '/Dashboard';
+            } else if (plan === 'enterprise') {
+                document.getElementById('contactModal').classList.remove('hidden');
+            } else {
+                document.getElementById('selected-plan').value = plan;
+                document.getElementById('paymentModal').classList.remove('hidden');
+            }
+        }
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+        function closeContactModal() {
+            document.getElementById('contactModal').classList.add('hidden');
         }
     </script>
 }

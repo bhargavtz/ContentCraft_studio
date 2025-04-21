@@ -158,7 +158,7 @@
                 formData.append('prompt', document.getElementById('prompt').value);
             }
 
-            const response = await fetch('/Tools/GenerateAndSaveCaption', {
+            const response = await fetch('/Tools/GenerateCaption', {
                 method: 'POST',
                 body: formData
             });
@@ -169,8 +169,8 @@
             
             captionsContainer.innerHTML = '';
 
-            if (data.success) {
-                const captions = data.response.split('---').map(c => c.trim());
+            if (data.captions) {
+                const captions = data.captions;
                 captions.forEach(caption => {
                     if (caption) {
                         const captionElement = template.cloneNode(true);
@@ -182,7 +182,7 @@
                 
                 document.getElementById('result').classList.remove('hidden');
             } else {
-                alert('Error generating captions: ' + data.message);
+                alert('Error generating captions: ' + data.error);
             }
         });
 

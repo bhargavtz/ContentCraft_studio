@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
                             <div class="ml-3 relative" x-data="{ open: false }">
                                 <div>
@@ -79,6 +79,7 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
         document.addEventListener('DOMContentLoaded', () => {

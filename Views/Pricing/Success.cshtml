@@ -2,15 +2,44 @@
     ViewData["Title"] = "Payment Successful";
 }
 
-<div class="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full text-center">
-        <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-        <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Payment Successful!</h2>
-        <p class="mt-2 text-sm text-gray-600">Thank you for purchasing the @ViewData["Plan"] plan. You now have access to all features.</p>
-        <div class="mt-6">
-            <a href="/Home" class="text-indigo-600 hover:text-indigo-500">Return to Dashboard</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h3 class="card-title">Payment Successful!</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Thank you for subscribing to the @ViewData["Plan"] plan.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Date:</span>
+                <span class="font-semibold text-gray-800">@ViewData["Date"]</span>
+            </div>
+        </div>
+        <button onclick="window.print()" class="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Print Invoice</button>
+    </div>
+</div>
+
+<div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="/Pricing/DownloadInvoice/@(ViewData["InvoiceId"])" class="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:from-blue-700 hover:to-indigo-700 transition-all font-semibold text-base">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Download Invoice (PDF)
+            </a>
+            <a href="/Home" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium text-base transition-all">
+                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m4-8v8m5 0h2a2 2 0 002-2v-7a2 2 0 00-.586-1.414l-8-8a2 2 0 00-2.828 0l-8 8A2 2 0 003 13v7a2 2 0 002 2h2" />
+                </svg>
+                Return to Dashboard
+            </a>
         </div>
     </div>
 </div>

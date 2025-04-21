@@ -2,214 +2,252 @@
     ViewData["Title"] = "Blog Content Generator";
 }
 
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-3xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Blog Content Generator</h1>
-        <p class="text-gray-600 mb-8">Generate SEO-optimized blog posts and articles in minutes.</p>
-        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
-            <p class="text-blue-700">✨ SEO optimization and multiple formats available</p>
-            <ul class="list-disc list-inside mt-2 text-blue-600">
-                <li>Keyword analysis and optimization</li>
-                <li>Meta description generation</li>
-                <li>Content structure recommendations</li>
-            </ul>
+<main class="min-h-screen bg-gradient-to-b from-[#e0e7ff] to-white py-12">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#312e81] mb-4">Blog Content Generator</h1>
+            <p class="text-lg text-gray-600">Generate SEO-optimized blog posts and articles in minutes with our AI-powered content generator.</p>
         </div>
 
-        <form id="blogGeneratorForm" class="space-y-6">
-            <div>
-                <label for="topic" class="block text-sm font-medium text-gray-700">Blog Topic</label>
-                <input type="text" id="topic" name="topic" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Enter your blog topic" required>
-            </div>
-
-            <div>
-                <label for="keywords" class="block text-sm font-medium text-gray-700">SEO Keywords</label>
-                <input type="text" id="keywords" name="keywords" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Enter keywords separated by commas" required>
-                <p class="mt-1 text-sm text-gray-500">Add 3-5 target keywords for better SEO optimization</p>
-            </div>
-
-            <div>
-                <label for="format" class="block text-sm font-medium text-gray-700">Content Format</label>
-                <select id="format" name="format" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <option value="article">Article</option>
-                    <option value="howto">How-to Guide</option>
-                    <option value="listicle">Listicle</option>
-                    <option value="review">Review</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="tone" class="block text-sm font-medium text-gray-700">Writing Tone</label>
-                <select id="tone" name="tone" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <option value="professional">Professional</option>
-                    <option value="casual">Casual</option>
-                    <option value="formal">Formal</option>
-                    <option value="conversational">Conversational</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="length" class="block text-sm font-medium text-gray-700">Content Length</label>
-                <select id="length" name="length" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                    <option value="short">Short (500 words)</option>
-                    <option value="medium">Medium (1000 words)</option>
-                    <option value="long">Long (1500+ words)</option>
-                </select>
-            </div>
-
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                Generate Content
-            </button>
-        </form>
-
-        <div id="generatedContent" class="mt-8 hidden">
-            <h2 class="text-xl font-semibold mb-4">Generated Content</h2>
-            <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                <h3 class="text-lg font-medium text-gray-700 mb-2">SEO Score</h3>
-                <div id="seoScore" class="flex items-center space-x-2">
-                    <div class="h-2 w-full bg-gray-200 rounded-full">
-                        <div id="seoScoreBar" class="h-2 bg-green-500 rounded-full" style="width: 0%"></div>
+        <div class="bg-white rounded-xl shadow-lg p-8 backdrop-blur-sm bg-opacity-90">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-6 md:col-span-1">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded-r-lg">
+                        <p class="text-blue-700 font-medium">✨ AI-Powered Features</p>
+                        <ul class="list-disc list-inside mt-2 text-blue-600 text-sm">
+                            <li>SEO optimization</li>
+                            <li>Keyword analysis</li>
+                            <li>Meta description</li>
+                            <li>Content structure</li>
+                        </ul>
                     </div>
-                    <span id="seoScoreText" class="text-sm font-medium text-gray-600">0%</span>
+
+                    <div>
+                        <label for="topic" class="block text-sm font-medium text-gray-700 mb-2">Blog Topic</label>
+                        <input type="text" id="topic" name="topic" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter your blog topic" required>
+                    </div>
+
+                    <div>
+                        <label for="keywords" class="block text-sm font-medium text-gray-700 mb-2">SEO Keywords</label>
+                        <input type="text" id="keywords" name="keywords" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter keywords separated by commas" required>
+                        <p class="mt-1 text-xs text-gray-500">Add 3-5 target keywords for better SEO optimization</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="format" class="block text-sm font-medium text-gray-700 mb-2">Content Format</label>
+                            <select id="format" name="format" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="article">Article</option>
+                                <option value="howto">How-to Guide</option>
+                                <option value="listicle">Listicle</option>
+                                <option value="review">Review</option>
+                                <option value="comparison">Comparison</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="tone" class="block text-sm font-medium text-gray-700 mb-2">Writing Tone</label>
+                            <select id="tone" name="tone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="professional">Professional</option>
+                                <option value="casual">Casual</option>
+                                <option value="formal">Formal</option>
+                                <option value="conversational">Conversational</option>
+                                <option value="humorous">Humorous</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="block text-sm font-medium text-gray-700">Content Length</label>
+                            <span id="length-value" class="text-sm text-indigo-600 font-medium">1000 words</span>
+                        </div>
+                        <input type="range" id="length" name="length" min="500" max="2000" value="1000" step="100"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>500</span>
+                            <span>1000</span>
+                            <span>2000</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="target-audience" class="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+                        <select id="target-audience" name="target-audience" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="general">General Audience</option>
+                            <option value="beginners">Beginners</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="expert">Expert</option>
+                            <option value="technical">Technical</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" id="generate-btn" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+                        Generate Content
+                    </button>
                 </div>
-                <ul id="seoTips" class="mt-3 text-sm text-gray-600 space-y-1"></ul>
-            </div>
-            <div id="contentOutput" class="prose max-w-none bg-white p-6 rounded-lg shadow">
-                <!-- Generated content will be inserted here -->
-            </div>
-            <div class="mt-4 flex justify-between items-center">
-                <div class="flex space-x-2">
-                    <button id="downloadWord" class="text-blue-600 hover:text-blue-800 font-medium">Download as Word</button>
-                    <button id="downloadPdf" class="text-blue-600 hover:text-blue-800 font-medium">Download as PDF</button>
+
+                <div class="bg-gray-50 rounded-lg p-6 md:col-span-1 md:col-span-2">
+                    <h2 class="text-xl font-semibold mb-4">Generated Content</h2>
+                    <div id="seo-score" class="mb-6 hidden">
+                        <h3 class="text-lg font-medium text-gray-700 mb-2">SEO Score</h3>
+                        <div class="flex items-center space-x-2">
+                            <div class="h-2 w-full bg-gray-200 rounded-full">
+                                <div id="seo-score-bar" class="h-2 bg-green-500 rounded-full transition-all duration-500"></div>
+                            </div>
+                            <span id="seo-score-text" class="text-sm font-medium text-gray-600">0%</span>
+                        </div>
+                        <ul id="seo-tips" class="mt-3 text-sm text-gray-600 space-y-1"></ul>
+                    </div>
+
+                    <form id="content-form">
+                        <div id="content-output" class="prose max-w-none bg-white p-8 rounded-lg shadow-sm mb-4 min-h-[500px] overflow-y-auto text-lg">
+                            <textarea id="content-textarea" name="content" class="w-full h-[800px] border-none outline-none resize-none" placeholder="Generated content will appear here..."></textarea>
+                        </div>
+                    </form>
+
+                    <div class="flex space-x-4">
+                        <button id="copy-btn" class="flex-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                                </svg>
+                                Copy
+                            </span>
+                        </button>
+                        <button id="share-btn" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+                                </svg>
+                                Share
+                            </span>
+                        </button>
+                        <button id="save-pdf-btn" class="flex-1 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-5l4 4m0 0l-4 4m-4-4h12" />
+                                </svg>
+                                Save as PDF
+                            </span>
+                        </button>
+                    </div>
                 </div>
-                <button id="copyContent" class="text-blue-600 hover:text-blue-800 font-medium">
-                    Copy to Clipboard
-                </button>
             </div>
         </div>
     </div>
-</div>
+</main>
 
-@section Scripts {
-    <script>
-        function analyzeSEO(content, keywords) {
-            const score = { value: 0, tips: [] };
-            const keywordList = keywords.split(',').map(k => k.trim().toLowerCase());
-            
-            // Check keyword density
-            keywordList.forEach(keyword => {
-                const regex = new RegExp(keyword, 'gi');
-                const count = (content.match(regex) || []).length;
-                const density = (count / content.split(' ').length) * 100;
-                if (density < 0.5) {
-                    score.tips.push(`Consider increasing usage of keyword: ${keyword}`);
-                } else if (density > 2.5) {
-                    score.tips.push(`Keyword '${keyword}' might be overused`);
-                } else {
-                    score.value += 20;
-                }
-            });
+<script>
+    // Update length value display
+    const lengthSlider = document.getElementById('length');
+    const lengthValue = document.getElementById('length-value');
+    lengthSlider.addEventListener('input', function() {
+        lengthValue.textContent = `${this.value} words`;
+    });
 
-            // Check content length
-            const wordCount = content.split(' ').length;
-            if (wordCount < 300) {
-                score.tips.push('Content length is too short for good SEO');
-            } else {
-                score.value += 20;
-            }
+    document.getElementById('generate-btn').addEventListener('click', async function(e) {
+        e.preventDefault();
+        const topic = document.getElementById('topic').value.trim();
+        const keywords = document.getElementById('keywords').value.trim();
+        const format = document.getElementById('format').value;
+        const tone = document.getElementById('tone').value;
+        const length = document.getElementById('length').value;
+        const targetAudience = document.getElementById('target-audience').value;
 
-            // Check headings
-            if (content.includes('<h1>') || content.includes('<h2>')) {
-                score.value += 20;
-            } else {
-                score.tips.push('Add more headings for better structure');
-            }
-
-            return score;
+        if (!topic || !keywords) {
+            alert('Please fill in all required fields.');
+            return;
         }
 
-        document.getElementById('blogGeneratorForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const form = e.target;
-            const formData = new FormData(form);
-            const prompt = `Generate a ${formData.get('length')} ${formData.get('format')} blog post about ${formData.get('topic')} in a ${formData.get('tone')} tone. Include these SEO keywords: ${formData.get('keywords')}. Focus on creating engaging, well-structured content with proper headings, paragraphs, and SEO optimization. Format the content with HTML tags for headings and paragraphs.`;
+        const formData = new FormData();
+        formData.append('topic', topic);
+        formData.append('keywords', keywords);
+        formData.append('format', format);
+        formData.append('tone', tone);
+        formData.append('length', length);
+        formData.append('targetAudience', targetAudience);
 
+        const response = await fetch('/api/tools/generate-blog-content', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        const contentTextarea = document.getElementById('content-textarea');
+        const seoScoreDiv = document.getElementById('seo-score');
+
+        if (data.content) {
+            contentTextarea.value = data.content;
+            seoScoreDiv.classList.remove('hidden');
+            updateSEOScore(data.seoScore || 0);
+        } else if (data.error) {
+            contentTextarea.value = `Error: ${data.error}`;
+        } else {
+            contentTextarea.value = 'No content generated.';
+        }
+    });
+
+    document.getElementById('save-pdf-btn').addEventListener('click', function() {
+        const content = document.getElementById('content-textarea').value;
+        const topic = document.getElementById('topic').value;
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        pdf.setFontSize(12);
+        pdf.text(content, 10, 10);
+        pdf.save(`${topic}.pdf`);
+    });
+
+    function updateSEOScore(score) {
+        const scoreBar = document.getElementById('seo-score-bar');
+        const scoreText = document.getElementById('seo-score-text');
+        scoreBar.style.width = `${score}%`;
+        scoreText.textContent = `${score}%`;
+
+        // Update color based on score
+        if (score >= 80) {
+            scoreBar.classList.remove('bg-yellow-500', 'bg-red-500');
+            scoreBar.classList.add('bg-green-500');
+        } else if (score >= 60) {
+            scoreBar.classList.remove('bg-green-500', 'bg-red-500');
+            scoreBar.classList.add('bg-yellow-500');
+        } else {
+            scoreBar.classList.remove('bg-green-500', 'bg-yellow-500');
+            scoreBar.classList.add('bg-red-500');
+        }
+    }
+
+    document.getElementById('copy-btn').addEventListener('click', async function() {
+        const content = document.getElementById('content-output').textContent;
+        if (!content) {
+            alert('No content to copy!');
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(content);
+            alert('Content copied to clipboard!');
+        } catch (err) {
+            alert('Failed to copy content');
+        }
+    });
+
+    document.getElementById('share-btn').addEventListener('click', async function() {
+        const content = document.getElementById('content-output').textContent;
+        if (!content) {
+            alert('No content to share!');
+            return;
+        }
+        if (navigator.share) {
             try {
-                const submitButton = form.querySelector('button[type="submit"]');
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<span class="animate-pulse">Generating...</span>';
-
-                const response = await fetch('/api/tools/generate-blog-content', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ prompt })
+                await navigator.share({
+                    title: 'Generated Blog Content',
+                    text: content
                 });
-
-                if (response.status === 429) {
-                    throw new Error('Too many requests. Please wait a moment and try again.');
-                }
-
-                if (!response.ok) {
-                    throw new Error('Failed to generate content. Please try again.');
-                }
-
-                const data = await response.json();
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                document.getElementById('contentOutput').innerHTML = data.content;
-                document.getElementById('generatedContent').classList.remove('hidden');
-
-                // Analyze SEO
-                const seoAnalysis = analyzeSEO(data.content, formData.get('keywords'));
-                const seoScoreBar = document.getElementById('seoScoreBar');
-                const seoScoreText = document.getElementById('seoScoreText');
-                const seoTips = document.getElementById('seoTips');
-
-                seoScoreBar.style.width = `${seoAnalysis.value}%`;
-                seoScoreText.textContent = `${seoAnalysis.value}%`;
-                seoTips.innerHTML = seoAnalysis.tips.map(tip => `<li>• ${tip}</li>`).join('');
             } catch (error) {
-                console.error('Error:', error);
-                const errorMessage = error.message.includes('Too many requests') ?
-                    error.message :
-                    'Failed to generate content. Please try again.';
-                alert(errorMessage);
-            } finally {
-                const submitButton = form.querySelector('button[type="submit"]');
-                submitButton.disabled = false;
-                submitButton.innerHTML = 'Generate Content';
+                console.log('Error sharing', error);
             }
-        });
-
-        document.getElementById('copyContent').addEventListener('click', () => {
-            const content = document.getElementById('contentOutput').innerText;
-            navigator.clipboard.writeText(content)
-                .then(() => alert('Content copied to clipboard!'))
-                .catch(err => console.error('Failed to copy:', err));
-        });
-
-        document.getElementById('downloadWord').addEventListener('click', () => {
-            const content = document.getElementById('contentOutput').innerHTML;
-            const blob = new Blob([content], { type: 'application/msword' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'blog-content.doc';
-            a.click();
-            URL.revokeObjectURL(url);
-        });
-
-        document.getElementById('downloadPdf').addEventListener('click', () => {
-            const content = document.getElementById('contentOutput').innerHTML;
-            const style = '<style>body { font-family: Arial, sans-serif; line-height: 1.6; }</style>';
-            const win = window.open('', '', 'height=700,width=700');
-            win.document.write(`<html><head>${style}</head><body>${content}</body></html>`);
-            win.document.close();
-            win.print();
-        });
-    </script>
-}
+        } else {
+            alert('Web Share API not supported on this device/browser.');
+        }
+    });
+</script>

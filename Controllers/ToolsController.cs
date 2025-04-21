@@ -6,6 +6,7 @@ using ContentCraft_studio.Services;
 using Microsoft.AspNetCore.Authorization;
 using ContentCraft_Studio.Models;  // Add this for ImageDescription model
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace ContentCraft_studio.Controllers
 {
@@ -15,14 +16,16 @@ namespace ContentCraft_studio.Controllers
         private readonly IConfiguration _configuration;
         private readonly IGeminiService _geminiService;
         private readonly IMongoDbService _mongoDbService;
+        public readonly ILogger<ToolsController> _logger;
 
         public ToolsController(IHttpClientFactory clientFactory, IConfiguration configuration, 
-            IGeminiService geminiService, IMongoDbService mongoDbService)
+            IGeminiService geminiService, IMongoDbService mongoDbService, ILogger<ToolsController> logger)
         {
             _clientFactory = clientFactory;
             _configuration = configuration;
             _geminiService = geminiService;
             _mongoDbService = mongoDbService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public IActionResult Index()
@@ -140,7 +143,7 @@ namespace ContentCraft_studio.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = "Failed to generate description", details = ex.Message });
+                return Json(new { error = "Failed to generate business names", details = ex.Message });
             }
         }
 
@@ -182,23 +185,80 @@ namespace ContentCraft_studio.Controllers
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [Route("api/tools/generate-blog-content")]
-        public async Task<IActionResult> GenerateBlogContent([FromBody] BlogContentRequest request)
+        public async Task<IActionResult> GenerateBlogContent(string topic, string keywords, string format, string tone, int length, string targetAudience)
         {
             try
             {
-                if (string.IsNullOrEmpty(request.Prompt))
+                if (string.IsNullOrEmpty(topic) || string.IsNullOrEmpty(keywords))
                 {
-                    return Json(new { error = "Prompt cannot be empty" });
+                    return Json(new { error = "Topic and keywords cannot be empty" });
                 }
-                var result = await _geminiService.GenerateContentAsync(request.Prompt);
-                return Json(new { content = result });
+
+                var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { error = "User not authenticated" });
+                }
+
+                string prompt = $"Generate a {length}-word {format} about {topic} with a {tone} tone for a {targetAudience} audience. The keywords are: {keywords}. The content should be well-written, engaging, and informative. It should also be optimized for SEO.";
+
+                _logger.LogInformation("Prompt: {Prompt}", prompt);
+
+                var content = await _geminiService.GenerateContentAsync(prompt);
+
+                _logger.LogInformation("Content: {Content}", content);
+
+                if (content.StartsWith("Error generating content:"))
+                {
+                    return Json(new { error = content });
+                }
+
+                // Create a new model to store the blog data
+                var blogPost = new BlogPost
+                {
+                    UserId = userId,
+                    Title = topic, // You might want to generate a title from the prompt or content
+                    Content = content,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                // Save the blog post to MongoDB
+                await _mongoDbService.SaveBlogPostAsync(blogPost);
+
+                // Calculate SEO score
+                double seoScore = CalculateSEOScore(content, keywords);
+
+                return Json(new { content = content, message = "Blog post saved successfully", seoScore = seoScore });
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to generate blog content");
                 return Json(new { error = "Failed to generate blog content", details = ex.Message });
             }
+        }
+
+        private double CalculateSEOScore(string content, string keywords)
+        {
+            if (string.IsNullOrEmpty(content) || string.IsNullOrEmpty(keywords))
+            {
+                return 0;
+            }
+
+            string[] keywordList = keywords.Split(',').Select(k => k.Trim()).ToArray();
+            double matchedKeywords = 0;
+
+            foreach (string keyword in keywordList)
+            {
+                if (content.Contains(keyword, StringComparison.OrdinalIgnoreCase))
+                {
+                    matchedKeywords++;
+                }
+            }
+
+            return (matchedKeywords / keywordList.Length) * 100;
         }
 
         [HttpPost]
@@ -222,10 +282,15 @@ namespace ContentCraft_studio.Controllers
 
         [HttpPost]
         [Route("api/tools/generate-business-names")]
-        public async Task<IActionResult> GenerateBusinessNames([FromBody] BusinessNameRequest request)
+        public async Task<IActionResult> GenerateBusinessNames([FromBody] BusinessNameRequest request, [FromHeader] string userId)
         {
             try
             {
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return BadRequest(new { error = "User ID is required" });
+                }
+
                 var client = _clientFactory.CreateClient();
                 var apiKey = _configuration["Gemini:ApiKey"];
 
@@ -264,13 +329,16 @@ Name Meaning: [brief explanation]";
                     }
                 };
 
+                _logger.LogInformation("Sending request to Gemini API: {RequestBody}", requestBody);
                 var response = await client.PostAsync(
                     $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
                     new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
                 );
 
+                _logger.LogInformation("Received response from Gemini API: {StatusCode}", response.StatusCode);
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation("Response content from Gemini API: {Content}", content);
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
 
                 var text = jsonElement
@@ -330,6 +398,34 @@ Name Meaning: [brief explanation]";
                         },
                         nameMeaning = string.Empty
                     }};
+                }
+
+                // Map the generated business names to the BusinessNameModel and save them to the database
+                var businessNamesToSave = result.Select(name => new BusinessNameModel
+                {
+                    UserId = userId,
+                    Name = name.name,
+                    BrandIdentity = new BrandIdentity
+                    {
+                        UniquePoints = name.brandIdentity.uniquePoints,
+                        IndustryFit = name.brandIdentity.industryFit,
+                        Keywords = name.brandIdentity.keywords
+                    },
+                    NameMeaning = name.nameMeaning,
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                foreach (var businessName in businessNamesToSave)
+                {
+                    try
+                    {
+                        await _mongoDbService.SaveBusinessNameAsync(businessName);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Failed to save business name to database.");
+                        return Json(new { error = "Failed to save business names", details = "An error occurred while saving the business names. Please try again." });
+                    }
                 }
 
                 return Json(new { names = result });

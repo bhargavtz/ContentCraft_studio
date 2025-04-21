@@ -35,7 +35,6 @@ C:\Users\hp\Downloads\ContentCraft_studio\bin\Debug\net9.0\ZstdSharp.dll
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\bundle\ContentCraft_studio.styles.css
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\scopedcss\projectbundle\ContentCraft_studio.bundle.scp.css
-C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\nxce1u9t8s-eg82fg4iv7.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\bzeok4w42d-61n19gt1b8.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\kgjvvf48n7-xtxxf3hu2r.gz
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\fjttd70s2e-t1cqhe9u97.gz
@@ -114,3 +113,4 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\refint\ContentCraft_s
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ContentCraft_studio.pdb
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ContentCraft_studio.genruntimeconfig.cache
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ref\ContentCraft_studio.dll
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\nxce1u9t8s-2btv97bxjc.gz

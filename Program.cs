@@ -15,15 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Configure data protection to persist keys to the file system
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "DataProtection-Keys")));
-
 
 builder.Services.AddAuth0WebAppAuthentication(options => {
-    options.Domain = builder.Configuration["Auth0:Domain"];
-    options.ClientId = builder.Configuration["Auth0:ClientId"];
-    options.ClientSecret = builder.Configuration["Auth0:ClientSecret"];
+    options.Domain = builder.Configuration["Auth0:Domain"] ?? 
+        throw new InvalidOperationException("Auth0:Domain configuration is missing");
+    options.ClientId = builder.Configuration["Auth0:ClientId"] ?? 
+        throw new InvalidOperationException("Auth0:ClientId configuration is missing");
+    options.ClientSecret = builder.Configuration["Auth0:ClientSecret"] ?? 
+        throw new InvalidOperationException("Auth0:ClientSecret configuration is missing");
 });
 
 builder.Services.ConfigureApplicationCookie(options => {
@@ -58,6 +57,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.Name = ".ContentCraft.Session";
 });
 
 // Add HTTPS configuration

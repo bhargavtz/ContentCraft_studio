@@ -2,52 +2,58 @@
     ViewData["Title"] = "Business Name Generator";
 }
 
-<div class="max-w-4xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-6">Business Name Generator</h1>
-    
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <form id="businessNameForm" class="space-y-6">
-            <div>
-                <label for="industry" class="block text-sm font-medium text-gray-700 mb-1">Industry</label>
-                <select id="industry" name="industry" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    <option value="">Select an industry</option>
-                    <option value="technology">Technology</option>
-                    <option value="retail">Retail</option>
-                    <option value="food">Food & Restaurant</option>
-                    <option value="health">Health & Wellness</option>
-                    <option value="creative">Creative & Design</option>
-                    <option value="consulting">Consulting</option>
-                </select>
-            </div>
+<main class="min-h-screen bg-gradient-to-b from-[#f0f9ff] to-white py-12">
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#1e40af] mb-4">Business Name Generator</h1>
+            <p class="text-lg text-gray-600">Create the perfect name for your business with our AI-powered generator</p>
+        </div>
 
-            <div>
-                <label for="keywords" class="block text-sm font-medium text-gray-700 mb-1">Keywords (separated by commas)</label>
-                <input type="text" id="keywords" name="keywords" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="e.g., innovative, modern, sustainable">
-            </div>
+        <div class="bg-white backdrop-blur-lg bg-opacity-90 rounded-xl shadow-lg p-8 mb-8 border border-gray-100">
+            <form id="businessNameForm" class="space-y-6">
+                <div class="group">
+                    <label for="industry" class="block text-sm font-medium text-gray-700 mb-2">Industry</label>
+                    <select id="industry" name="industry" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors">
+                        <option value="">Select an industry</option>
+                        <option value="technology">Technology</option>
+                        <option value="retail">Retail</option>
+                        <option value="food">Food & Restaurant</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="creative">Creative & Design</option>
+                        <option value="consulting">Consulting</option>
+                    </select>
+                </div>
 
-            <div>
-                <label for="style" class="block text-sm font-medium text-gray-700 mb-1">Name Style</label>
-                <select id="style" name="style" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    <option value="modern">Modern</option>
-                    <option value="classic">Classic</option>
-                    <option value="fun">Fun & Playful</option>
-                    <option value="professional">Professional</option>
-                </select>
-            </div>
+                <div class="group">
+                    <label for="keywords" class="block text-sm font-medium text-gray-700 mb-2">Keywords</label>
+                    <input type="text" id="keywords" name="keywords" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors" placeholder="e.g., innovative, modern, sustainable">
+                    <p class="mt-1 text-sm text-gray-500">Separate keywords with commas</p>
+                </div>
 
-            <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">
-                Generate Names
-            </button>
-        </form>
+                <div class="group">
+                    <label for="style" class="block text-sm font-medium text-gray-700 mb-2">Name Style</label>
+                    <select id="style" name="style" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition-colors">
+                        <option value="modern">Modern</option>
+                        <option value="classic">Classic</option>
+                        <option value="fun">Fun & Playful</option>
+                        <option value="professional">Professional</option>
+                    </select>
+                </div>
 
-        <div id="results" class="mt-8 hidden">
-            <h2 class="text-xl font-semibold mb-4">Generated Names</h2>
-            <div id="namesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transform hover:scale-[1.02] transition-all duration-200 shadow-md hover:shadow-lg">
+                    Generate Names
+                </button>
+            </form>
+        </div>
+
+        <div id="results" class="hidden space-y-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Generated Names</h2>
+            <div id="namesList" class="grid grid-cols-1 gap-6">
                 <!-- Generated names will be inserted here -->
             </div>
         </div>
     </div>
-</div>
+</main>
 
 @section Scripts {
     <script>
@@ -61,7 +67,7 @@
             // Show loading state
             const button = e.target.querySelector('button');
             const originalText = button.textContent;
-            button.textContent = 'Generating...';
+            button.innerHTML = '<span class="inline-flex items-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Generating...</span>';
             button.disabled = true;
 
             try {
@@ -81,35 +87,43 @@
                 
                 resultsDiv.classList.remove('hidden');
                 namesListDiv.innerHTML = data.names.map(name => `
-                    <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                        <h3 class="font-medium text-lg mb-2">${name.name}</h3>
-                        <div class="space-y-2">
-                            <p class="text-sm text-gray-600">Domain availability: Checking...</p>
+                    <div class="bg-white backdrop-blur-lg bg-opacity-90 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 p-6 border border-gray-100">
+                        <h3 class="font-bold text-xl text-gray-800 mb-3">${name.name}</h3>
+                        <div class="space-y-4">
+                            <p class="text-sm text-gray-600 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                                </svg>
+                                Domain availability: Checking...
+                            </p>
                             <div class="text-sm">
-                                <p class="font-medium text-gray-700">Brand Identity:</p>
-                                <ul class="list-disc list-inside text-gray-600 ml-2">
+                                <p class="font-semibold text-gray-700 mb-2">Brand Identity</p>
+                                <ul class="list-disc list-inside text-gray-600 space-y-1 ml-2">
                                     ${name.brandIdentity.uniquePoints.map(point => `<li>${point}</li>`).join('')}
                                 </ul>
                             </div>
-                            <div class="text-sm mt-2">
-                                <p class="font-medium text-gray-700">Industry Fit:</p>
+                            <div class="text-sm">
+                                <p class="font-semibold text-gray-700 mb-2">Industry Fit</p>
                                 <p class="text-gray-600 ml-2">${name.brandIdentity.industryFit}</p>
                             </div>
-                            <div class="text-sm mt-2">
-                                <p class="font-medium text-gray-700">Keywords:</p>
-                                <div class="flex flex-wrap gap-1 ml-2">
+                            <div class="text-sm">
+                                <p class="font-semibold text-gray-700 mb-2">Keywords</p>
+                                <div class="flex flex-wrap gap-2 ml-2">
                                     ${name.brandIdentity.keywords.map(keyword => `
-                                        <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">${keyword}</span>
+                                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">${keyword}</span>
                                     `).join('')}
                                 </div>
                             </div>
-                            <div class="text-sm mt-2">
-                                <p class="font-medium text-gray-700">Name Meaning:</p>
+                            <div class="text-sm">
+                                <p class="font-semibold text-gray-700 mb-2">Name Meaning</p>
                                 <p class="text-gray-600 ml-2">${name.nameMeaning}</p>
                             </div>
-                            <div class="mt-3">
-                                <button class="text-indigo-600 text-sm font-medium hover:text-indigo-700 transition-colors">Select this name</button>
-                            </div>
+                            <button class="mt-4 text-blue-600 font-medium hover:text-blue-700 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Select this name
+                            </button>
                         </div>
                     </div>
                 `).join('');
@@ -118,7 +132,7 @@
                 console.error('Error:', error);
                 alert('An error occurred while generating names. Please try again.');
             } finally {
-                button.textContent = originalText;
+                button.innerHTML = originalText;
                 button.disabled = false;
             }
         });
