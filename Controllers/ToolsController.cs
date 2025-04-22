@@ -47,8 +47,31 @@ namespace ContentCraft_studio.Controllers
         [Route("api/tools/generate-image")]
         public async Task<IActionResult> GenerateImage([FromBody] ImageGenerationRequest request)
         {
-            var result = await _geminiService.GenerateImageAsync(request);
-            return Json(result);
+            try
+            {
+                if (request == null || string.IsNullOrEmpty(request.Prompt))
+                {
+                    _logger.LogError("Invalid image generation request: Prompt is required");
+                    return BadRequest(new { error = "Prompt is required" });
+                }
+
+                _logger.LogInformation("Generating image with prompt: {Prompt}", request.Prompt);
+                var result = await _geminiService.GenerateImageAsync(request);
+
+                if (!result.Success)
+                {
+                    _logger.LogError("Image generation failed: {Error}", result.Error);
+                    return BadRequest(new { error = result.Error });
+                }
+
+                _logger.LogInformation("Image generated successfully");
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred while generating the image");
+                return StatusCode(500, new { error = "An error occurred while generating the image", details = ex.Message });
+            }
         }
 
         public IActionResult BusinessName()
@@ -278,12 +301,15 @@ namespace ContentCraft_studio.Controllers
                     return Unauthorized(new { error = "User not authenticated" });
                 }
 
+                _logger.LogInformation("Story Prompt: {Prompt}", request.Prompt);
+
                 var result = await _geminiService.GenerateContentAsync(request.Prompt);
+
+                _logger.LogInformation("Story Result: {Result}", result);
 
                 // Create a new model to store the story data
                 var story = new Story
                 {
-                    Id = Guid.NewGuid().ToString(),
                     UserId = userId,
                     Prompt = request.Prompt,
                     Content = result,
@@ -302,10 +328,16 @@ namespace ContentCraft_studio.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost]
         [Route("api/tools/generate-business-names")]
-        public async Task<IActionResult> GenerateBusinessNames([FromBody] BusinessNameRequest request, [FromHeader] string userId)
+        public async Task<IActionResult> GenerateBusinessNames([FromBody] BusinessNameRequest request)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { error = "User not authenticated" });
+            }
             try
             {
                 if (string.IsNullOrEmpty(userId))
