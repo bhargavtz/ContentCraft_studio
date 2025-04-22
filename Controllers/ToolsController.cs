@@ -267,15 +267,37 @@ namespace ContentCraft_studio.Controllers
         {
             try
             {
-                 if (string.IsNullOrEmpty(request.Prompt))
+                if (string.IsNullOrEmpty(request.Prompt))
                 {
                     return Json(new { error = "Prompt cannot be empty" });
                 }
+
+                var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new { error = "User not authenticated" });
+                }
+
                 var result = await _geminiService.GenerateContentAsync(request.Prompt);
-                return Json(new { story = result });
+
+                // Create a new model to store the story data
+                var story = new Story
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserId = userId,
+                    Prompt = request.Prompt,
+                    Content = result,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                // Save the story to MongoDB
+                await _mongoDbService.SaveStoryAsync(story);
+
+                return Json(new { story = result, message = "Story saved successfully" });
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to generate story", ex);
                 return Json(new { error = "Failed to generate story", details = ex.Message });
             }
         }
@@ -424,7 +446,7 @@ Name Meaning: [brief explanation]";
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Failed to save business name to database.");
-                        return Json(new { error = "Failed to save business names", details = "An error occurred while saving the business names. Please try again." });
+                        return Json(new { error = "Failed to generate business names", details = "An error occurred while saving the business names. Please try again." });
                     }
                 }
 

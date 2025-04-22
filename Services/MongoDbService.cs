@@ -13,6 +13,7 @@ namespace ContentCraft_studio.Services
         Task UpsertUserAsync(UserModel user);
         Task SaveBusinessNameAsync(BusinessNameModel businessName);
         Task SaveBlogPostAsync(BlogPost blogPost);
+        Task SaveStoryAsync(Story story);
     }
 
     public class MongoDbService : IMongoDbService
@@ -21,6 +22,7 @@ namespace ContentCraft_studio.Services
         private readonly IMongoCollection<UserModel> _users;
         private readonly IMongoCollection<BusinessNameModel> _businessNamesCollection;
         private readonly IMongoCollection<BlogPost> _blogPostsCollection;
+        private readonly IMongoCollection<Story> _storiesCollection;
         private readonly ILogger<MongoDbService> _logger;
 
         public MongoDbService(IConfiguration configuration, ILogger<MongoDbService> logger)
@@ -46,6 +48,8 @@ namespace ContentCraft_studio.Services
                 mongoDbOptions.BusinessNamesCollectionName ?? "BusinessNames");
             _blogPostsCollection = database.GetCollection<BlogPost>(
                 mongoDbOptions.BlogPostsCollectionName ?? "BlogPosts");
+            _storiesCollection = database.GetCollection<Story>(
+                mongoDbOptions.StoriesCollectionName ?? "Stories");
         }
 
         public async Task SaveImageDescriptionAsync(ImageDescription imageDescription)
@@ -108,6 +112,11 @@ namespace ContentCraft_studio.Services
                 _logger.LogError(ex, "Failed to save blog post: {Ex}", ex);
                 throw;
             }
+        }
+
+        public async Task SaveStoryAsync(Story story)
+        {
+            await _storiesCollection.InsertOneAsync(story);
         }
     }
 }
