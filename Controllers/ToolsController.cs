@@ -38,6 +38,35 @@ namespace ContentCraft_studio.Controllers
             return View();
         }
 
+        [HttpPost]
+        [Route("Tools/SaveCaption")]
+        public async Task<IActionResult> SaveCaption([FromBody] Caption caption)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(caption.Text))
+                {
+                    return Json(new { success = false, error = "Caption text is required" });
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Json(new { success = false, error = "User must be logged in to save captions" });
+                }
+
+                caption.UserId = userId;
+                var captionId = await _mongoDbService.SaveCaptionAsync(caption);
+
+                return Json(new { success = true, captionId = captionId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error saving caption");
+                return Json(new { success = false, error = "An error occurred while saving the caption" });
+            }
+        }
+
         public IActionResult ImageGenerator()
         {
             return View();
@@ -491,10 +520,17 @@ Name Meaning: [brief explanation]";
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> GenerateCaption([FromForm] CaptionRequest request, IFormFile image)
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Json(new { error = "User must be logged in to generate captions" });
+                }
+
                 var client = _clientFactory.CreateClient();
                 var apiKey = _configuration["Gemini:ApiKey"];
                 string promptText;
@@ -569,6 +605,19 @@ Name Meaning: [brief explanation]";
                 var captions = text?.Split("---", StringSplitOptions.RemoveEmptyEntries)
                     .Select(c => c.Trim())
                     .ToArray() ?? new[] { "Unable to generate captions" };
+
+                // Save captions to database
+                foreach (var captionText in captions)
+                {
+                    var caption = new Caption
+                    {
+                        UserId = userId,
+                        Text = captionText,
+                        Mood = request.Mood,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    await _mongoDbService.SaveCaptionAsync(caption);
+                }
 
                 return Json(new { captions });
             }

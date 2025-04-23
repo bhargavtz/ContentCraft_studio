@@ -14,6 +14,7 @@ namespace ContentCraft_studio.Services
         Task SaveBusinessNameAsync(BusinessNameModel businessName);
         Task SaveBlogPostAsync(BlogPost blogPost);
         Task SaveStoryAsync(Story story);
+        Task<string> SaveCaptionAsync(Caption caption);
     }
 
     public class MongoDbService : IMongoDbService
@@ -23,6 +24,7 @@ namespace ContentCraft_studio.Services
         private readonly IMongoCollection<BusinessNameModel> _businessNamesCollection;
         private readonly IMongoCollection<BlogPost> _blogPostsCollection;
         private readonly IMongoCollection<Story> _storiesCollection;
+        private readonly IMongoCollection<Caption> _captionsCollection;
         private readonly ILogger<MongoDbService> _logger;
 
         public MongoDbService(IConfiguration configuration, ILogger<MongoDbService> logger)
@@ -50,6 +52,7 @@ namespace ContentCraft_studio.Services
                 mongoDbOptions.BlogPostsCollectionName ?? "BlogPosts");
             _storiesCollection = database.GetCollection<Story>(
                 mongoDbOptions.StoriesCollectionName ?? "Stories");
+            _captionsCollection = database.GetCollection<Caption>("Captions");
         }
 
         public async Task SaveImageDescriptionAsync(ImageDescription imageDescription)
@@ -116,7 +119,33 @@ namespace ContentCraft_studio.Services
 
         public async Task SaveStoryAsync(Story story)
         {
-            await _storiesCollection.InsertOneAsync(story);
+            try
+            {
+                _logger.LogInformation("Attempting to save story: {@Story}", story);
+                await _storiesCollection.InsertOneAsync(story);
+                _logger.LogInformation("Story saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save story: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<string> SaveCaptionAsync(Caption caption)
+        {
+            try
+            {
+                _logger.LogInformation("Attempting to save caption: {@Caption}", caption);
+                await _captionsCollection.InsertOneAsync(caption);
+                _logger.LogInformation("Caption saved successfully.");
+                return caption.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save caption: {Ex}", ex);
+                throw;
+            }
         }
     }
 }

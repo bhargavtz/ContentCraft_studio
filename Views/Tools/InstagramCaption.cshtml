@@ -67,7 +67,15 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Generate Caption</button>
+                    <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 relative">
+                        <span>Generate Caption</span>
+                        <div id="loading-spinner" class="hidden absolute inset-0 flex items-center justify-center">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
+                    </button>
                 </form>
 
                 <div id="result" class="mt-8 hidden">
@@ -97,6 +105,7 @@
                                     Copy
                                 </button>
                             </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -146,6 +155,14 @@
 
         document.getElementById('captionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const buttonText = submitButton.querySelector('span');
+            
+            // Show loading state
+            buttonText.classList.add('opacity-0');
+            loadingSpinner.classList.remove('hidden');
+            
             const formData = new FormData();
             formData.append('mood', document.getElementById('mood').value);
             
@@ -158,31 +175,40 @@
                 formData.append('prompt', document.getElementById('prompt').value);
             }
 
-            const response = await fetch('/Tools/GenerateCaption', {
-                method: 'POST',
-                body: formData
-            });
-
-            const data = await response.json();
-            const captionsContainer = document.getElementById('generatedCaptions');
-            const template = document.querySelector('.caption-item');
-            
-            captionsContainer.innerHTML = '';
-
-            if (data.captions) {
-                const captions = data.captions;
-                captions.forEach(caption => {
-                    if (caption) {
-                        const captionElement = template.cloneNode(true);
-                        captionElement.classList.remove('hidden');
-                        captionElement.querySelector('.caption-text').textContent = caption;
-                        captionsContainer.appendChild(captionElement);
-                    }
+            try {
+                const response = await fetch('/Tools/GenerateCaption', {
+                    method: 'POST',
+                    body: formData
                 });
+
+                const data = await response.json();
+                const captionsContainer = document.getElementById('generatedCaptions');
+                const template = document.querySelector('.caption-item');
                 
-                document.getElementById('result').classList.remove('hidden');
-            } else {
-                alert('Error generating captions: ' + data.error);
+                captionsContainer.innerHTML = '';
+
+                if (data.captions) {
+                    const captions = data.captions;
+                    captions.forEach(caption => {
+                        if (caption) {
+                            const captionElement = template.cloneNode(true);
+                            captionElement.classList.remove('hidden');
+                            captionElement.querySelector('.caption-text').textContent = caption;
+                            captionsContainer.appendChild(captionElement);
+                        }
+                    });
+                    
+                    document.getElementById('result').classList.remove('hidden');
+                } else {
+                    alert('Error generating captions: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error generating captions. Please try again.');
+            } finally {
+                // Hide loading state
+                buttonText.classList.remove('opacity-0');
+                loadingSpinner.classList.add('hidden');
             }
         });
 
@@ -240,6 +266,38 @@
             }
             
             captionEdit.value = formattedText;
+        }
+
+        async function saveCaptionToDb(button) {
+            const captionText = button.closest('.caption-item').querySelector('.caption-text').innerHTML;
+            if (!captionText || captionText.trim() === '') {
+                alert('Please enter caption text.');
+                return;
+            }
+            const mood = document.getElementById('mood').value;
+
+            try {
+                const response = await fetch('/Tools/SaveCaption', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        caption: captionText,
+                        mood: mood
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('Caption saved successfully! ID: ' + result.captionId);
+                } else {
+                    alert('Error saving caption: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving caption. Please try again.');
+            }
         }
     </script>
 }
