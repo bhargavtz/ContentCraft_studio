@@ -66,8 +66,14 @@
                         </div>
                     </div>
 
-                    <button id="generate-btn" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
-                        Generate Story
+                    <button id="generate-btn" class="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors relative">
+                        <span>Generate Story</span>
+                        <div id="loading-spinner" class="hidden absolute inset-0 flex items-center justify-center">
+                            <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </div>
                     </button>
                 </div>
                 <div class="p-6 bg-gray-50 rounded-lg">
@@ -113,6 +119,14 @@
 
         let fullPrompt = `Write a ${weight} story of approximately ${length} words in ${storyType} style with ${creativity} creativity about: ${prompt}`;
 
+        const submitButton = document.getElementById('generate-btn');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const buttonText = submitButton.querySelector('span');
+
+        // Show loading state
+        buttonText.classList.add('opacity-0');
+        loadingSpinner.classList.remove('hidden');
+
         const response = await fetch('/api/tools/generate-story', {
             method: 'POST',
             headers: {
@@ -123,6 +137,11 @@
 
         const data = await response.json();
         const output = document.getElementById('story-output');
+        
+        // Hide loading state
+        buttonText.classList.remove('opacity-0');
+        loadingSpinner.classList.add('hidden');
+
         if(data.story){
             output.textContent = data.story;
         } else if(data.error){

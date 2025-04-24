@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ContentCraft_studio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+964e81e1a13d17ab3ba621a636c1a322827726fd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0f5e1027aced0c5d789a61d3ead02a8cb7b15a1")]
 [assembly: System.Reflection.AssemblyProductAttribute("ContentCraft_studio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ContentCraft_studio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
