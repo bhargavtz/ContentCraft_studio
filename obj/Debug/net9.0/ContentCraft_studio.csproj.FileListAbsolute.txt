@@ -114,3 +114,4 @@ C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ContentCraft_studio.p
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ContentCraft_studio.genruntimeconfig.cache
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\ref\ContentCraft_studio.dll
 C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\nxce1u9t8s-2btv97bxjc.gz
+C:\Users\hp\Downloads\ContentCraft_studio\obj\Debug\net9.0\compressed\4y0qbu9awq-d97mi7l49o.gz

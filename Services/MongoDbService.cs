@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 
 namespace ContentCraft_studio.Services
 {
@@ -15,6 +17,9 @@ namespace ContentCraft_studio.Services
         Task SaveBlogPostAsync(BlogPost blogPost);
         Task SaveStoryAsync(Story story);
         Task<string> SaveCaptionAsync(Caption caption);
+        Task SavePaymentAsync(PaymentModel payment);
+        Task<int> GetUserTotalUsageAsync(string userId);
+        Task<List<UserActivity>> GetUserRecentActivitiesAsync(string userId);
     }
 
     public class MongoDbService : IMongoDbService
@@ -25,6 +30,7 @@ namespace ContentCraft_studio.Services
         private readonly IMongoCollection<BlogPost> _blogPostsCollection;
         private readonly IMongoCollection<Story> _storiesCollection;
         private readonly IMongoCollection<Caption> _captionsCollection;
+        private readonly IMongoCollection<PaymentModel> _paymentsCollection;
         private readonly ILogger<MongoDbService> _logger;
 
         public MongoDbService(IConfiguration configuration, ILogger<MongoDbService> logger)
@@ -53,6 +59,7 @@ namespace ContentCraft_studio.Services
             _storiesCollection = database.GetCollection<Story>(
                 mongoDbOptions.StoriesCollectionName ?? "Stories");
             _captionsCollection = database.GetCollection<Caption>("Captions");
+            _paymentsCollection = database.GetCollection<PaymentModel>("Payments");
         }
 
         public async Task SaveImageDescriptionAsync(ImageDescription imageDescription)
@@ -144,6 +151,108 @@ namespace ContentCraft_studio.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to save caption: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task SavePaymentAsync(PaymentModel payment)
+        {
+            try
+            {
+                _logger.LogInformation("Attempting to save payment: {@Payment}", payment);
+                await _paymentsCollection.InsertOneAsync(payment);
+                _logger.LogInformation("Payment saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save payment: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<int> GetUserTotalUsageAsync(string userId)
+        {
+            try
+            {
+                _logger.LogInformation("Getting total usage for user: {UserId}", userId);
+                
+                var imageCount = await _imageDescriptions.CountDocumentsAsync(x => x.UserId == userId);
+                var businessNameCount = await _businessNamesCollection.CountDocumentsAsync(x => x.UserId == userId);
+                var blogPostCount = await _blogPostsCollection.CountDocumentsAsync(x => x.UserId == userId);
+                var storyCount = await _storiesCollection.CountDocumentsAsync(x => x.UserId == userId);
+                var captionCount = await _captionsCollection.CountDocumentsAsync(x => x.UserId == userId);
+                
+                var totalUsage = (int)(imageCount + businessNameCount + blogPostCount + storyCount + captionCount);
+                
+                _logger.LogInformation("Total usage for user {UserId}: {TotalUsage}", userId, totalUsage);
+                return totalUsage;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get total usage for user {UserId}", userId);
+                throw;
+            }
+        }
+
+        public async Task<List<UserActivity>> GetUserRecentActivitiesAsync(string userId)
+        {
+            try
+            {
+                _logger.LogInformation("Getting recent activities for user: {UserId}", userId);
+                var activities = new List<UserActivity>();
+
+                // Get recent image descriptions
+                var images = await _imageDescriptions
+                    .Find(x => x.UserId == userId)
+                    .SortByDescending(x => x.CreatedAt)
+                    .Limit(5)
+                    .ToListAsync();
+                activities.AddRange(images.Select(x => new UserActivity
+                {
+                    Type = "Image Description",
+                    Description = x.Description,
+                    CreatedAt = x.CreatedAt
+                }));
+
+                // Get recent business names
+                var businessNames = await _businessNamesCollection
+                    .Find(x => x.UserId == userId)
+                    .SortByDescending(x => x.CreatedAt)
+                    .Limit(5)
+                    .ToListAsync();
+                activities.AddRange(businessNames.Select(x => new UserActivity
+                {
+                    Type = "Business Name",
+                    Description = x.Name,
+                    CreatedAt = x.CreatedAt
+                }));
+
+                // Get recent blog posts
+                var blogPosts = await _blogPostsCollection
+                    .Find(x => x.UserId == userId)
+                    .SortByDescending(x => x.CreatedAt)
+                    .Limit(5)
+                    .ToListAsync();
+                activities.AddRange(blogPosts.Select(x => new UserActivity
+                {
+                    Type = "Blog Post",
+                    Description = x.Title,
+                    CreatedAt = x.CreatedAt
+                }));
+
+                // Return activities sorted by creation date
+                var sortedActivities = activities
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Take(10)
+                    .ToList();
+
+                _logger.LogInformation("Retrieved {Count} recent activities for user {UserId}", 
+                    sortedActivities.Count, userId);
+                return sortedActivities;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to get recent activities for user {UserId}", userId);
                 throw;
             }
         }

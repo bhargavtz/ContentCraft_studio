@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using ContentCraft_studio.Models;
+using ContentCraft_studio.Services;
 
 namespace ContentCraft_studio.Controllers
 {
@@ -45,30 +47,41 @@ namespace ContentCraft_studio.Controllers
             return View();
         }
 
+        private readonly IMongoDbService _mongoDbService;
+
+        public PricingController(IMongoDbService mongoDbService)
+        {
+            _mongoDbService = mongoDbService;
+        }
+
         [HttpPost]
         [Route("ProcessPayment")]
-        public IActionResult ProcessPayment([FromForm] string plan, [FromForm] string cardNumber, [FromForm] string expiry, [FromForm] string cvc)
+        public async Task<IActionResult> ProcessPayment([FromForm] PaymentModel payment)
         {
-            if (string.IsNullOrEmpty(plan))
+            if (string.IsNullOrEmpty(payment.PlanName))
             {
                 return BadRequest("Plan is required");
             }
 
-            // TODO: Add real payment processing logic here
-            // Stripe payment integration (demo purpose, replace with real tokenization in production)
             try
             {
-                // Here you would use Stripe API to create a payment intent and confirm payment
-                // For demo, we assume payment is successful
-                // You can add Stripe logic here if you have API keys
+                // Set payment details
+                payment.UserId = User.Identity.Name; // Get current user's ID
+                payment.PaymentDate = DateTime.UtcNow;
+                payment.Status = "success";
+                payment.TransactionId = Guid.NewGuid().ToString();
+
+                // Save payment to database
+                await _mongoDbService.SavePaymentAsync(payment);
+
+                TempData["Plan"] = payment.PlanName;
+                TempData["TransactionId"] = payment.TransactionId;
+                return RedirectToAction("Success");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Payment failed: {ex.Message}");
             }
-
-            TempData["Plan"] = plan;
-            return RedirectToAction("Success");
         }
 
         [HttpGet]

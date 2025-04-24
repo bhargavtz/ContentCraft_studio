@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Fx8ySNBX53gp/yOYfL8OWxHUgo8em2j5+FkD5EompnA=",
+  "Hash": "s9MrNZXQnVAmJBPnJOdo9IJeEPXmz6xcgP2DRiiGWiA=",
   "Source": "ContentCraft_studio",
   "BasePath": "_content/ContentCraft_studio",
   "Mode": "Default",
@@ -183,6 +183,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Identity": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\4y0qbu9awq-d97mi7l49o.gz",
+      "SourceId": "ContentCraft_studio",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/ContentCraft_studio",
+      "RelativePath": "css/profile#[.{fingerprint=d97mi7l49o}]?.css.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\profile.css",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "6djbe1bkcb",
+      "Integrity": "NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\profile.css"
     },
     {
       "Identity": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\54jhmjm1ci-mrlpezrjn3.gz",
@@ -1401,6 +1422,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\scopedcss\\projectbundle\\ContentCraft_studio.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\profile.css",
+      "SourceId": "ContentCraft_studio",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\",
+      "BasePath": "_content/ContentCraft_studio",
+      "RelativePath": "css/profile#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "d97mi7l49o",
+      "Integrity": "vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\profile.css"
     },
     {
       "Identity": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\site.css",
@@ -3341,6 +3383,304 @@
         {
           "Name": "integrity",
           "Value": "sha256-soV+8/F8DEm3xS82hIS/+q+p/nJMBN5DRLDHq7KiAR8="
+        }
+      ]
+    },
+    {
+      "Route": "css/profile.css",
+      "AssetFile": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\4y0qbu9awq-d97mi7l49o.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001328021248"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "752"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 09:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU="
+        }
+      ]
+    },
+    {
+      "Route": "css/profile.css",
+      "AssetFile": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\profile.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2494"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 09:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU="
+        }
+      ]
+    },
+    {
+      "Route": "css/profile.css.gz",
+      "AssetFile": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\4y0qbu9awq-d97mi7l49o.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "752"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 09:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0="
+        }
+      ]
+    },
+    {
+      "Route": "css/profile.d97mi7l49o.css",
+      "AssetFile": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\4y0qbu9awq-d97mi7l49o.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.001328021248"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "752"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 09:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "d97mi7l49o"
+        },
+        {
+          "Name": "label",
+          "Value": "css/profile.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU="
+        }
+      ]
+    },
+    {
+      "Route": "css/profile.d97mi7l49o.css",
+      "AssetFile": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\wwwroot\\css\\profile.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2494"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 09:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "d97mi7l49o"
+        },
+        {
+          "Name": "label",
+          "Value": "css/profile.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-vxMqo0SbdT/W4UhAt1FIehN3XcS9gnipdhnqAMilYBU="
+        }
+      ]
+    },
+    {
+      "Route": "css/profile.d97mi7l49o.css.gz",
+      "AssetFile": "C:\\Users\\hp\\Downloads\\ContentCraft_studio\\obj\\Debug\\net9.0\\compressed\\4y0qbu9awq-d97mi7l49o.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "752"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 24 Apr 2025 09:24:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "d97mi7l49o"
+        },
+        {
+          "Name": "label",
+          "Value": "css/profile.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-NqcrTdYZs2W50GZ21UxMWOwGrzwJ/yYV8Hpz62MPr+0="
         }
       ]
     },

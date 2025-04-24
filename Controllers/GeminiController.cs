@@ -15,7 +15,7 @@ using System.Security.Claims;
 namespace ContentCraft_studio.Controllers
 {
     [ApiController]
-    [Route("api/tools")]
+    [Route("api/gemini")] // Updated base route
     public class GeminiController : ControllerBase
     {
         private readonly IHttpClientFactory _clientFactory;
@@ -34,6 +34,11 @@ namespace ContentCraft_studio.Controllers
         [HttpPost("generate-image")]
         public async Task<IActionResult> GenerateImage([FromBody] ImageGenerationRequest request)
         {
+            if (string.IsNullOrEmpty(request?.Prompt))
+            {
+                return BadRequest(new { error = "Prompt is required" });
+            }
+            
             var apiKey = _configuration["Gemini:ApiKey"];
             var modelId = "gemini-2.0-flash-exp-image-generation";
 

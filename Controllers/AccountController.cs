@@ -73,30 +73,20 @@ namespace GeminiAspNetDemo.Controllers
 
         // Profile Action
         [Authorize]
-        public async Task<IActionResult> Profile()
+        public IActionResult Profile()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userName = User.FindFirstValue(ClaimTypes.Name);
-            var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            var userNickname = User.FindFirstValue("nickname");
-            //var picture = User.FindFirstValue("picture");
-            //var emailVerified = User.FindFirstValue("email_verified");
-            //var locale = User.FindFirstValue("locale");
-            //var updatedAt = User.FindFirstValue("updated_at");
-            //var authTime = User.FindFirstValue("auth_time");
-
-            var user = new UserModel
+            var userClaims = User.Claims;
+            
+            var viewModel = new UserProfileViewModel
             {
-                Id = userId ?? string.Empty,
-                Name = userName ?? string.Empty,
-                Email = userEmail ?? string.Empty,
-                Nickname = userNickname ?? string.Empty,
-                LastLogin = DateTime.UtcNow
+                Username = User.Identity?.Name,
+                Email = userClaims.FirstOrDefault(c => c.Type == "email")?.Value,
+                AvatarUrl = userClaims.FirstOrDefault(c => c.Type == "picture")?.Value,
+                Bio = "Welcome to ContentCraft Studio!", // You can modify this default value
+                JoinDate = DateTime.UtcNow // You might want to store this in your user data
             };
 
-            await _mongoDbService.UpsertUserAsync(user);
-
-            return View(user);
+            return View(viewModel);
         }
 
         // Update Profile Action
