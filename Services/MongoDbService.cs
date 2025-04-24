@@ -1,5 +1,4 @@
-using ContentCraft_Studio.Models;
-using ContentCraft_studio.Models;
+using ContentCraft_studio.Models; // Update to correct namespace
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using System.Threading.Tasks;
@@ -223,7 +222,7 @@ namespace ContentCraft_studio.Services
                 activities.AddRange(businessNames.Select(x => new UserActivity
                 {
                     Type = "Business Name",
-                    Description = x.Name,
+                    Description = x.Name ?? string.Empty,
                     CreatedAt = x.CreatedAt
                 }));
 
@@ -248,11 +247,11 @@ namespace ContentCraft_studio.Services
 
                 _logger.LogInformation("Retrieved {Count} recent activities for user {UserId}", 
                     sortedActivities.Count, userId);
-                return sortedActivities;
+                return sortedActivities ?? new List<UserActivity>(); // Ensure non-null return
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to get recent activities for user {UserId}", userId);
+                _logger.LogError(ex, "Failed to get recent activities for user {UserId}", userId); // Correct LogError usage
                 throw;
             }
         }

@@ -2,7 +2,7 @@ using System;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace ContentCraft_Studio.Models
+namespace ContentCraft_studio.Models
 {
     public class ImageDescription
     {

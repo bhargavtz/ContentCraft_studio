@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using ContentCraft_studio.Services;
-using ContentCraft_Studio.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 

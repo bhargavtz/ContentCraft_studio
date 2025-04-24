@@ -2,12 +2,12 @@ namespace ContentCraft_studio.Models
 {
     public class MongoDbOptions
     {
-        public string ConnectionString { get; set; }
-        public string DatabaseName { get; set; }
-        public string ImageDescriptionsCollectionName { get; set; }
-        public string UsersCollectionName { get; set; }
-        public string BusinessNamesCollectionName { get; set; }
-        public string BlogPostsCollectionName { get; set; }
-        public string StoriesCollectionName { get; set; }
+        public required string ConnectionString { get; set; }
+        public required string DatabaseName { get; set; }
+        public required string ImageDescriptionsCollectionName { get; set; }
+        public required string UsersCollectionName { get; set; }
+        public required string BusinessNamesCollectionName { get; set; }
+        public required string BlogPostsCollectionName { get; set; }
+        public required string StoriesCollectionName { get; set; }
     }
 }

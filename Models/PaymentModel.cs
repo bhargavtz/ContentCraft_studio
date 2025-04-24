@@ -1,19 +1,36 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace ContentCraft_studio.Models
 {
     public class PaymentModel
     {
-        public string UserId { get; set; }
-        public string PlanName { get; set; }
-        public decimal Amount { get; set; }
-        public string PaymentMethod { get; set; } // "card" or "upi"
-        public string UpiId { get; set; }
-        public string CardNumber { get; set; }
-        public string CardExpiry { get; set; }
-        public string CardCvc { get; set; }
-        public string TransactionId { get; set; }
-        public DateTime PaymentDate { get; set; }
-        public string Status { get; set; } // "pending", "success", "failed"
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string? Id { get; set; }
+
+        public required string UserId { get; set; }
+
+        public required string PlanName { get; set; }
+
+        public required decimal Amount { get; set; }
+
+        public string? TransactionId { get; set; }
+
+        public PaymentStatus Status { get; set; }
+
+        [BsonElement("PaymentDate")]
+        public DateTime PaymentDate { get; set; } = DateTime.UtcNow;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    }
+
+    public enum PaymentStatus
+    {
+        Pending,
+        Completed,
+        Failed,
+        Refunded
     }
 }

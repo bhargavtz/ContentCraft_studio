@@ -66,9 +66,13 @@ namespace ContentCraft_studio.Controllers
             try
             {
                 // Set payment details
+                if (User.Identity == null || string.IsNullOrEmpty(User.Identity.Name))
+                {
+                    return Unauthorized("User not authenticated");
+                }
                 payment.UserId = User.Identity.Name; // Get current user's ID
                 payment.PaymentDate = DateTime.UtcNow;
-                payment.Status = "success";
+                payment.Status = PaymentStatus.Completed;
                 payment.TransactionId = Guid.NewGuid().ToString();
 
                 // Save payment to database

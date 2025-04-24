@@ -4,7 +4,6 @@ using System.Text.Json;
 using ContentCraft_studio.Models;
 using ContentCraft_studio.Services;
 using Microsoft.AspNetCore.Authorization;
-using ContentCraft_Studio.Models;  // Add this for ImageDescription model
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 
@@ -412,13 +411,13 @@ Name Meaning: [brief explanation]";
                     }
                 };
 
-                _logger.LogInformation("Sending request to Gemini API: {RequestBody}", requestBody);
+                _logger.LogInformation("Sending request to Gemini API: {RequestBody}", JsonSerializer.Serialize(requestBody));
                 var response = await client.PostAsync(
                     $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
                     new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
                 );
 
-                _logger.LogInformation("Received response from Gemini API: {StatusCode}", response.StatusCode);
+                _logger.LogInformation("Received response from Gemini API: {StatusCode}", (int)response.StatusCode);
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation("Response content from Gemini API: {Content}", content);
@@ -506,7 +505,7 @@ Name Meaning: [brief explanation]";
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Failed to save business name to database.");
+                        _logger.LogError(ex, "Failed to save business name to database: {ErrorMessage}", ex.Message);
                         return Json(new { error = "Failed to generate business names", details = "An error occurred while saving the business names. Please try again." });
                     }
                 }
@@ -611,6 +610,7 @@ Name Meaning: [brief explanation]";
                 {
                     var caption = new Caption
                     {
+                        Id = Guid.NewGuid().ToString(),
                         UserId = userId,
                         Text = captionText,
                         Mood = request.Mood,

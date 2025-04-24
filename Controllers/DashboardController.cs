@@ -5,6 +5,8 @@ using ContentCraft_studio.Services;
 using System.Security.Claims;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+// Removed duplicate: using ContentCraft_studio.Models;
 
 namespace ContentCraft_studio.Controllers
 {
@@ -12,10 +14,12 @@ namespace ContentCraft_studio.Controllers
     public class DashboardController : Controller
     {
         private readonly IMongoDbService _mongoDbService;
+        private readonly ILogger<DashboardController> _logger;
 
-        public DashboardController(IMongoDbService mongoDbService)
+        public DashboardController(IMongoDbService mongoDbService, ILogger<DashboardController> logger)
         {
             _mongoDbService = mongoDbService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -52,6 +56,7 @@ namespace ContentCraft_studio.Controllers
             catch (Exception ex)
             {
                 // Log the error and return to home page
+                _logger.LogError(ex, "Error in DashboardController.Index");
                 return RedirectToAction("Index", "Home");
             }
         }

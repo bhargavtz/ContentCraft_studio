@@ -15,18 +15,4 @@ namespace ContentCraft_studio.Models
             RecentActivities = new List<UserActivity>();
         }
     }
-
-    public class UserActivity
-    {
-        public string ActivityType { get; set; }
-        public string Description { get; set; }
-        public DateTime Timestamp { get; set; }
-
-        public UserActivity()
-        {
-            ActivityType = string.Empty;
-            Description = string.Empty;
-            Timestamp = DateTime.UtcNow;
-        }
-    }
 }
