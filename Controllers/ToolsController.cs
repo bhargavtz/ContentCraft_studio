@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using System.Text;
 using System.Text.Json;
 using ContentCraft_studio.Models;
@@ -418,7 +419,7 @@ Name Meaning: [brief explanation]";
                     new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
                 );
 
-                _logger.LogInformation("Received response from Gemini API: {StatusCode}", (int)response.StatusCode);
+_logger.LogInformation("Received response from Gemini API: {StatusCode}", response.StatusCode);
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation("Response content from Gemini API: {Content}", content);
@@ -617,6 +618,7 @@ Name Meaning: [brief explanation]";
                 {
                     var caption = new Caption
                     {
+                        Id = ObjectId.GenerateNewId().ToString(),
                         UserId = userId,
                         Text = captionText,
                         Mood = request.Mood,

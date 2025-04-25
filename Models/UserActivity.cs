@@ -8,7 +8,7 @@ namespace ContentCraft_studio.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
+    public required string Id { get; set; }
 
         public required string UserId { get; set; }
         public required string ActivityType { get; set; }

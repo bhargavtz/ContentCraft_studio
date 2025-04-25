@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-// Removed duplicate: using ContentCraft_studio.Models;
 
 namespace ContentCraft_studio.Controllers
 {
@@ -61,6 +60,36 @@ namespace ContentCraft_studio.Controllers
         {
             await _mongoDbService.DeleteUserActivityAsync(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateCaption([FromBody] UpdateCaptionRequest request)
+        {
+            try
+            {
+                await _mongoDbService.UpdateCaptionAsync(request.Id, request.Text);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteCaption([FromBody] string id)
+        {
+            try
+            {
+                await _mongoDbService.DeleteCaptionAsync(id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
         }
     }
 }

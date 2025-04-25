@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewData["Title"] = "Home";
 }
 
@@ -29,7 +29,7 @@
                         stunning images in seconds.
                     </p>
                     <div class="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <a href="@Url.Action("SignUp", "Account")" class="bg-[#023e8a] text-white py-3 px-6 rounded-lg inline-flex items-center justify-center text-base font-medium hover:bg-[#0077b6] transform hover:scale-105 transition-all duration-300 shadow-lg">
+                        <a href="/Account/SignIn" class="bg-[#023e8a] text-white py-3 px-6 rounded-lg inline-flex items-center justify-center text-base font-medium hover:bg-[#0077b6] transform hover:scale-105 transition-all duration-300 shadow-lg">
                             Get Started Free
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -271,8 +271,6 @@
             </div>
         </div>
     </section>
-
-
     <!-- Footer -->
     <footer class="bg-gradient-to-b from-[#7bdff2] to-[#b2f7ef] text-[#eff7f6] py-16">
         <div class="max-w-7xl mx-auto px-4">
@@ -290,19 +288,15 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- Quick Links -->
                 <div>
                     <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
                     <ul class="space-y-3">
-                        <li><a href="/Home/About" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">About Us</a></li>
-                        <li><a href="/Home/Tools" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Tools</a></li>
-                        <li><a href="/pricing" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Pricing</a></li>
-                        <li><a href="/Home/Contact" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Contact</a></li>
+<li><a href="/Home/About" class="text-black hover:text-[#48cae4] transition-colors duration-300">About Us</a></li>
+<li><a href="/Home/Tools" class="text-black hover:text-[#48cae4] transition-colors duration-300">Tools</a></li>
+<li><a href="/pricing" class="text-black hover:text-[#48cae4] transition-colors duration-300">Pricing</a></li>
+<li><a href="/Home/Contact" class="text-black hover:text-[#48cae4] transition-colors duration-300">Contact</a></li>
                     </ul>
                 </div>
-
-                <!-- Legal & Social -->
                 <div>
                     <h4 class="text-lg font-semibold mb-6">Connect With Us</h4>
                     <div class="flex space-x-4 mb-8">
@@ -318,15 +312,15 @@
                     </div>
                     <h4 class="text-lg font-semibold mb-4">Legal</h4>
                     <ul class="space-y-3">
-                        <li><a href="/Home/Privacy" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Privacy Policy</a></li>
-                        <li><a href="/Home/Terms" class="text-gray-300 hover:text-[#48cae4] transition-colors duration-300">Terms of Service</a></li>
+                        <li><a href="/Home/Privacy" class="text-black hover:text-[#48cae4] transition-colors duration-300">Privacy Policy</a></li>
+                        <li><a href="/Home/Terms" class="text-black hover:text-[#48cae4] transition-colors duration-300">Terms of Service</a></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Copyright -->
             <div class="mt-12 pt-8 border-t border-white/10 text-center">
-                <p class="text-gray-300">&copy; 2025 ContentCraft Studio. All rights reserved.</p>
+                <p class="text-black">&copy; 2025 ContentCraft Studio. All rights reserved.</p>
             </div>
         </div>
     </footer>

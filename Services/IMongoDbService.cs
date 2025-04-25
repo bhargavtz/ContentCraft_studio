@@ -10,6 +10,8 @@ namespace ContentCraft_studio.Services
         Task SaveBlogPostAsync(BlogPost blogPost);
         Task SaveStoryAsync(Story story);
         Task<string> SaveCaptionAsync(Caption caption);
+        Task UpdateCaptionAsync(string id, string text);
+        Task DeleteCaptionAsync(string id);
         Task SavePaymentAsync(PaymentModel payment);
         Task<int> GetUserTotalUsageAsync(string userId);
         Task<List<UserActivity>> GetUserRecentActivitiesAsync(string userId);

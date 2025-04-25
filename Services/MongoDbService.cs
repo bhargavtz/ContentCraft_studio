@@ -205,11 +205,12 @@ namespace ContentCraft_studio.Services
                 // Get recent image descriptions
                 var images = await _imageDescriptions
                     .Find(x => x.UserId == userId)
-                    .SortByDescending(x => x.Timestamp)
+                    .SortByDescending(x => x.CreatedAt)
                     .Limit(5)
                     .ToListAsync();
                 activities.AddRange(images.Select(x => new UserActivity
                 {
+                    Id = ObjectId.GenerateNewId().ToString(),
                     UserId = userId,
                     ActivityType = "Image Description",
                     Description = x.Description,
@@ -219,11 +220,12 @@ namespace ContentCraft_studio.Services
                 // Get recent business names
                 var businessNames = await _businessNamesCollection
                     .Find(x => x.UserId == userId)
-                    .SortByDescending(x => x.Timestamp)
+                    .SortByDescending(x => x.CreatedAt)
                     .Limit(5)
                     .ToListAsync();
                 activities.AddRange(businessNames.Select(x => new UserActivity
                 {
+                    Id = ObjectId.GenerateNewId().ToString(),
                     UserId = userId,
                     ActivityType = "Business Name",
                     Description = x.Name ?? string.Empty,
@@ -233,11 +235,12 @@ namespace ContentCraft_studio.Services
                 // Get recent blog posts
                 var blogPosts = await _blogPostsCollection
                     .Find(x => x.UserId == userId)
-                    .SortByDescending(x => x.Timestamp)
+                    .SortByDescending(x => x.CreatedAt)
                     .Limit(5)
                     .ToListAsync();
                 activities.AddRange(blogPosts.Select(x => new UserActivity
                 {
+                    Id = ObjectId.GenerateNewId().ToString(),
                     UserId = userId,
                     ActivityType = "Blog Post",
                     Description = x.Title,
@@ -341,6 +344,46 @@ namespace ContentCraft_studio.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to fetch dashboard data for user: {UserId}", userId);
+                throw;
+            }
+        }
+
+        public async Task UpdateCaptionAsync(string id, string text)
+        {
+            try
+            {
+                var filter = Builders<Caption>.Filter.Eq(c => c.Id, id);
+                var update = Builders<Caption>.Update.Set(c => c.Text, text);
+                
+                var result = await _captionsCollection.UpdateOneAsync(filter, update);
+                
+                if (result.ModifiedCount == 0)
+                {
+                    throw new Exception("Caption not found or not modified");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update caption: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task DeleteCaptionAsync(string id)
+        {
+            try
+            {
+                var filter = Builders<Caption>.Filter.Eq(c => c.Id, id);
+                var result = await _captionsCollection.DeleteOneAsync(filter);
+                
+                if (result.DeletedCount == 0)
+                {
+                    throw new Exception("Caption not found or not deleted");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete caption: {Ex}", ex);
                 throw;
             }
         }
