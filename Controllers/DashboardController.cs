@@ -91,5 +91,66 @@ namespace ContentCraft_studio.Controllers
                 return Json(new { success = false, error = ex.Message });
             }
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateStory([FromBody] UpdateStoryRequest request)
+        {
+            try
+            {
+                await _mongoDbService.UpdateStoryAsync(request.Id, request.Content);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteStory([FromBody] string id)
+        {
+            try
+            {
+                await _mongoDbService.DeleteStoryAsync(id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+    
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateBlogPost([FromBody] UpdateBlogPostRequest request)
+        {
+            try
+            {
+                await _mongoDbService.UpdateBlogPostAsync(request.Id, request.Title, request.Content);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteBlogPost([FromBody] string id)
+        {
+            try
+            {
+                await _mongoDbService.DeleteBlogPostAsync(id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
     }
 }

@@ -387,5 +387,93 @@ namespace ContentCraft_studio.Services
                 throw;
             }
         }
+
+        public async Task UpdateStoryAsync(string id, string content)
+        {
+            try
+            {
+                var filter = Builders<Story>.Filter.Eq(s => s.Id, id);
+                var update = Builders<Story>.Update.Set(s => s.Content, content);
+                
+                var result = await _storiesCollection.UpdateOneAsync(filter, update);
+                
+                if (result.ModifiedCount == 0)
+                {
+                    throw new Exception("Story not found or not modified");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update story: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task DeleteStoryAsync(string id)
+        {
+            try
+            {
+                var filter = Builders<Story>.Filter.Eq(s => s.Id, id);
+                var result = await _storiesCollection.DeleteOneAsync(filter);
+                
+                if (result.DeletedCount == 0)
+                {
+                    throw new Exception("Story not found or not deleted");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete story: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task UpdateBlogPostAsync(string id, string title, string content)
+        {
+            try
+            {
+                var filter = Builders<BlogPost>.Filter.Eq(bp => bp.Id, id);
+                var update = Builders<BlogPost>.Update.Set(bp => bp.Title, title).Set(bp => bp.Content, content);
+
+                var result = await _blogPostsCollection.UpdateOneAsync(filter, update);
+
+                if (result.ModifiedCount == 0)
+                {
+                    throw new Exception("Blog post not found or not modified");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update blog post: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task DeleteBlogPostAsync(string id)
+        {
+            _logger.LogInformation($"Attempting to delete blog post with ID: {id}");
+            try
+            {
+                ObjectId objectId;
+                if (ObjectId.TryParse(id, out objectId))
+                {
+                    var filter = Builders<BlogPost>.Filter.Eq(bp => bp.Id, objectId.ToString());
+                    var result = await _blogPostsCollection.DeleteOneAsync(filter);
+
+                    _logger.LogInformation($"Delete result: {result.DeletedCount}");
+
+                    if (result.DeletedCount == 0)
+                    {
+                        _logger.LogInformation("Blog post not found or not deleted");
+                        throw new Exception("Blog post not found or not deleted");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to delete blog post: {Ex}", ex);
+                throw;
+            }
+        }
     }
 }

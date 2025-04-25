@@ -9,6 +9,8 @@ namespace ContentCraft_studio.Services
         Task SaveBusinessNameAsync(BusinessNameModel businessName);
         Task SaveBlogPostAsync(BlogPost blogPost);
         Task SaveStoryAsync(Story story);
+        Task UpdateStoryAsync(string id, string content);
+        Task DeleteStoryAsync(string id);
         Task<string> SaveCaptionAsync(Caption caption);
         Task UpdateCaptionAsync(string id, string text);
         Task DeleteCaptionAsync(string id);
@@ -18,5 +20,7 @@ namespace ContentCraft_studio.Services
         Task<List<UserActivity>> GetUserActivitiesAsync(string userId);
         Task DeleteUserActivityAsync(string id);
         Task<DashboardViewModel> GetUserDashboardDataAsync(string userId);
+        Task UpdateBlogPostAsync(string id, string title, string content);
+        Task DeleteBlogPostAsync(string id);
     }
 }
