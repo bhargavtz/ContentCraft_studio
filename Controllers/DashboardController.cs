@@ -48,7 +48,8 @@ namespace ContentCraft_studio.Controllers
                 {
                     User = userModel,
                     TotalUsage = await _mongoDbService.GetUserTotalUsageAsync(userId),
-                    RecentActivities = await _mongoDbService.GetUserRecentActivitiesAsync(userId)
+                    RecentActivities = await _mongoDbService.GetUserRecentActivitiesAsync(userId),
+                    UserActivities = await _mongoDbService.GetUserActivitiesAsync(userId)
                 };
 
                 return View(viewModel);
@@ -59,6 +60,13 @@ namespace ContentCraft_studio.Controllers
                 _logger.LogError(ex, "Error in DashboardController.Index");
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteActivity(string id)
+        {
+            await _mongoDbService.DeleteUserActivityAsync(id);
+            return RedirectToAction("Index");
         }
     }
 }

@@ -23,6 +23,14 @@ namespace ContentCraft_studio.Models
 
         [BsonElement("CreatedAt")]
         public DateTime CreatedAt { get; set; }
+
+        [BsonElement("Timestamp")]
+        public DateTime Timestamp { get; set; }
+
+        public BusinessNameModel()
+        {
+            Timestamp = DateTime.UtcNow;
+        }
     }
 
     public class BrandIdentity

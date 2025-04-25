@@ -19,11 +19,15 @@ namespace ContentCraft_studio.Models
         [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        [BsonElement("timestamp")]
+        public DateTime Timestamp { get; set; }
+
         public ImageDescription()
         {
             Id = string.Empty;
             UserId = string.Empty;
             Description = string.Empty;
+            Timestamp = DateTime.UtcNow;
         }
     }
 }

@@ -1,11 +1,18 @@
 using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ContentCraft_studio.Models
 {
     public class UserActivity
     {
-        public required string Type { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+
+        public required string UserId { get; set; }
+        public required string ActivityType { get; set; }
         public required string Description { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

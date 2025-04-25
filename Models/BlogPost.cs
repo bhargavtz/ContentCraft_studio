@@ -17,5 +17,13 @@ namespace ContentCraft_studio.Models
         public string Content { get; set; } = null!;
 
         public DateTime CreatedAt { get; set; }
+
+        [BsonElement("timestamp")]
+        public DateTime Timestamp { get; set; }
+
+         public BlogPost()
+        {
+            Timestamp = DateTime.UtcNow;
+        }
     }
 }

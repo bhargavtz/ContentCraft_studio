@@ -32,6 +32,7 @@ namespace ContentCraft_studio.Controllers
             return View();
         }
 
+        [Route("Tools/InstagramCaption")]
         public IActionResult InstagramCaption()
         {
             return View();
@@ -585,12 +586,18 @@ Name Meaning: [brief explanation]";
                     };
                 }
 
+                _logger.LogInformation("Sending request to Gemini API for caption generation");
                 var response = await client.PostAsync(
-                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
                     new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json")
                 );
 
-                response.EnsureSuccessStatusCode();
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogError("Gemini API error: {StatusCode}, {Error}", response.StatusCode, errorContent);
+                    return Json(new { error = $"Failed to generate caption: {response.StatusCode} - {errorContent}" });
+                }
                 var content = await response.Content.ReadAsStringAsync();
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
 
@@ -610,7 +617,6 @@ Name Meaning: [brief explanation]";
                 {
                     var caption = new Caption
                     {
-                        Id = Guid.NewGuid().ToString(),
                         UserId = userId,
                         Text = captionText,
                         Mood = request.Mood,
