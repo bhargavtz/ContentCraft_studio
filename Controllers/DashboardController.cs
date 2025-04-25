@@ -44,13 +44,7 @@ namespace ContentCraft_studio.Controllers
                 // Store or update user data in MongoDB
                 await _mongoDbService.UpsertUserAsync(userModel);
 
-                var viewModel = new DashboardViewModel
-                {
-                    User = userModel,
-                    TotalUsage = await _mongoDbService.GetUserTotalUsageAsync(userId),
-                    RecentActivities = await _mongoDbService.GetUserRecentActivitiesAsync(userId),
-                    UserActivities = await _mongoDbService.GetUserActivitiesAsync(userId)
-                };
+                var viewModel = await _mongoDbService.GetUserDashboardDataAsync(userId);
 
                 return View(viewModel);
             }

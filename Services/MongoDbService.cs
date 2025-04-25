@@ -282,22 +282,65 @@ namespace ContentCraft_studio.Services
         {
             try
             {
-                _logger.LogInformation("Deleting activity with ID: {ActivityId}", id);
+                _logger.LogInformation("Attempting to delete user activity with ID: {Id}", id);
                 var filter = Builders<UserActivity>.Filter.Eq(a => a.Id, id);
-                var result = await _activitiesCollection.DeleteOneAsync(filter);
-
-                if (result.DeletedCount > 0)
-                {
-                    _logger.LogInformation("Activity with ID {ActivityId} deleted successfully", id);
-                }
-                else
-                {
-                    _logger.LogWarning("Activity with ID {ActivityId} not found for deletion", id);
-                }
+                await _activitiesCollection.DeleteOneAsync(filter);
+                _logger.LogInformation("User activity deleted successfully.");
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to delete activity with ID {ActivityId}: {Ex}", ex, id);
+                _logger.LogError(ex, "Failed to delete user activity: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<DashboardViewModel> GetUserDashboardDataAsync(string userId)
+        {
+            try
+            {
+                _logger.LogInformation("Fetching dashboard data for user: {UserId}", userId);
+
+                var userFilter = Builders<UserModel>.Filter.Eq(u => u.Id, userId);
+                var user = await _users.Find(userFilter).FirstOrDefaultAsync();
+
+                var imageDescriptionsFilter = Builders<ImageDescription>.Filter.Eq(i => i.UserId, userId);
+                var imageDescriptions = await _imageDescriptions.Find(imageDescriptionsFilter).ToListAsync();
+
+                var businessNamesFilter = Builders<BusinessNameModel>.Filter.Eq(b => b.UserId, userId);
+                var businessNames = await _businessNamesCollection.Find(businessNamesFilter).ToListAsync();
+
+                var blogPostsFilter = Builders<BlogPost>.Filter.Eq(b => b.UserId, userId);
+                var blogPosts = await _blogPostsCollection.Find(blogPostsFilter).ToListAsync();
+
+                var storiesFilter = Builders<Story>.Filter.Eq(s => s.UserId, userId);
+                var stories = await _storiesCollection.Find(storiesFilter).ToListAsync();
+
+                var captionsFilter = Builders<Caption>.Filter.Eq(c => c.UserId, userId);
+                var captions = await _captionsCollection.Find(captionsFilter).ToListAsync();
+
+                var totalUsage = await GetUserTotalUsageAsync(userId);
+                var recentActivities = await GetUserRecentActivitiesAsync(userId);
+                var userActivities = await GetUserActivitiesAsync(userId);
+
+                var dashboardData = new DashboardViewModel
+                {
+                    User = user ?? new UserModel(),
+                    TotalUsage = totalUsage,
+                    RecentActivities = recentActivities,
+                    UserActivities = userActivities,
+                    ImageDescriptions = imageDescriptions,
+                    BusinessNames = businessNames,
+                    BlogPosts = blogPosts,
+                    Stories = stories,
+                    Captions = captions
+                };
+
+                _logger.LogInformation("Dashboard data fetched successfully for user: {UserId}", userId);
+                return dashboardData;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch dashboard data for user: {UserId}", userId);
                 throw;
             }
         }

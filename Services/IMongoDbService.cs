@@ -15,5 +15,6 @@ namespace ContentCraft_studio.Services
         Task<List<UserActivity>> GetUserRecentActivitiesAsync(string userId);
         Task<List<UserActivity>> GetUserActivitiesAsync(string userId);
         Task DeleteUserActivityAsync(string id);
+        Task<DashboardViewModel> GetUserDashboardDataAsync(string userId);
     }
 }
