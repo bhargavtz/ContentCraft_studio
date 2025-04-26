@@ -335,7 +335,7 @@ namespace ContentCraft_studio.Services
                     BusinessNames = businessNames,
                     BlogPosts = blogPosts,
                     Stories = stories,
-                    Captions = captions
+                    InstagramCaptions = captions
                 };
 
                 _logger.LogInformation("Dashboard data fetched successfully for user: {UserId}", userId);
@@ -413,17 +413,33 @@ namespace ContentCraft_studio.Services
         {
             try
             {
+                if (string.IsNullOrEmpty(id))
+                {
+                    throw new ArgumentException("Story ID cannot be null or empty", nameof(id));
+                }
+
+                var story = await _storiesCollection.Find(s => s.Id == id).FirstOrDefaultAsync();
+                if (story == null)
+                {
+                    throw new KeyNotFoundException($"Story with ID {id} was not found");
+                }
+
                 var filter = Builders<Story>.Filter.Eq(s => s.Id, id);
                 var result = await _storiesCollection.DeleteOneAsync(filter);
                 
                 if (result.DeletedCount == 0)
                 {
-                    throw new Exception("Story not found or not deleted");
+                    throw new Exception($"Failed to delete story with ID {id}");
                 }
+            }
+            catch (Exception ex) when (ex is ArgumentException || ex is KeyNotFoundException)
+            {
+                _logger.LogWarning(ex, "Validation error in DeleteStoryAsync: {Message}", ex.Message);
+                throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to delete story: {Ex}", ex);
+                _logger.LogError(ex, "Database error in DeleteStoryAsync: {Message}", ex.Message);
                 throw;
             }
         }
@@ -472,6 +488,183 @@ namespace ContentCraft_studio.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to delete blog post: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task DeleteImageDescriptionAsync(string id)
+        {
+            await _imageDescriptions.DeleteOneAsync(x => x.Id == id);
+        }
+
+        public async Task DeleteBusinessNameAsync(string id)
+        {
+            await _businessNamesCollection.DeleteOneAsync(x => x.Id == id);
+        }
+
+        public async Task UpdateUserAsync(UserModel user)
+        {
+            var filter = Builders<UserModel>.Filter.Eq(u => u.Id, user.Id);
+            var update = Builders<UserModel>.Update
+                .Set(u => u.Name, user.Name)
+                .Set(u => u.Email, user.Email)
+                .Set(u => u.Nickname, user.Nickname);
+
+            await _users.UpdateOneAsync(filter, update);
+        }
+
+        public async Task UpdateUserActivitiesAsync(string userId, UserModel user)
+        {
+            var filter = Builders<UserActivity>.Filter.Eq(a => a.UserId, userId);
+            var update = Builders<UserActivity>.Update.Set(a => a.UserName, user.Name);
+
+            await _activitiesCollection.UpdateManyAsync(filter, update);
+        }
+
+        public async Task UpdateUserStoriesAsync(string userId, UserModel user)
+        {
+            var filter = Builders<Story>.Filter.Eq(s => s.UserId, userId);
+            var update = Builders<Story>.Update.Set(s => s.UserName, user.Name);
+
+            await _storiesCollection.UpdateManyAsync(filter, update);
+        }
+
+        public async Task UpdateUserBlogPostsAsync(string userId, UserModel user)
+        {
+            var filter = Builders<BlogPost>.Filter.Eq(bp => bp.UserId, userId);
+            var update = Builders<BlogPost>.Update.Set(bp => bp.UserName, user.Name);
+
+            await _blogPostsCollection.UpdateManyAsync(filter, update);
+        }
+
+        public async Task UpdateUserImageDescriptionsAsync(string userId, UserModel user)
+        {
+            var filter = Builders<ImageDescription>.Filter.Eq(id => id.UserId, userId);
+            var update = Builders<ImageDescription>.Update.Set(id => id.UserName, user.Name);
+
+            await _imageDescriptions.UpdateManyAsync(filter, update);
+        }
+
+        public async Task UpdateUserBusinessNamesAsync(string userId, UserModel user)
+        {
+            var filter = Builders<BusinessNameModel>.Filter.Eq(bn => bn.UserId, userId);
+            var update = Builders<BusinessNameModel>.Update.Set(bn => bn.UserName, user.Name);
+
+            await _businessNamesCollection.UpdateManyAsync(filter, update);
+        }
+
+        public async Task UpdateImageDescriptionAsync(string id, string description)
+        {
+            try
+            {
+                var filter = Builders<ImageDescription>.Filter.Eq(img => img.Id, id);
+                var update = Builders<ImageDescription>.Update.Set(img => img.Description, description);
+
+                var result = await _imageDescriptions.UpdateOneAsync(filter, update);
+
+                if (result.ModifiedCount == 0)
+                {
+                    throw new Exception("Image description not found or not modified");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update image description: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetAllBlogPostsAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching all blog posts from the collection.");
+                var blogPosts = await _blogPostsCollection.Find(_ => true).ToListAsync();
+                return blogPosts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch blog posts: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<Story>> GetAllStoriesAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching all stories from the collection.");
+                var stories = await _storiesCollection.Find(_ => true).ToListAsync();
+                return stories;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch stories: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<Caption>> GetAllCaptionsAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching all captions from the collection.");
+                var captions = await _captionsCollection.Find(_ => true).ToListAsync();
+                return captions;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch captions: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<ImageDescription>> GetAllImageDescriptionsAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching all image descriptions from the collection.");
+                var descriptions = await _imageDescriptions.Find(_ => true).ToListAsync();
+                return descriptions;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch image descriptions: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<BusinessNameModel>> GetAllBusinessNamesAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Fetching all business names from the collection.");
+                var businessNames = await _businessNamesCollection.Find(_ => true).ToListAsync();
+                return businessNames;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch business names: {Ex}", ex);
+                throw;
+            }
+        }
+
+        public async Task<List<UserActivity>> GetRecentActivitiesAsync(string userId)
+        {
+            try
+            {
+                _logger.LogInformation("Fetching recent activities for user: {UserId}", userId);
+                var filter = Builders<UserActivity>.Filter.Eq(a => a.UserId, userId);
+                var activities = await _activitiesCollection
+                    .Find(filter)
+                    .SortByDescending(a => a.Timestamp)
+                    .Limit(10)
+                    .ToListAsync();
+                return activities;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to fetch recent activities: {Ex}", ex);
                 throw;
             }
         }

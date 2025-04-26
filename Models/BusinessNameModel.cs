@@ -26,6 +26,7 @@ namespace ContentCraft_studio.Models
 
         [BsonElement("Timestamp")]
         public DateTime Timestamp { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
         public BusinessNameModel()
         {

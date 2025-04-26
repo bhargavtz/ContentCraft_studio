@@ -13,7 +13,7 @@ namespace ContentCraft_studio.Models
         public List<BusinessNameModel> BusinessNames { get; set; }
         public List<BlogPost> BlogPosts { get; set; }
         public List<Story> Stories { get; set; }
-        public List<Caption> Captions { get; set; }
+        public List<Caption> InstagramCaptions { get; set; }
 
         public DashboardViewModel()
         {
@@ -24,7 +24,7 @@ namespace ContentCraft_studio.Models
             BusinessNames = new List<BusinessNameModel>();
             BlogPosts = new List<BlogPost>();
             Stories = new List<Story>();
-            Captions = new List<Caption>();
+            InstagramCaptions = new List<Caption>();
         }
     }
 }

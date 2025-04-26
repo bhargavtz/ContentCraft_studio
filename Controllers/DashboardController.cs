@@ -43,13 +43,24 @@ namespace ContentCraft_studio.Controllers
                 // Store or update user data in MongoDB
                 await _mongoDbService.UpsertUserAsync(userModel);
 
-                var viewModel = await _mongoDbService.GetUserDashboardDataAsync(userId);
+
+                // Get all collections for the dashboard
+                var viewModel = new DashboardViewModel
+                {
+                    User = userModel,
+                    BlogPosts = await _mongoDbService.GetAllBlogPostsAsync(),
+                    Stories = await _mongoDbService.GetAllStoriesAsync(),
+                    InstagramCaptions = await _mongoDbService.GetAllCaptionsAsync(),
+                    ImageDescriptions = await _mongoDbService.GetAllImageDescriptionsAsync(),
+                    BusinessNames = await _mongoDbService.GetAllBusinessNamesAsync(),
+                    UserActivities = await _mongoDbService.GetUserActivitiesAsync(userId),
+                    RecentActivities = await _mongoDbService.GetRecentActivitiesAsync(userId)
+                };
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                // Log the error and return to home page
                 _logger.LogError(ex, "Error in DashboardController.Index");
                 return RedirectToAction("Index", "Home");
             }
@@ -151,6 +162,80 @@ namespace ContentCraft_studio.Controllers
             {
                 return Json(new { success = false, error = ex.Message });
             }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteImageDescription([FromBody] string id)
+        {
+            try
+            {
+                await _mongoDbService.DeleteImageDescriptionAsync(id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteBusinessName([FromBody] string id)
+        {
+            try
+            {
+                await _mongoDbService.DeleteBusinessNameAsync(id);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> EditUserData([FromBody] UserModel updatedUserData)
+        {
+            try
+            {
+                // Update user data in all relevant collections
+                await _mongoDbService.UpdateUserAsync(updatedUserData);
+                await _mongoDbService.UpdateUserActivitiesAsync(updatedUserData.Id, updatedUserData);
+                await _mongoDbService.UpdateUserStoriesAsync(updatedUserData.Id, updatedUserData);
+                await _mongoDbService.UpdateUserBlogPostsAsync(updatedUserData.Id, updatedUserData);
+                await _mongoDbService.UpdateUserImageDescriptionsAsync(updatedUserData.Id, updatedUserData);
+                await _mongoDbService.UpdateUserBusinessNamesAsync(updatedUserData.Id, updatedUserData);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateImageDescription([FromBody] UpdateImageDescriptionRequest request)
+        {
+            try
+            {
+                await _mongoDbService.UpdateImageDescriptionAsync(request.Id, request.Description);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+        [HttpGet("/Dashboard/BlogPosts")]
+        public async Task<IActionResult> GetBlogPosts()
+        {
+            var blogPosts = await _mongoDbService.GetAllBlogPostsAsync();
+            return Ok(blogPosts);
         }
     }
 }

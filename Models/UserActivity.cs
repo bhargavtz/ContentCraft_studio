@@ -14,5 +14,6 @@ namespace ContentCraft_studio.Models
         public required string ActivityType { get; set; }
         public required string Description { get; set; }
         public DateTime Timestamp { get; set; }
+        public string UserName { get; set; } = string.Empty;
     }
 }

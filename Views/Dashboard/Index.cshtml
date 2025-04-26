@@ -16,7 +16,7 @@
                 Edit Profile
             </a>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="bg-white overflow-hidden shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
                 <div class="p-6">
@@ -37,7 +37,6 @@
                 </div>
             </div>
 
-          
             <div class="bg-white overflow-hidden shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
                 <div class="p-6">
                     <div class="flex items-center">
@@ -50,13 +49,12 @@
                             <dl>
                                 <dt class="text-sm font-medium text-gray-500 truncate">Recent Activities</dt>
                                 <dd class="text-2xl font-bold text-gray-900 mt-1">@Model.RecentActivities.Count</dd>
-                              <dd class="text-sm text-gray-600 mt-1">Active sessions</dd>
+                                <dd class="text-sm text-gray-600 mt-1">Active sessions</dd>
                             </dl>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="bg-white overflow-hidden shadow-lg rounded-xl hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
                 <div class="p-6">
                     <div class="flex items-center">
@@ -77,9 +75,9 @@
             </div>
         </div>
 
-        
         <!-- Image Descriptions -->
         <div class="mt-12">
+            @Html.AntiForgeryToken()
             <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
                     <div>
@@ -105,8 +103,8 @@
                                     </div>
                                 </div>
                                 <div class="flex space-x-3">
-                                    <button onclick="editDescription(@description.Id, '@description.Description')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
-                                    <button onclick="deleteDescription(@description.Id)" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
+                                    <button onclick="openEditModal('@description.Id', '@description.Description', '/Dashboard/UpdateImageDescription')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
+                                    <button onclick="deleteItem('@description.Id', 'deleteImageDescriptionModal')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
                                 </div>
                             </div>
                         </li>
@@ -115,370 +113,18 @@
             </div>
         </div>
 
-        <!-- Edit Description Modal -->
-        <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Edit Description</h3>
-                    <div class="mt-2">
-                        <input type="hidden" id="editDescriptionId">
-                        <textarea id="editDescriptionText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="4"></textarea>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeEditModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="saveDescription()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Confirmation Modal -->
-        <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+        <!-- Delete Image Description Modal -->
+        <div id="deleteImageDescriptionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
             <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
                 <div class="mt-3">
                     <h3 class="text-lg font-medium text-gray-900">Confirm Delete</h3>
                     <div class="mt-2">
-                        <p class="text-sm text-gray-500">Are you sure you want to delete this description?</p>
-                        <input type="hidden" id="deleteDescriptionId">
+                        <p class="text-sm text-gray-500">Are you sure you want to delete this image description?</p>
+                        <input type="hidden" id="deleteId">
                     </div>
                     <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="confirmDelete()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Edit Business Name Modal -->
-        <div id="editBusinessNameModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Edit Business Name</h3>
-                    <div class="mt-2">
-                        <input type="hidden" id="editBusinessNameId">
-                        <textarea id="editBusinessNameText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="4"></textarea>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeEditBusinessNameModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="saveBusinessName()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Business Name Confirmation Modal -->
-        <div id="deleteBusinessNameModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Confirm Delete</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">Are you sure you want to delete this business name?</p>
-                        <input type="hidden" id="deleteBusinessNameId">
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeDeleteBusinessNameModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="confirmDeleteBusinessName()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function editDescription(id, description) {
-                document.getElementById('editDescriptionId').value = id;
-                document.getElementById('editDescriptionText').value = description;
-                document.getElementById('editModal').classList.remove('hidden');
-            }
-
-            function closeEditModal() {
-                document.getElementById('editModal').classList.add('hidden');
-            }
-
-            function saveDescription() {
-                const id = document.getElementById('editDescriptionId').value;
-                const description = document.getElementById('editDescriptionText').value;
-                
-                fetch('/Dashboard/UpdateStory', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, content: content })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function deleteDescription(id) {
-                document.getElementById('deleteDescriptionId').value = id;
-                document.getElementById('deleteModal').classList.remove('hidden');
-            }
-
-            function closeDeleteModal() {
-                document.getElementById('deleteModal').classList.add('hidden');
-            }
-
-            function confirmDelete() {
-                const id = document.getElementById('deleteDescriptionId').value;
-                
-                fetch('/Dashboard/DeleteDescription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function editBusinessName(id, name) {
-                document.getElementById('editBusinessNameId').value = id;
-                document.getElementById('editBusinessNameText').value = name;
-                document.getElementById('editBusinessNameModal').classList.remove('hidden');
-            }
-
-            function closeEditBusinessNameModal() {
-                document.getElementById('editBusinessNameModal').classList.add('hidden');
-            }
-
-            function saveBusinessName() {
-                const id = document.getElementById('editBusinessNameId').value;
-                const name = document.getElementById('editBusinessNameText').value;
-
-                fetch('/Dashboard/UpdateBusinessName', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, name: name })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function deleteBusinessName(id) {
-                document.getElementById('deleteBusinessNameId').value = id;
-                document.getElementById('deleteBusinessNameModal').classList.remove('hidden');
-            }
-
-            function closeDeleteBusinessNameModal() {
-                document.getElementById('deleteBusinessNameModal').classList.add('hidden');
-            }
-
-            function confirmDeleteBusinessName() {
-                const id = document.getElementById('deleteBusinessNameId').value;
-
-                fetch('/Dashboard/DeleteBusinessName', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function editStory(id, content) {
-                document.getElementById('editStoryId').value = id;
-                document.getElementById('editStoryText').value = content;
-                document.getElementById('editStoryModal').classList.remove('hidden');
-            }
-
-            function closeEditStoryModal() {
-                document.getElementById('editStoryModal').classList.add('hidden');
-            }
-
-            function saveStory() {
-                const id = document.getElementById('editStoryId').value;
-                const content = document.getElementById('editStoryText').value;
-
-                fetch('/Dashboard/UpdateStory', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, content: content })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function deleteStory(id) {
-                document.getElementById('deleteStoryId').value = id;
-                document.getElementById('deleteStoryModal').classList.remove('hidden');
-            }
-
-            function closeDeleteStoryModal() {
-                document.getElementById('deleteStoryModal').classList.add('hidden');
-            }
-
-            function confirmDeleteStory() {
-                const id = document.getElementById('deleteStoryId').value;
-
-                fetch('/Dashboard/DeleteStory', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(id)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-        </script>
-
-        <!-- Edit Blog Post Modal -->
-        <div id="editBlogPostModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Edit Blog Post</h3>
-                    <div class="mt-2">
-                        <input type="hidden" id="editBlogPostId">
-                        <label for="editBlogPostTitle" class="block text-sm font-medium text-gray-700">Title</label>
-                        <input type="text" id="editBlogPostTitle" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                        <label for="editBlogPostContent" class="block text-sm font-medium text-gray-700 mt-2">Content</label>
-                        <textarea id="editBlogPostContent" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="4"></textarea>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeEditBlogPostModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="saveBlogPost()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Blog Post Modal -->
-        <div id="deleteBlogPostModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Confirm Delete</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">Are you sure you want to delete this blog post?</p>
-                        <input type="hidden" id="deleteBlogPostId">
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeDeleteBlogPostModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="confirmDeleteBlogPost()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function editBlogPost(id, title, content) {
-                document.getElementById('editBlogPostId').value = id;
-                document.getElementById('editBlogPostTitle').value = title;
-                document.getElementById('editBlogPostContent').value = content;
-                document.getElementById('editBlogPostModal').classList.remove('hidden');
-            }
-
-            function closeEditBlogPostModal() {
-                document.getElementById('editBlogPostModal').classList.add('hidden');
-            }
-
-            function saveBlogPost() {
-                const id = document.getElementById('editBlogPostId').value;
-                const title = document.getElementById('editBlogPostTitle').value;
-                const content = document.getElementById('editBlogPostContent').value;
-
-                fetch('/Dashboard/UpdateBlogPost', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, title: title, content: content })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function deleteBlogPost(id) {
-                document.getElementById('deleteBlogPostId').value = id;
-                document.getElementById('deleteBlogPostModal').classList.remove('hidden');
-            }
-
-            function closeDeleteBlogPostModal() {
-                document.getElementById('deleteBlogPostModal').classList.add('hidden');
-            }
-
-            function confirmDeleteBlogPost() {
-                const id = document.getElementById('deleteBlogPostId').value;
-
-                fetch('/Dashboard/DeleteBlogPost', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-        </script>
-
-        <!-- Edit Story Modal -->
-        <div id="editStoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Edit Story</h3>
-                    <div class="mt-2">
-                        <input type="hidden" id="editStoryId">
-                        <textarea id="editStoryText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="4"></textarea>
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeEditStoryModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="saveStory()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Story Modal -->
-        <div id="deleteStoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
-            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-                <div class="mt-3">
-                    <h3 class="text-lg font-medium text-gray-900">Confirm Delete</h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">Are you sure you want to delete this story?</p>
-                        <input type="hidden" id="deleteStoryId">
-                    </div>
-                    <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeDeleteStoryModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="confirmDeleteStory()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
+                        <button onclick="closeModal('deleteImageDescriptionModal')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
+                        <button onclick="confirmDelete('/Dashboard/DeleteImageDescription', 'deleteImageDescriptionModal')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
                     </div>
                 </div>
             </div>
@@ -511,8 +157,8 @@
                                     </div>
                                 </div>
                                 <div class="flex space-x-3">
-                                    <button onclick="editBusinessName('@businessName.Id', '@businessName.Name')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
-                                    <button onclick="deleteBusinessName('@businessName.Id')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
+                                    <button onclick="openEditModal('@businessName.Id', '@businessName.Name', '/Dashboard/UpdateBusinessName')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
+                                    <button onclick="deleteItem('@businessName.Id', 'deleteBusinessNameModal')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
                                 </div>
                             </div>
                         </li>
@@ -521,84 +167,24 @@
             </div>
         </div>
 
-        <!-- Blog Posts -->
-        <div class="mt-8">
-            <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900">Blog Posts</h3>
-                        <p class="mt-1 text-sm text-gray-500">Your AI-generated blog content</p>
+        <!-- Delete Business Name Modal -->
+        <div id="deleteBusinessNameModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900">Confirm Delete</h3>
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">Are you sure you want to delete this business name?</p>
+                        <input type="hidden" id="deleteId">
                     </div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                        @Model.BlogPosts.Count() Posts
-                    </span>
-                </div>
-                <ul class="divide-y divide-gray-100">
-                    @foreach (var blogPost in Model.BlogPosts)
-                    {
-                        <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
-                            <div class="space-y-3">
-                                <div class="flex items-center justify-between">
-                                    <h4 class="text-base font-semibold text-indigo-600">@blogPost.Title</h4>
-                                    <div class="flex items-center space-x-2">
-                                        <button onclick="editBlogPost('@blogPost.Id', '@blogPost.Title', '@blogPost.Content')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
-                                        <span class="text-gray-300">|</span>
-                                        <button onclick="deleteBlogPost('@blogPost.Id')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
-                                    </div>
-                                </div>
-                                <p class="text-sm text-gray-900 line-clamp-2">@blogPost.Content</p>
-                                <div class="flex items-center text-sm text-gray-500">
-                                    <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    @blogPost.CreatedAt.ToString("MMM dd, yyyy")
-                                </div>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
-
-        <!-- Stories -->
-        <div class="mt-8">
-            <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-900">Stories</h3>
-                        <p class="mt-1 text-sm text-gray-500">Your AI-generated story content</p>
+                    <div class="mt-4 flex justify-end space-x-3">
+                        <button onclick="closeModal('deleteBusinessNameModal')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
+                        <button onclick="confirmDelete('/Dashboard/DeleteBusinessName', 'deleteBusinessNameModal')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
                     </div>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                        @Model.Stories.Count() Stories
-                    </span>
                 </div>
-                <ul class="divide-y divide-gray-100">
-                    @foreach (var story in Model.Stories)
-                    {
-                        <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
-                            <div class="space-y-2">
-                                <p class="text-sm text-gray-900">@story.Content</p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center text-sm text-gray-500">
-                                        <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        @story.CreatedAt.ToString("MMM dd, yyyy")
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                        <button onclick="editStory('@story.Id', '@story.Content')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
-                                        <span class="text-gray-300">|</span>
-                                        <button onclick="deleteStory('@story.Id')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    }
-                </ul>
             </div>
         </div>
 
-        <!-- Captions -->
+        <!-- Instagram Captions -->
         <div class="mt-8">
             <div class="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
@@ -607,27 +193,26 @@
                         <p class="mt-1 text-sm text-gray-500">Your AI-generated Instagram captions</p>
                     </div>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-pink-100 text-pink-800">
-                        @Model.Captions.Count() Captions
+                        @Model.InstagramCaptions.Count() Captions
                     </span>
                 </div>
                 <ul class="divide-y divide-gray-100">
-                    @foreach (var caption in Model.Captions)
+                    @foreach (var caption in Model.InstagramCaptions)
                     {
-                        <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150" id="caption-@caption.Id">
-                            <div class="space-y-2">
-                                <p class="text-sm text-gray-900 caption-text">@caption.Text</p>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center text-sm text-gray-500">
+                        <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-grow">
+                                    <div class="text-sm font-medium text-gray-900">@caption.Text</div>
+                                    <div class="mt-1 flex items-center text-sm text-gray-500">
                                         <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                         @caption.CreatedAt.ToString("MMM dd, yyyy")
                                     </div>
-                                    <div class="flex items-center space-x-2">
-                                        <button onclick="editCaption('@caption.Id', '@caption.Text')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
-                                        <span class="text-gray-300">|</span>
-                                        <button onclick="deleteCaption('@caption.Id')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
-                                    </div>
+                                </div>
+                                <div class="flex space-x-3">
+                                    <button onclick="openEditModal('@caption.Id', '@caption.Text', '/Dashboard/UpdateCaption')" class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">Edit</button>
+                                    <button onclick="deleteItem('@caption.Id', 'deleteCaptionModal')" class="text-sm text-red-600 hover:text-red-900 font-medium">Delete</button>
                                 </div>
                             </div>
                         </li>
@@ -642,12 +227,12 @@
                 <div class="mt-3">
                     <h3 class="text-lg font-medium text-gray-900">Edit Caption</h3>
                     <div class="mt-2">
-                        <input type="hidden" id="editCaptionId">
+                        <input type="hidden" id="editId">
                         <textarea id="editCaptionText" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="4"></textarea>
                     </div>
                     <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeEditCaptionModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="updateCaption()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
+                        <button onclick="closeModal('editCaptionModal')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
+                        <button onclick="saveItem('/Dashboard/UpdateCaption', 'editCaptionModal', 'editCaptionText')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
                     </div>
                 </div>
             </div>
@@ -660,205 +245,15 @@
                     <h3 class="text-lg font-medium text-gray-900">Delete Caption</h3>
                     <div class="mt-2">
                         <p class="text-sm text-gray-500">Are you sure you want to delete this caption? This action cannot be undone.</p>
-                        <input type="hidden" id="deleteCaptionId">
+                        <input type="hidden" id="deleteId">
                     </div>
                     <div class="mt-4 flex justify-end space-x-3">
-                        <button onclick="closeDeleteCaptionModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
-                        <button onclick="confirmDeleteCaption()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
+                        <button onclick="closeModal('deleteCaptionModal')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
+                        <button onclick="confirmDelete('/Dashboard/DeleteCaption', 'deleteCaptionModal')" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <script>
-            function editDescription(id, description) {
-                document.getElementById('editDescriptionId').value = id;
-                document.getElementById('editDescriptionText').value = description;
-                document.getElementById('editModal').classList.remove('hidden');
-            }
-
-            function closeEditModal() {
-                document.getElementById('editModal').classList.add('hidden');
-            }
-
-            function saveDescription() {
-                const id = document.getElementById('editDescriptionId').value;
-                const description = document.getElementById('editDescriptionText').value;
-                
-                fetch('/Dashboard/UpdateDescription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, description: description })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function deleteDescription(id) {
-                document.getElementById('deleteDescriptionId').value = id;
-                document.getElementById('deleteModal').classList.remove('hidden');
-            }
-
-            function closeDeleteModal() {
-                document.getElementById('deleteModal').classList.add('hidden');
-            }
-
-            function confirmDelete() {
-                const id = document.getElementById('deleteDescriptionId').value;
-                
-                fetch('/Dashboard/DeleteDescription', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function editBusinessName(id, name) {
-                document.getElementById('editBusinessNameId').value = id;
-                document.getElementById('editBusinessNameText').value = name;
-                document.getElementById('editBusinessNameModal').classList.remove('hidden');
-            }
-
-            function closeEditBusinessNameModal() {
-                document.getElementById('editBusinessNameModal').classList.add('hidden');
-            }
-
-            function saveBusinessName() {
-                const id = document.getElementById('editBusinessNameId').value;
-                const name = document.getElementById('editBusinessNameText').value;
-
-                fetch('/Dashboard/UpdateBusinessName', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, name: name })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function deleteBusinessName(id) {
-                document.getElementById('deleteBusinessNameId').value = id;
-                document.getElementById('deleteBusinessNameModal').classList.remove('hidden');
-            }
-
-            function closeDeleteBusinessNameModal() {
-                document.getElementById('deleteBusinessNameModal').classList.add('hidden');
-            }
-
-            function confirmDeleteBusinessName() {
-                const id = document.getElementById('deleteBusinessNameId').value;
-
-                fetch('/Dashboard/DeleteBusinessName', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    }
-                });
-            }
-
-            function editCaption(id, text) {
-                document.getElementById('editCaptionId').value = id;
-                document.getElementById('editCaptionText').value = text;
-                document.getElementById('editCaptionModal').classList.remove('hidden');
-            }
-
-            function closeEditCaptionModal() {
-                document.getElementById('editCaptionModal').classList.add('hidden');
-            }
-
-            function updateCaption() {
-                const id = document.getElementById('editCaptionId').value;
-                const text = document.getElementById('editCaptionText').value;
-                
-                fetch('/Dashboard/UpdateCaption', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ id: id, text: text })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const captionElement = document.querySelector(`#caption-${id} .caption-text`);
-                        if (captionElement) {
-                            captionElement.textContent = text;
-                        }
-                        closeEditCaptionModal();
-                    } else {
-                        alert('Error updating caption: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error updating caption. Please try again.');
-                });
-            }
-
-            function deleteCaption(id) {
-                document.getElementById('deleteCaptionId').value = id;
-                document.getElementById('deleteCaptionModal').classList.remove('hidden');
-            }
-
-            function closeDeleteCaptionModal() {
-                document.getElementById('deleteCaptionModal').classList.add('hidden');
-            }
-
-            function confirmDeleteCaption() {
-                const id = document.getElementById('deleteCaptionId').value;
-                
-                fetch('/Dashboard/DeleteCaption', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(id)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const captionElement = document.getElementById(`caption-${id}`);
-                        if (captionElement) {
-                            captionElement.remove();
-                        }
-                        closeDeleteCaptionModal();
-                    } else {
-                        alert('Error deleting caption: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error deleting caption. Please try again.');
-                });
-            }
-        </script>
 
         <!-- User Activities -->
         <div class="mt-8">
@@ -875,49 +270,137 @@
                         </span>
                     }
                 </div>
-                <ul class="divide-y divide-gray-100">
-                    @if (Model.UserActivities != null && Model.UserActivities.Any())
-                    {
-                        @foreach (var activity in Model.UserActivities)
-                        {
-                            <li class="px-6 py-4 hover:bg-gray-50 transition-colors duration-150">
-                                <div class="space-y-3">
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="flex-shrink-0 w-2 h-2 rounded-full bg-green-400"></span>
-                                            <span class="text-sm font-medium text-indigo-600 truncate">@activity.ActivityType</span>
-                                        </div>
-                                        <div class="flex items-center space-x-3">
-                                            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-800">Completed</span>
-                                            <form method="post" asp-action="DeleteActivity" asp-route-id="@activity.Id" class="inline-block">
-                                                <button type="submit" class="inline-flex items-center text-sm font-medium text-red-600 hover:text-red-900 transition-colors duration-150">
-                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <p class="text-sm text-gray-600">@activity.Description</p>
-                                    <div class="flex items-center text-sm text-gray-500">
-                                        <svg class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        @activity.Timestamp
-                                    </div>
-                                </div>
-                            </li>
-                        }
-                    }
-                    else
-                    {
-                        <li class="px-6 py-4 text-center text-gray-500">
-                            No activities recorded yet.
-                        </li>
-                    }
-                </ul>
+               
+        <!-- Generic Edit Modal -->
+        <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3">
+                    <h3 class="text-lg font-medium text-gray-900">Edit Data</h3>
+                    <div class="mt-2">
+                        <label for="editField" class="block text-sm font-medium text-gray-700">Edit Field</label>
+                        <textarea id="editField" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" rows="4"></textarea>
+                    </div>
+                    <div class="mt-4 flex justify-end space-x-3">
+                        <button onclick="closeModal('editModal')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">Cancel</button>
+                        <button onclick="saveEditedData()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+
+        @await Html.PartialAsync("_BlogPosts", Model.BlogPosts)
+        @await Html.PartialAsync("_Stories", Model.Stories)
+
+        <script>
+            let currentEditId = null;
+            let currentEditUrl = null;
+
+            function openEditModal(id, content, url) {
+                currentEditId = id;
+                currentEditUrl = url;
+                document.getElementById('editField').value = content;
+                document.getElementById('editModal').classList.remove('hidden');
+            }
+
+            function closeModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            function saveEditedData() {
+                const updatedContent = document.getElementById('editField').value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                const data = {
+                    Id: currentEditId,
+                    Content: updatedContent
+                };
+
+                fetch(currentEditUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Data updated successfully!');
+                        window.location.reload();
+                    } else {
+                        alert('Failed to update data: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating data.');
+                });
+            }
+
+            function deleteItem(id, modalId) {
+                document.getElementById('deleteId').value = id;
+                document.getElementById(modalId).classList.remove('hidden');
+            }
+
+            function confirmDelete(url, modalId) {
+                const id = document.getElementById('deleteId').value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify(id)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to delete. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting.');
+                });
+            }
+
+            function openEditUserDataModal(user) {
+                document.getElementById('userNameInput').value = user.name;
+                document.getElementById('userEmailInput').value = user.email;
+                document.getElementById('userNicknameInput').value = user.nickname;
+                document.getElementById('editUserDataModal').classList.remove('hidden');
+            }
+
+            function editUserData() {
+                const userName = document.getElementById('userNameInput').value;
+                const userEmail = document.getElementById('userEmailInput').value;
+                const userNickname = document.getElementById('userNicknameInput').value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                const data = {
+                    Name: userName,
+                    Email: userEmail,
+                    Nickname: userNickname
+                };
+
+                fetch('/Dashboard/EditUserData', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('User data updated successfully!');
+                        window.location.reload();
+                    } else {
+                        alert('Failed to update user data: ' + data.error);
+                    }

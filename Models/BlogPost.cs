@@ -12,6 +12,8 @@ namespace ContentCraft_studio.Models
 
         public string UserId { get; set; } = null!;
 
+        public string UserName { get; set; } = string.Empty;
+
         public string Title { get; set; } = null!;
 
         public string Content { get; set; } = null!;

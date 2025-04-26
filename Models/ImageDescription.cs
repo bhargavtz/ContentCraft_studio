@@ -13,6 +13,9 @@ namespace ContentCraft_studio.Models
         [BsonElement("userId")]
         public string UserId { get; set; }
 
+        [BsonElement("userName")]
+        public string UserName { get; set; } = string.Empty;
+
         [BsonElement("description")]
         public string Description { get; set; }
 
