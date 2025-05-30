@@ -10,6 +10,9 @@ using System.Security.Claims;
 
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
+using DotNetEnv;
+
+Env.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +20,14 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddAuth0WebAppAuthentication(options => {
-    options.Domain = builder.Configuration["Auth0:Domain"] ?? 
-        throw new InvalidOperationException("Auth0:Domain configuration is missing");
-    options.ClientId = builder.Configuration["Auth0:ClientId"] ?? 
-        throw new InvalidOperationException("Auth0:ClientId configuration is missing");
-    options.ClientSecret = builder.Configuration["Auth0:ClientSecret"] ?? 
-        throw new InvalidOperationException("Auth0:ClientSecret configuration is missing");
+    options.Domain = Environment.GetEnvironmentVariable("Auth0__Domain") ?? 
+        throw new InvalidOperationException("Auth0:Domain environment variable is missing");
+    options.ClientId = Environment.GetEnvironmentVariable("Auth0__ClientId") ?? 
+        throw new InvalidOperationException("Auth0:ClientId environment variable is missing");
+    options.ClientSecret = Environment.GetEnvironmentVariable("Auth0__ClientSecret") ?? 
+        throw new InvalidOperationException("Auth0:ClientSecret environment variable is missing");
+    options.CallbackUrl = Environment.GetEnvironmentVariable("Auth0__CallbackUrl") ??
+        throw new InvalidOperationException("Auth0:CallbackUrl environment variable is missing");
 });
 
 builder.Services.ConfigureApplicationCookie(options => {
@@ -37,17 +42,33 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
-builder.Services.Configure<GeminiOptions>(
-    builder.Configuration.GetSection("Gemini") ?? 
-    throw new InvalidOperationException("Gemini configuration section is missing"));
+builder.Services.Configure<GeminiOptions>(options =>
+{
+    options.ApiKey = Environment.GetEnvironmentVariable("Gemini__ApiKey") ??
+        throw new InvalidOperationException("Gemini:ApiKey environment variable is missing");
+});
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 builder.Services.AddScoped<IMongoDbService, MongoDbService>();
 
 // Configure MongoDB settings
-builder.Services.Configure<MongoDbOptions>(
-    builder.Configuration.GetSection("MongoDB") ?? 
-    throw new InvalidOperationException("MongoDB configuration section is missing"));
+builder.Services.Configure<MongoDbOptions>(options =>
+{
+    options.ConnectionString = Environment.GetEnvironmentVariable("MongoDb__ConnectionString") ??
+        throw new InvalidOperationException("MongoDb:ConnectionString environment variable is missing");
+    options.DatabaseName = builder.Configuration["MongoDb:DatabaseName"] ??
+        throw new InvalidOperationException("MongoDb:DatabaseName configuration is missing");
+    options.ImageDescriptionsCollectionName = builder.Configuration["MongoDb:ImageDescriptionsCollectionName"] ??
+        throw new InvalidOperationException("MongoDb:ImageDescriptionsCollectionName configuration is missing");
+    options.UsersCollectionName = builder.Configuration["MongoDb:UsersCollectionName"] ??
+        throw new InvalidOperationException("MongoDb:UsersCollectionName configuration is missing");
+    options.BusinessNamesCollectionName = builder.Configuration["MongoDb:BusinessNamesCollectionName"] ??
+        throw new InvalidOperationException("MongoDb:BusinessNamesCollectionName configuration is missing");
+    options.BlogPostsCollectionName = builder.Configuration["MongoDb:BlogPostsCollectionName"] ??
+        throw new InvalidOperationException("MongoDb:BlogPostsCollectionName configuration is missing");
+    options.StoriesCollectionName = builder.Configuration["MongoDb:StoriesCollectionName"] ??
+        throw new InvalidOperationException("MongoDb:StoriesCollectionName configuration is missing");
+});
 
 // Add session services
 builder.Services.AddDistributedMemoryCache();
