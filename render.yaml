@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: contentcraft-studio
+    env: docker
+    dockerfilePath: ./Dockerfile
+    disk:
+      name: data-protection-keys
+      mountPath: /app/keys
+      sizeGB: 1

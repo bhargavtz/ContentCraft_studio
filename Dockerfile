@@ -15,6 +15,11 @@ RUN dotnet publish "ContentCraft_studio.csproj" -c Release -o /app/publish
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
+
+# Create directory for data protection keys
+RUN mkdir -p /app/keys && chmod 777 /app/keys
+
+# Copy application files
 COPY --from=build /app/publish ./
 
 # Set environment variables
