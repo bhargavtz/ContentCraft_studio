@@ -33,8 +33,11 @@ builder.Services.AddAuth0WebAppAuthentication(options => {
         throw new InvalidOperationException("Auth0:ClientId environment variable is missing");
     options.ClientSecret = Environment.GetEnvironmentVariable("Auth0__ClientSecret") ?? 
         throw new InvalidOperationException("Auth0:ClientSecret environment variable is missing");
-    options.CallbackUrl = Environment.GetEnvironmentVariable("Auth0__CallbackUrl") ??
-        throw new InvalidOperationException("Auth0:CallbackUrl environment variable is missing");
+});
+
+// Configure OpenID Connect callback path
+builder.Services.Configure<OpenIdConnectOptions>("Auth0", options => {
+    options.CallbackPath = new PathString("/callback");
 });
 
 builder.Services.ConfigureApplicationCookie(options => {

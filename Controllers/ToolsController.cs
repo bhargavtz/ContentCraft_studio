@@ -353,7 +353,7 @@ namespace ContentCraft_studio.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to generate story", ex);
+                _logger.LogError(ex, "Failed to generate story: {Error}", ex.Message);
                 return Json(new { error = "Failed to generate story", details = ex.Message });
             }
         }
