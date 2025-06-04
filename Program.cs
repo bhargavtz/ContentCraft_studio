@@ -40,6 +40,8 @@ else
 
 builder.Services.AddControllersWithViews();
 
+// Add health checks
+builder.Services.AddHealthChecks();
 
 builder.Services.AddAuth0WebAppAuthentication(options => {
     options.Domain = Environment.GetEnvironmentVariable("Auth0__Domain") ?? 
