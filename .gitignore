@@ -37,5 +37,9 @@ msbuild.log
 *.sln.iml
 
 # Environment Variables
+.env
+*.env
+.env.*
+!.env.example
 appsettings.Development.json
 appsettings.Production.json
